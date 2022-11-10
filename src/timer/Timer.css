@@ -1,0 +1,35 @@
+.timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.timerCounter {
+    background-color: #747a8d;
+    border: 0;
+    border-radius: 6px;
+    color: white;
+    padding: 10px;
+}
+
+.timerButtons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.timerButtons > button {
+    margin-bottom: 10px;
+    background-color: #747a8d;
+    border: 0;
+    border-radius: 6px;
+    color: white;
+    padding: 5px;
+    width: 164px;
+}
+
+.disabled {
+    opacity: 0.5;
+}

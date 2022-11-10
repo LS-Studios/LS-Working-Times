@@ -1,0 +1,25 @@
+.Login-Form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 25px;
+}
+
+.Login-Form > * {
+  margin: 2px 0;
+  color: white;
+  border: 0;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+.Login-Form > input {
+  background-color: #747a8d;
+}
+
+.Login-Form > button {
+  margin-top: 10px;
+  background-color: #747a8d;
+  border: 0;
+}
