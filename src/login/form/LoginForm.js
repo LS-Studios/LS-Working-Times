@@ -6,7 +6,7 @@ function LoginForm()
 {
         const navigate = useNavigate()
         const submitLogin = () => {
-                navigate("timer")
+                navigate("timing")
         }
 
         return (

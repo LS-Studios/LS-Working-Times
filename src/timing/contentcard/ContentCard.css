@@ -1,0 +1,18 @@
+.contentCard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #2C3A47;
+    border: 0;
+    border-radius: 6px;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    margin: 10px 5px 5px;
+    width: 110px;
+}
+
+.contentCardContent {
+    font-size: 20px;
+}

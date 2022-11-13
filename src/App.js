@@ -5,14 +5,14 @@ import {
     Route,
     Routes
 } from "react-router-dom";
-import Timer from "./timer/Timer";
+import Timing from "./timing/Timing";
 
 function App() {
   return (
     <Router className="App">
         <Routes>
             <Route path="/" element={<Login/>}/>
-            <Route path="/timer" element={<Timer/>}/>
+            <Route path="/timing" element={<Timing/>}/>
         </Routes>
     </Router>
   );
