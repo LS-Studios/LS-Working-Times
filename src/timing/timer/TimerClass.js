@@ -8,7 +8,8 @@ export class TimerClass {
         seconds, setSeconds,
         currentInterval, setCurrentInterval,
         startTime, setStartTime,
-        currentTime, setCurrentTime,
+        breakTime, setBreakTime,
+        takenBreak, setTakenBreak,
         isRunning, setIsRunning) {
         this.hours = hours
         this.setHours = setHours
@@ -20,9 +21,10 @@ export class TimerClass {
         this.setCurrentInterval = setCurrentInterval
         this.startTime = startTime
         this.setStartTime = setStartTime
-        this.currentTime = currentTime
-        this.setCurrentTime = setCurrentTime
-        this.diff = 0
+        this.breakTime = breakTime
+        this.setBreakTime = setBreakTime
+        this.takenBreak = takenBreak
+        this.setTakenBreak = setTakenBreak
         this.isRunning = isRunning
         this.setIsRunning = setIsRunning
 
@@ -34,7 +36,7 @@ export class TimerClass {
     }
 
     getTime() {
-        const dateTimeDiff = new DateTime().getDiffToDateTime(DateTime.dateTimeFromDate(this.startTime))
+        const dateTimeDiff = new DateTime().getDiffToDateTime(DateTime.dateTimeFromDate(this.startTime), this.takenBreak)
 
         this.setHours(dateTimeDiff.getHours)
         this.setMinutes(dateTimeDiff.getMinutes)
@@ -49,7 +51,22 @@ export class TimerClass {
     }
 
     startTimer() {
-        this.diff = Date.now() - this.currentTime
+        if (this.startTime == null) {
+            const newDate = new Date()
+            this.setStartTime(newDate)
+            this.startTime = newDate
+        }
+
+        if (this.breakTime == null) {
+            const newDateTime = new DateTime()
+            this.setBreakTime(newDateTime)
+            this.breakTime = newDateTime
+        }
+
+        console.log(this.breakTime)
+
+        this.setTakenBreak(this.takenBreak.addDateTime(new DateTime().getDiffToDateTime(this.breakTime)))
+
         if (this.currentInterval == null) {
             this.setCurrentInterval(setInterval(() => {
                 this.getTime()
@@ -62,7 +79,7 @@ export class TimerClass {
         clearInterval(this.currentInterval)
         this.setCurrentInterval(null)
         this.setIsRunning(false)
-        this.setCurrentTime(new Date())
+        this.setBreakTime(new DateTime())
     }
 
     resetTimer() {
@@ -70,8 +87,8 @@ export class TimerClass {
         this.setHours(0)
         this.setMinutes(0)
         this.setSeconds(0)
-        this.setStartTime(new Date())
-        this.setCurrentTime(new Date())
+        this.setStartTime(null)
+        this.setBreakTime(null)
     }
 
     get getHours() {

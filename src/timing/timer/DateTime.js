@@ -7,36 +7,50 @@ export class DateTime {
         this.getDiffToDateTime = this.getDiffToDateTime.bind(this)
     }
 
-    getDiffToDateTime(dateTime) {
-        let hourDiff = dateTime.getHours - this.hours
-        let minuteDiff
-        let secondDiff
+    setValuesByStringTime(stringTime) {
+        const splitTimeString = stringTime.split(".")
+        this.hours = parseInt(splitTimeString[0])
+        this.minutes = parseInt(splitTimeString[1])
+        this.seconds = parseInt(splitTimeString[2])
+    }
 
-        if (dateTime.getMinutes - this.minutes < 0) {
-            hourDiff -= 1
-            minuteDiff = 60 - dateTime.getMinutes
-        } else {
-            minuteDiff = dateTime.getMinutes - this.minutes
-        }
+    getDiffToDateTime(dateTime, takenBreak) {
+        const date = this.getDate()
 
-        if (dateTime.getSeconds - this.seconds < 0) {
-            if (minuteDiff - 1 < 0) {
-                hourDiff -= 1
-                minuteDiff = 59
-            } else {
-                minuteDiff -= 1
-            }
-
-            secondDiff = 60 - dateTime.getSeconds
-        } else {
-            secondDiff = dateTime.getSeconds - this.seconds
-        }
+        date.setHours(date.getHours() - dateTime.getHours - (takenBreak != null ? takenBreak.getHours : 0))
+        date.setMinutes(date.getMinutes() - dateTime.getMinutes - (takenBreak != null ? takenBreak.getMinutes : 0))
+        date.setSeconds(date.getSeconds() - dateTime.getSeconds - (takenBreak != null ? takenBreak.getSeconds : 0))
 
         return new DateTime(
-            hourDiff,
-            minuteDiff,
-            secondDiff
+            date.getHours(),
+            date.getMinutes(),
+            date.getSeconds()
         )
+    }
+
+    addDateTime(dateTime) {
+        let dateTimeDate = this.getDate()
+        dateTimeDate.setHours(dateTimeDate.getHours() +dateTime.getHours)
+        dateTimeDate.setMinutes(dateTimeDate.getMinutes() +dateTime.getMinutes)
+        dateTimeDate.setSeconds(dateTimeDate.getSeconds() +dateTime.getSeconds)
+
+        this.hours = dateTimeDate.getHours()
+        this.minutes = dateTimeDate.getMinutes()
+        this.seconds = dateTimeDate.getSeconds()
+
+        return new DateTime(
+            this.hours,
+            this.minutes,
+            this.seconds
+        )
+    }
+
+    getDate() {
+        const newDate = new Date()
+        newDate.setHours(this.hours)
+        newDate.setMinutes(this.minutes)
+        newDate.setSeconds(this.seconds)
+        return newDate
     }
 
     toTimeString() {
@@ -47,11 +61,9 @@ export class DateTime {
     }
 
     static dateTimeFromDate(date) {
-        const time = date.getTime()
-
-        const hours = (Math.floor((time / (1000 * 60 * 60)) % 24))
-        const minutes = (Math.floor((time / 1000 / 60) % 60))
-        const seconds = (Math.floor((time / 1000) % 60))
+        const hours = date.getHours()
+        const minutes = date.getMinutes()
+        const seconds = date.getSeconds()
 
         return new DateTime(
             hours,

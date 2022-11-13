@@ -6,13 +6,15 @@ import ContentCard from "./contentcard/ContentCard";
 import {DateTime} from "./timer/DateTime";
 
 function Timing() {
-    const [startTime, setStartTime] = useState(new Date());
+    const [startTime, setStartTime] = useState(null);
 
     const [overallHours, setOverallHours] = useState(0);
     const [overallMinutes, setOverallMinutes] = useState(0);
     const [overallSeconds, setOverallSeconds] = useState(0);
     const [overallCurrentInterval, setOverallCurrentInterval] = useState(null);
     const [overallIsRunning, setOverallIsRunning] = useState(false);
+    const [overallBreakTime, setOverallBreakTime] = useState(null);
+    const [overallTakenBreak, setOverallTakenBreak] = useState(new DateTime(0, 0, 0));
 
     const overallTimer = new TimerClass(
         overallHours, setOverallHours,
@@ -20,13 +22,17 @@ function Timing() {
         overallSeconds, setOverallSeconds,
         overallCurrentInterval, setOverallCurrentInterval,
         startTime, setStartTime,
+        overallBreakTime, setOverallBreakTime,
+        overallTakenBreak, setOverallTakenBreak,
         overallIsRunning, setOverallIsRunning)
 
     const [breakHours, setBreakHours] = useState(0);
     const [breakMinutes, setBreakMinutes] = useState(0);
     const [breakSeconds, setBreakSeconds] = useState(0);
     const [breakCurrentInterval, setBreakCurrentInterval] = useState(null);
-    const [breakSsRunning, setBreakIsRunning] = useState(false);
+    const [breakIsRunning, setBreakIsRunning] = useState(false);
+    const [breakBreakTime, setBreakBreakTime] = useState(null);
+    const [breakTakenBreak, setBreakTakenBreak] = useState(new DateTime(0, 0, 0));
 
     const breakTimer = new TimerClass(
         breakHours, setBreakHours,
@@ -34,7 +40,9 @@ function Timing() {
         breakSeconds, setBreakSeconds,
         breakCurrentInterval, setBreakCurrentInterval,
         startTime, setStartTime,
-        breakSsRunning, setBreakIsRunning)
+        breakBreakTime, setBreakBreakTime,
+        breakTakenBreak, setBreakTakenBreak,
+        breakIsRunning, setBreakIsRunning)
 
     const resetTimers = () => {
         overallTimer.resetTimer()
@@ -44,8 +52,8 @@ function Timing() {
     return (
         <div className="timing">
             <div className="timingTimers">
-                <ContentCard name="Date" content={startTime.toLocaleDateString("de")}/>
-                <ContentCard name="Start time" content={startTime.toLocaleTimeString("de")}/>
+                <ContentCard name="Date" content={startTime != null ? startTime.toLocaleDateString("de") : "Not started"}/>
+                <ContentCard name="Start time" content={startTime != null ? startTime.toLocaleTimeString("de") : "Not started"}/>
             </div>
 
             <div className="timingTimers">
