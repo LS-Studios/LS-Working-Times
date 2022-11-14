@@ -7,11 +7,14 @@ export class DateTime {
         this.getDiffToDateTime = this.getDiffToDateTime.bind(this)
     }
 
-    setValuesByStringTime(stringTime) {
-        const splitTimeString = stringTime.split(".")
-        this.hours = parseInt(splitTimeString[0])
-        this.minutes = parseInt(splitTimeString[1])
-        this.seconds = parseInt(splitTimeString[2])
+    static dateTimeFromString(stringTime) {
+        const splitTimeString = stringTime.split(":")
+
+        return new DateTime(
+            parseInt(splitTimeString[0]),
+            parseInt(splitTimeString[1]),
+            parseInt(splitTimeString[2])
+        )
     }
 
     getDiffToDateTime(dateTime, takenBreak) {

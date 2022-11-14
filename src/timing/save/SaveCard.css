@@ -1,0 +1,38 @@
+.saveCardBg {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: #212A33;
+    border: 0;
+    border-radius: 6px;
+    width: 240px;
+    padding: 6px;
+    margin: 5px;
+}
+
+.saveCardTitleExpanded {
+    margin-bottom: 5px;
+}
+
+.saveCardRowTitle {
+    display: flex;
+    width: 240px;
+    flex-wrap: wrap;
+    font-size: 16px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.saveCardRowValue {
+    display: flex;
+    width: 240px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.gone {
+    display: none;
+}

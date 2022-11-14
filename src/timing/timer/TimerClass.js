@@ -6,7 +6,6 @@ export class TimerClass {
         hours, setHours,
         minutes, setMinutes,
         seconds, setSeconds,
-        currentInterval, setCurrentInterval,
         startTime, setStartTime,
         breakTime, setBreakTime,
         takenBreak, setTakenBreak,
@@ -17,8 +16,6 @@ export class TimerClass {
         this.setMinutes = setMinutes
         this.seconds = seconds
         this.setSeconds = setSeconds
-        this.currentInterval = currentInterval
-        this.setCurrentInterval = setCurrentInterval
         this.startTime = startTime
         this.setStartTime = setStartTime
         this.breakTime = breakTime
@@ -29,7 +26,6 @@ export class TimerClass {
         this.setIsRunning = setIsRunning
 
         this.getTime = this.getTime.bind(this)
-        this.toggleTimer = this.toggleTimer.bind(this)
         this.startTimer = this.startTimer.bind(this)
         this.stopTimer = this.stopTimer.bind(this)
         this.resetTimer = this.resetTimer.bind(this)
@@ -42,13 +38,6 @@ export class TimerClass {
         this.setMinutes(dateTimeDiff.getMinutes)
         this.setSeconds(dateTimeDiff.getSeconds)
     };
-
-    toggleTimer() {
-        if (this.isRunning)
-            this.stopTimer()
-        else
-            this.startTimer()
-    }
 
     startTimer() {
         if (this.startTime == null) {
@@ -63,21 +52,12 @@ export class TimerClass {
             this.breakTime = newDateTime
         }
 
-        console.log(this.breakTime)
-
         this.setTakenBreak(this.takenBreak.addDateTime(new DateTime().getDiffToDateTime(this.breakTime)))
 
-        if (this.currentInterval == null) {
-            this.setCurrentInterval(setInterval(() => {
-                this.getTime()
-            }, 1000))
-        }
         this.setIsRunning(true)
     };
 
     stopTimer() {
-        clearInterval(this.currentInterval)
-        this.setCurrentInterval(null)
         this.setIsRunning(false)
         this.setBreakTime(new DateTime())
     }
@@ -87,8 +67,10 @@ export class TimerClass {
         this.setHours(0)
         this.setMinutes(0)
         this.setSeconds(0)
+        this.setIsRunning(false)
         this.setStartTime(null)
         this.setBreakTime(null)
+        this.setTakenBreak(new DateTime(0, 0, 0))
     }
 
     get getHours() {
