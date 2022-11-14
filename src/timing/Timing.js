@@ -6,6 +6,10 @@ import ContentCard from "./contentcard/ContentCard";
 import {DateTime} from "./timer/DateTime";
 import SavedCard from "./save/SavedCard";
 
+import { initializeApp } from "firebase/app"
+import { getDatabase, ref, onValue, set } from "firebase/database"
+import firebaseConfig from "../firebase/config";
+
 function Timing() {
     const [startTime, setStartTime] = useState(null);
     const [saved, setSaved] = useState([]);
@@ -13,18 +17,18 @@ function Timing() {
     const [overallHours, setOverallHours] = useState(0);
     const [overallMinutes, setOverallMinutes] = useState(0);
     const [workSeconds, setWorkSeconds] = useState(0);
-    const [overallIsRunning, setOverallIsRunning] = useState(false);
-    const [overallBreakTime, setOverallBreakTime] = useState(null);
-    const [overallTakenBreak, setOverallTakenBreak] = useState(new DateTime(0, 0, 0));
+    const [workIsRunning, setWorkIsRunning] = useState(false);
+    const [workBreakTime, setWorkBreakTime] = useState(null);
+    const [workTakenBreak, setWorkTakenBreak] = useState(new DateTime(0, 0, 0));
 
     const overallTimer = new TimerClass(
         overallHours, setOverallHours,
         overallMinutes, setOverallMinutes,
         workSeconds, setWorkSeconds,
         startTime, setStartTime,
-        overallBreakTime, setOverallBreakTime,
-        overallTakenBreak, setOverallTakenBreak,
-        overallIsRunning, setOverallIsRunning)
+        workBreakTime, setWorkBreakTime,
+        workTakenBreak, setWorkTakenBreak,
+        workIsRunning, setWorkIsRunning)
 
     const [breakHours, setBreakHours] = useState(0);
     const [breakMinutes, setBreakMinutes] = useState(0);
@@ -57,7 +61,7 @@ function Timing() {
     }
 
     const toggleOverallTimer = () => {
-        if (overallIsRunning) {
+        if (workIsRunning) {
             overallTimer.stopTimer()
         } else {
             overallTimer.startTimer()
@@ -106,13 +110,60 @@ function Timing() {
     }
 
     useInterval(() => {
-        if (overallIsRunning) {
+        if (workIsRunning) {
             overallTimer.getTime()
         }
         if (breakIsRunning) {
             breakTimer.getTime()
         }
     }, 1000);
+
+    useEffect(() => {
+        const app = initializeApp(firebaseConfig)
+        const db = getDatabase(app)
+        onValue(ref(db, "/start-time"), snapshot => {
+            const data = snapshot.val()
+
+            if (data == "")
+                setStartTime(null)
+            else
+                setStartTime(DateTime.dateTimeFromString(data).getDate())
+        })
+        onValue(ref(db, "/work-break-time"), snapshot => {
+            const data = snapshot.val()
+
+            if (data == "")
+                setWorkBreakTime(null)
+            else
+                setWorkBreakTime(DateTime.dateTimeFromString(data))
+        })
+        onValue(ref(db, "/work-taken-break"), snapshot => {
+            const data = snapshot.val()
+
+            if (data == "")
+                setWorkTakenBreak(null)
+            else
+                setWorkTakenBreak(DateTime.dateTimeFromString(data))
+        })
+        onValue(ref(db, "/break-break-time"), snapshot => {
+            const data = snapshot.val()
+
+            if (data == "")
+                setBreakBreakTime(null)
+            else
+                setBreakBreakTime(DateTime.dateTimeFromString(data))
+        })
+        onValue(ref(db, "/break-taken-break"), snapshot => {
+            const data = snapshot.val()
+
+            if (data == "")
+                setBreakTakenBreak(null)
+            else
+                setBreakTakenBreak(DateTime.dateTimeFromString(data))
+        })
+
+        set(ref(db, "/start-time"), startTime != null ? startTime.toLocaleDateString("de") : "")
+    }, [])
 
     return (
         <div className="timing">
