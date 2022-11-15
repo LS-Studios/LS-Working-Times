@@ -7,10 +7,16 @@ import {DateTime} from "./timer/DateTime";
 import SavedCard from "./save/SavedCard";
 
 import { initializeApp } from "firebase/app"
-import { getDatabase, ref, onValue, set } from "firebase/database"
+import { getDatabase, ref, onValue, set, push, onChildAdded, onChildChanged, onChildRemoved } from "firebase/database"
 import firebaseConfig from "../firebase/config";
+import {getAuth} from "firebase/auth";
+import {useNavigate} from "react-router-dom";
 
 function Timing() {
+    const navigate = useNavigate()
+
+    const [currentUser, setCurrentUser] = useState(null)
+
     const [startTime, setStartTime] = useState(null);
     const [saved, setSaved] = useState([]);
 
@@ -18,53 +24,53 @@ function Timing() {
     const [overallMinutes, setOverallMinutes] = useState(0);
     const [workSeconds, setWorkSeconds] = useState(0);
     const [workIsRunning, setWorkIsRunning] = useState(false);
-    const [workBreakTime, setWorkBreakTime] = useState(null);
-    const [workTakenBreak, setWorkTakenBreak] = useState(new DateTime(0, 0, 0));
+    const [workStopTime, setWorkStopTime] = useState(null);
+    const [workTakenStop, setWorkTakenStop] = useState(new DateTime(0, 0, 0));
 
-    const overallTimer = new TimerClass(
+    const workTimer = new TimerClass(
+        currentUser, "work",
         overallHours, setOverallHours,
         overallMinutes, setOverallMinutes,
         workSeconds, setWorkSeconds,
-        startTime, setStartTime,
-        workBreakTime, setWorkBreakTime,
-        workTakenBreak, setWorkTakenBreak,
-        workIsRunning, setWorkIsRunning)
+        startTime, workStopTime,
+        workTakenStop, workIsRunning)
 
     const [breakHours, setBreakHours] = useState(0);
     const [breakMinutes, setBreakMinutes] = useState(0);
     const [breakSeconds, setBreakSeconds] = useState(0);
     const [breakIsRunning, setBreakIsRunning] = useState(false);
-    const [breakBreakTime, setBreakBreakTime] = useState(new DateTime());
-    const [breakTakenBreak, setBreakTakenBreak] = useState(new DateTime(0, 0, 0));
+    const [breakStopTime, setBreakStopTime] = useState(new DateTime());
+    const [breakTakenStop, setBreakTakenStop] = useState(new DateTime(0, 0, 0));
 
     const breakTimer = new TimerClass(
+        currentUser,"break",
         breakHours, setBreakHours,
         breakMinutes, setBreakMinutes,
         breakSeconds, setBreakSeconds,
-        startTime, setStartTime,
-        breakBreakTime, setBreakBreakTime,
-        breakTakenBreak, setBreakTakenBreak,
-        breakIsRunning, setBreakIsRunning)
+        startTime, breakStopTime,
+        breakTakenStop, breakIsRunning)
 
     const resetTimers = () => {
-        overallTimer.resetTimer()
+        workTimer.resetTimer()
         breakTimer.resetTimer()
 
-        setSaved(prevState => (
-            [{
-                date:startTime.toLocaleDateString("de"),
-                startTime: startTime.toLocaleTimeString("de"),
-                worked: new DateTime(overallHours, overallMinutes, workSeconds).toTimeString(),
-                break: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString()
-            }].concat(prevState)
-        ))
+        set(ref(getDatabase(), "/users/" + currentUser.uid + "/start-time"), "")
+
+        const newSaveRef = push(ref(getDatabase(), "/users/" + currentUser.uid + "/saved"));
+        set(newSaveRef, {
+            id:newSaveRef.key,
+            date:startTime.toLocaleDateString("de"),
+            startTime: startTime.toLocaleTimeString("de"),
+            worked: new DateTime(overallHours, overallMinutes, workSeconds).toTimeString(),
+            break: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString()
+        });
     }
 
     const toggleOverallTimer = () => {
         if (workIsRunning) {
-            overallTimer.stopTimer()
+            workTimer.stopTimer()
         } else {
-            overallTimer.startTimer()
+            workTimer.startTimer()
             breakTimer.stopTimer()
         }
     }
@@ -74,7 +80,7 @@ function Timing() {
             breakTimer.stopTimer()
         } else {
             breakTimer.startTimer()
-            overallTimer.stopTimer()
+            workTimer.stopTimer()
         }
     }
 
@@ -110,85 +116,133 @@ function Timing() {
     }
 
     useInterval(() => {
+        if (startTime != null) {
+            workTimer.setByTimeDiff(false)
+            breakTimer.setByTimeDiff(false)
+        }
+
         if (workIsRunning) {
-            overallTimer.getTime()
+            workTimer.setByTimeDiff()
         }
         if (breakIsRunning) {
-            breakTimer.getTime()
+            breakTimer.setByTimeDiff()
         }
     }, 1000);
 
     useEffect(() => {
-        const app = initializeApp(firebaseConfig)
-        const db = getDatabase(app)
-        onValue(ref(db, "/start-time"), snapshot => {
-            const data = snapshot.val()
+        const db = getDatabase()
+        const auth = getAuth()
 
-            if (data == "")
-                setStartTime(null)
-            else
-                setStartTime(DateTime.dateTimeFromString(data).getDate())
-        })
-        onValue(ref(db, "/work-break-time"), snapshot => {
-            const data = snapshot.val()
+        auth.onAuthStateChanged(function(user) {
+            if (user == null) {
+                navigate("/login")
+            }
 
-            if (data == "")
-                setWorkBreakTime(null)
-            else
-                setWorkBreakTime(DateTime.dateTimeFromString(data))
-        })
-        onValue(ref(db, "/work-taken-break"), snapshot => {
-            const data = snapshot.val()
+            setCurrentUser(user)
 
-            if (data == "")
-                setWorkTakenBreak(null)
-            else
-                setWorkTakenBreak(DateTime.dateTimeFromString(data))
-        })
-        onValue(ref(db, "/break-break-time"), snapshot => {
-            const data = snapshot.val()
+            onValue(ref(db, "/users/" + user.uid + "/start-time"), snapshot => {
+                const data = snapshot.val()
 
-            if (data == "")
-                setBreakBreakTime(null)
-            else
-                setBreakBreakTime(DateTime.dateTimeFromString(data))
-        })
-        onValue(ref(db, "/break-taken-break"), snapshot => {
-            const data = snapshot.val()
+                if (data == null || data === "")
+                    setStartTime(null)
+                else
+                    setStartTime(DateTime.dateTimeFromString(data).getDate())
+            })
+            onValue(ref(db, "/users/" + user.uid + "/work-stop-time"), snapshot => {
+                const data = snapshot.val()
 
-            if (data == "")
-                setBreakTakenBreak(null)
-            else
-                setBreakTakenBreak(DateTime.dateTimeFromString(data))
-        })
+                if (data == null || data === "")
+                    setWorkStopTime(null)
+                else
+                    setWorkStopTime(DateTime.dateTimeFromString(data))
+            })
+            onValue(ref(db, "/users/" + user.uid + "/work-taken-stop"), snapshot => {
+                const data = snapshot.val()
 
-        set(ref(db, "/start-time"), startTime != null ? startTime.toLocaleDateString("de") : "")
+                if (data == null || data === "")
+                    setWorkTakenStop(new DateTime(0,0,0))
+                else
+                    setWorkTakenStop(DateTime.dateTimeFromString(data))
+            })
+            onValue(ref(db, "/users/" + user.uid + "/break-stop-time"), snapshot => {
+                const data = snapshot.val()
+
+                if (data == null || data === "")
+                    setBreakStopTime(null)
+                else
+                    setBreakStopTime(DateTime.dateTimeFromString(data))
+            })
+            onValue(ref(db, "/users/" + user.uid + "/break-taken-stop"), snapshot => {
+                const data = snapshot.val()
+
+                if (data == null || data === "")
+                    setBreakTakenStop(new DateTime(0,0,0))
+                else
+                    setBreakTakenStop(DateTime.dateTimeFromString(data))
+            })
+            onValue(ref(db, "/users/" + user.uid + "/work-is-running"), snapshot => {
+                const data = snapshot.val()
+
+                if (data == null || data === "")
+                    setWorkIsRunning(false)
+                else
+                    setWorkIsRunning(data)
+            })
+            onValue(ref(db, "/users/" + user.uid + "/break-is-running"), snapshot => {
+                const data = snapshot.val()
+
+                if (data == null || data === "")
+                    setBreakIsRunning(false)
+                else
+                    setBreakIsRunning(data)
+            })
+            onChildAdded(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
+                const value = snapshot.val()
+                if (value != null) {
+                    setSaved(prevState => (
+                        [value].concat(prevState)
+                    ))
+                }
+            });
+            onChildRemoved(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
+                const value = snapshot.val()
+                if (value != null) {
+                    setSaved((current) =>
+                        current.filter((save) => save.id !== value.id)
+                    );
+                }
+            });
+        });
     }, [])
 
     return (
         <div className="timing">
+            <h1>Timer</h1>
             <div className="timingTimers">
                 <ContentCard name="Date" content={startTime != null ? startTime.toLocaleDateString("de") : "Not started"}/>
                 <ContentCard name="Start time" content={startTime != null ? startTime.toLocaleTimeString("de") : "Not started"}/>
             </div>
 
             <div className="timingTimers">
-                <Timer name="Worked" timer={overallTimer}/>
+                <Timer name="Worked" timer={workTimer}/>
                 <Timer name="Break" timer={breakTimer}/>
             </div>
 
             <div className="timerButtons">
-                <button onClick={toggleOverallTimer}>{overallTimer.getIsRunning ? "Stop" : "Start"}</button>
+                <button onClick={toggleOverallTimer}>{workTimer.getIsRunning ? "Stop" : "Start"}</button>
                 <button onClick={toggleBreakTimer}>{breakTimer.getIsRunning ? "Stop break" : "Start break"}</button>
-                <button onClick={resetTimers}>Reset and save</button>
+                <button className={startTime != null ? "" : "disabled"} onClick={startTime != null ? resetTimers : null}>Reset and save</button>
             </div>
 
             <div className="saved">
                 <div className="saveTitle"><b>Saved</b></div>
                 {
-                    saved.map((save, i) => {
-                        return <SavedCard save={save} index={i} isExpanded={false}/>
+                    saved.map(save => {
+                        return <SavedCard key={save.id} save={save} isExpanded={false}/>
                     })
+                }
+                {
+                    saved.length == 0 ? <div className="saveNoSaves">No saves</div> : null
                 }
             </div>
         </div>

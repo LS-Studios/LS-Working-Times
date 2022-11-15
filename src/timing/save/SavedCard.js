@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import "./SaveCard.css"
 import {DateTime} from "../timer/DateTime";
+import {getDatabase, ref, remove} from "firebase/database"
+import {getAuth} from "firebase/auth";
 
-function SavedCard({save, index, isExpanded}) {
+function SavedCard({save, isExpanded}) {
     const [expanded, setExpanded] = useState(isExpanded)
 
     const getDateNameByString = (string) => {
@@ -22,6 +24,11 @@ function SavedCard({save, index, isExpanded}) {
 
     const expand = () => {
         setExpanded(!expanded)
+    }
+
+    const deleteSave = () => {
+        const auth = getAuth()
+        remove(ref(getDatabase(), "/users/" + auth.currentUser.uid + "/saved/"+save.id))
     }
 
     return (
@@ -46,6 +53,7 @@ function SavedCard({save, index, isExpanded}) {
                     <div>{save.worked}</div>
                     <div>{save.break}</div>
                 </div>
+                <button className="saveCardDeleteButton" onClick={deleteSave}>Delete</button>
             </div>
         </div>
     );

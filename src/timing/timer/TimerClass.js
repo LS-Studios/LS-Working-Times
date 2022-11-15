@@ -1,15 +1,17 @@
 import {DateTime} from "./DateTime";
+import {getDatabase, ref, set} from "firebase/database";
+import {getAuth} from "firebase/auth";
 
 export class TimerClass {
 
     constructor(
+        currentUser, timerType,
         hours, setHours,
         minutes, setMinutes,
         seconds, setSeconds,
-        startTime, setStartTime,
-        breakTime, setBreakTime,
-        takenBreak, setTakenBreak,
-        isRunning, setIsRunning) {
+        startTime, stopTime,
+        takenStop, isRunning) {
+        this.timerType = timerType
         this.hours = hours
         this.setHours = setHours
         this.minutes = minutes
@@ -17,22 +19,19 @@ export class TimerClass {
         this.seconds = seconds
         this.setSeconds = setSeconds
         this.startTime = startTime
-        this.setStartTime = setStartTime
-        this.breakTime = breakTime
-        this.setBreakTime = setBreakTime
-        this.takenBreak = takenBreak
-        this.setTakenBreak = setTakenBreak
+        this.stopTime = stopTime
+        this.takenStop = takenStop
         this.isRunning = isRunning
-        this.setIsRunning = setIsRunning
+        this.userId = currentUser != null ? currentUser.uid : ""
 
-        this.getTime = this.getTime.bind(this)
+        this.setByTimeDiff = this.setByTimeDiff.bind(this)
         this.startTimer = this.startTimer.bind(this)
         this.stopTimer = this.stopTimer.bind(this)
         this.resetTimer = this.resetTimer.bind(this)
     }
 
-    getTime() {
-        const dateTimeDiff = new DateTime().getDiffToDateTime(DateTime.dateTimeFromDate(this.startTime), this.takenBreak)
+    setByTimeDiff(takeCurrent = true) {
+        const dateTimeDiff = (takeCurrent ? new DateTime() : this.stopTime).getDiffToDateTime(DateTime.dateTimeFromDate(this.startTime), this.takenStop)
 
         this.setHours(dateTimeDiff.getHours)
         this.setMinutes(dateTimeDiff.getMinutes)
@@ -40,26 +39,37 @@ export class TimerClass {
     };
 
     startTimer() {
-        if (this.startTime == null) {
+        const setStartTime = () => {
             const newDate = new Date()
-            this.setStartTime(newDate)
             this.startTime = newDate
+            set(ref(getDatabase(), "/users/" + this.userId + "/start-time"), newDate.toLocaleTimeString("de"))
         }
 
-        if (this.breakTime == null) {
+        const setStopTime = () => {
             const newDateTime = new DateTime()
-            this.setBreakTime(newDateTime)
-            this.breakTime = newDateTime
+            this.stopTime = newDateTime
+
+            if (this.startTime == null)
+                set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), newDateTime.toTimeString())
+            else
+                set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), this.startTime.toLocaleTimeString("de"))
         }
 
-        this.setTakenBreak(this.takenBreak.addDateTime(new DateTime().getDiffToDateTime(this.breakTime)))
+        if (this.startTime == null) {
+            setStartTime()
+            setStopTime()
+        } else if (this.stopTime == null) {
+            setStopTime()
+        }
 
-        this.setIsRunning(true)
+        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-is-running"), true)
+        const newStopTime = this.takenStop.addDateTime(new DateTime().getDiffToDateTime(this.stopTime))
+        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-taken-stop"), newStopTime.toTimeString())
     };
 
     stopTimer() {
-        this.setIsRunning(false)
-        this.setBreakTime(new DateTime())
+        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-is-running"), false)
+        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), new DateTime().toTimeString())
     }
 
     resetTimer() {
@@ -67,10 +77,9 @@ export class TimerClass {
         this.setHours(0)
         this.setMinutes(0)
         this.setSeconds(0)
-        this.setIsRunning(false)
-        this.setStartTime(null)
-        this.setBreakTime(null)
-        this.setTakenBreak(new DateTime(0, 0, 0))
+        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-is-running"), false)
+        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), "")
+        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-taken-stop"), "00:00:00")
     }
 
     get getHours() {

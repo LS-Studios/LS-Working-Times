@@ -17,12 +17,12 @@ export class DateTime {
         )
     }
 
-    getDiffToDateTime(dateTime, takenBreak) {
+    getDiffToDateTime(dateTime, takenStop) {
         const date = this.getDate()
 
-        date.setHours(date.getHours() - dateTime.getHours - (takenBreak != null ? takenBreak.getHours : 0))
-        date.setMinutes(date.getMinutes() - dateTime.getMinutes - (takenBreak != null ? takenBreak.getMinutes : 0))
-        date.setSeconds(date.getSeconds() - dateTime.getSeconds - (takenBreak != null ? takenBreak.getSeconds : 0))
+        date.setHours(date.getHours() - dateTime.getHours - (takenStop != null ? takenStop.getHours : 0))
+        date.setMinutes(date.getMinutes() - dateTime.getMinutes - (takenStop != null ? takenStop.getMinutes : 0))
+        date.setSeconds(date.getSeconds() - dateTime.getSeconds - (takenStop != null ? takenStop.getSeconds : 0))
 
         return new DateTime(
             date.getHours(),

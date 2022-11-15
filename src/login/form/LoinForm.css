@@ -1,4 +1,4 @@
-.Login-Form {
+.login-form {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6,19 +6,37 @@
   margin-top: 25px;
 }
 
-.Login-Form > * {
+.login-form > * {
   margin: 2px 0;
   border: 0;
   border-radius: 6px;
   padding: 2px 8px;
 }
 
-.Login-Form > input {
+.login-form > input {
   background-color: #2C3A47;
 }
 
-.Login-Form > button {
-  margin-top: 10px;
+.login-form input:focus {
+  outline: none;
+}
+
+.login-form > button {
   background-color: #2C3A47;
+  width: 200px;
+  outline-width: 0;
   border: 0;
+}
+
+.loginLoginButton {
+  margin-top: 20px;
+}
+
+.loginCreatButton {
+  margin-top: 10px;
+}
+
+.loginErrorText {
+  color: red;
+  font-size: 14px;
 }

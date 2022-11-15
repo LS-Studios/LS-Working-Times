@@ -3,8 +3,8 @@ import LoginForm from "./form/LoginForm";
 import "./Login.css"
 
 const Login = () => (
-    <div className="Login">
-        <h1>Timer</h1>
+    <div className="login">
+        <h1>Login</h1>
         <LoginForm/>
     </div>
 );

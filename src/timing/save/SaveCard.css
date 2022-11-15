@@ -9,6 +9,7 @@
     width: 240px;
     padding: 6px;
     margin: 5px;
+    cursor: pointer;
 }
 
 .saveCardTitleExpanded {
@@ -31,6 +32,15 @@
     font-size: 14px;
     align-items: center;
     justify-content: space-between;
+}
+
+.saveCardDeleteButton {
+    width: 240px;
+    font-size: 14px;
+    border: 0;
+    border-radius: 6px;
+    background-color: #2C3A47;
+    margin-top: 5px;
 }
 
 .gone {
