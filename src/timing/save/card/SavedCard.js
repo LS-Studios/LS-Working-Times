@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import "./SaveCard.css"
-import {DateTime} from "../timer/DateTime";
+import {DateTime} from "../../timer/DateTime";
 import {getDatabase, ref, remove} from "firebase/database"
 import {getAuth} from "firebase/auth";
+import {initializeApp} from "firebase/app";
+import {LSWorkingTimesConfig} from "../../../firebase/LSWorkingTimesConfig";
+import {LSWalletConfig} from "../../../firebase/LSWalletConfig";
 
 function SavedCard({save, isExpanded}) {
     const [expanded, setExpanded] = useState(isExpanded)
@@ -27,8 +30,11 @@ function SavedCard({save, isExpanded}) {
     }
 
     const deleteSave = () => {
-        const auth = getAuth()
-        remove(ref(getDatabase(), "/users/" + auth.currentUser.uid + "/saved/"+save.id))
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
+
+        const auth = getAuth(lsWalletApp)
+        remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/saved/"+save.id))
     }
 
     return (

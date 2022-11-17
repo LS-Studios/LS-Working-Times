@@ -1,0 +1,38 @@
+@import "../Card";
+
+.buttonCard {
+    @extend .card;
+    width: 271px;
+    height: 33px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.darkerButtonCard {
+    @extend .card;
+    width: 271px;
+    height: 40px;
+    margin: 10px 10px;
+    background-color: #212A33;
+    cursor: pointer;
+}
+
+.darkerButtonCard:hover {
+    box-shadow: none;
+}
+
+.disabled {
+    @extend .buttonCard;
+    opacity: 0.5;
+}
+
+.buttonCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.buttonContainer {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    margin-top: 5px;
+}

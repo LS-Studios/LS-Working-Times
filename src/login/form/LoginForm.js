@@ -3,92 +3,110 @@ import "./LoinForm.css"
 import {useNavigate} from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import {initializeApp} from "firebase/app";
-import firebaseConfig from "../../firebase/config";
-
+import {LSWalletConfig} from "../../firebase/LSWalletConfig";
+import {getDatabase, ref, set} from "firebase/database";
+import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
+import InputCard from "../../cards/Input/InputCard";
+import ButtonCard from "../../cards/Button/ButtonCard";
 
 function LoginForm()
 {
     const [error, setError] = useState("")
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [emailInput, setEmailInput] = useState("")
+    const [passwordInput, setPasswordInput] = useState("")
     const navigate = useNavigate()
+
+    const updateUserInDatabase = (userId) => {
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const db = getDatabase(lsWorkingTimesApp)
+
+        set(ref(db, "/users/"+userId), {email:emailInput, password:passwordInput})
+            .then(() => navigate("timing"))
+            .catch(error => setError(error.message))
+    }
 
     const submitLogin = (e) => {
         e.preventDefault()
-        const app = initializeApp(firebaseConfig)
-        const auth = getAuth()
+        const app = initializeApp(LSWalletConfig, "LS-Wallet")
+        const auth = getAuth(app)
 
-        if (email == "") {
+        setError("")
+
+        if (emailInput == "") {
             setError("No email entered!")
             return
         }
 
-        if (password == "") {
+        if (passwordInput == "") {
             setError("No password entered!")
             return
         }
 
-        signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
-                navigate("timing")
+                updateUserInDatabase(userCredential.user.uid)
             })
             .catch((error) => {
                 const errorMessage = error.message;
 
                 setError(errorMessage)
 
-                if (errorMessage == "Firebase: Error (auth/wrong-password).") {
+                if (errorMessage == "Firebase: Error (auth/wrong-passwordInput).") {
                     setError("Password is wrong!")
                 }
 
-                if (errorMessage == "Firebase: Error (auth/user-not-found).") {
-                    setError("Email or password is wrong!")
+                if (errorMessage == "Firebase: Error (auth/invalid-email).") {
+                    setError("Email is wrong!")
                 }
-            });
+
+                if (errorMessage == "Firebase: Error (auth/user-not-found).") {
+                    setError("Email or passwordInput is wrong!")
+                }
+            })
     }
 
     const submitCreateUser = (e) => {
         e.preventDefault()
-        const auth = getAuth()
+        const app = initializeApp(LSWalletConfig, "LS-Wallet")
+        const auth = getAuth(app)
 
-        if (email == "") {
-            setError("No email entered!")
+        setError("")
+
+        if (emailInput == "") {
+            setError("No emailInput entered!")
             return
         }
 
-        if (password.length < 6)
+        if (passwordInput.length < 6)
             setError("Password need to be at least 6 sings long!")
-        if (!password.contains("[A-Z]"))
+        if (!passwordInput.contains("[A-Z]"))
             setError("Password need to contain a uppercase letter!")
-        if (!password.contains("[a-z]"))
+        if (!passwordInput.contains("[a-z]"))
             setError("Password need to contain a lowercase letter!")
-        if (!password.contains("[0-9]"))
+        if (!passwordInput.contains("[0-9]"))
             setError("Password need to contain a number character!")
-        if (!password.contains("[#?!@\$%^&*-.,]"))
+        if (!passwordInput.contains("[#?!@\$%^&*-.,]"))
             setError("Password need to contain a special character!")
 
-        createUserWithEmailAndPassword(auth, email, password)
+        createUserWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
-                const user = userCredential.user;
-
-                navigate("timing")
+                updateUserInDatabase(userCredential.user.uid)
             })
             .catch((error) => {
                 const errorMessage = error.message;
-
                 setError(errorMessage)
             });
     }
 
     return (
             <div className="login-form">
-                <label>Email</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)}/>
-                <label>Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)}/>
+                <InputCard type="email" title="Email" currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
+                <InputCard type="password" title="Password" currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
                 { error != "" ? <div className="loginErrorText">{error}</div> : null }
-                <button className="loginLoginButton" onClick={submitLogin}>Login</button>
-                <button className="loginCreatButton" onClick={submitCreateUser}>Create account</button>
+                <div>
+                    <ButtonCard title="Login" action={submitLogin}/>
+                    <ButtonCard title="Create account" action={submitCreateUser}/>
+                </div>
             </div>
     )
 }

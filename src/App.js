@@ -6,28 +6,47 @@ import {
     Routes
 } from "react-router-dom";
 import Timing from "./timing/Timing";
-import {initializeApp} from "firebase/app";
-import firebaseConfig from "./firebase/config";
-import React from "react";
+import React, {useState} from "react";
+import Header from "./header/Header";
+import Footer from "./footer/Footer";
+import Settings from "./settings/Settings";
+import {DialogProvider} from "use-react-dialog";
+import ResetDialog from "./dialogs/ResetDialog";
 
 function App() {
-    initializeApp(firebaseConfig)
+    const [currentMenu, setCurrentMenu] = useState(0)
+    const [menuIsOpened, setMenuIsOpen] = useState(false);
+
+    const dialogs = {
+        ResetDialog
+    }
 
     return (
-      <Router className="App">
-          <Routes>
-              <Route path="/login" element={<Login/>}/>
-              <Route
-                  path="/timing"
-                  element={<Timing/>}
-              />
-              <Route
-                  path="*"
-                  element={<Navigate replace to="/timing" />}
-              />
-          </Routes>
-          <div className="footer"><b>LS-Working-Times</b></div>
-      </Router>
+        <DialogProvider dialogs={dialogs}>
+            <Router className="holder">
+                <div className="spacer1"/>
+                <div className={menuIsOpened ? "blur" : ""}>
+                    <Routes>
+                        <Route path="/login" element={<Login setCurrentMenu={setCurrentMenu}/>}/>
+                        <Route
+                            path="/timing"
+                            element={<Timing setCurrentMenu={setCurrentMenu}/>}
+                        />
+                        <Route
+                            path="/settings"
+                            element={<Settings setCurrentMenu={setCurrentMenu}/>}
+                        />
+                        <Route
+                            path="*"
+                            element={<Navigate replace to="/timing" />}
+                        />
+                    </Routes>
+                </div>
+                <Header currentMenu={currentMenu} setCurrentMenu={setCurrentMenu} menuIsOpened={menuIsOpened} setMenuIsOpen={setMenuIsOpen}/>
+                <div className="spacer2"/>
+                <Footer/>
+            </Router>
+        </DialogProvider>
     );
 }
 

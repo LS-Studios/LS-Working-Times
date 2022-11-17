@@ -1,0 +1,37 @@
+@import "../cards/Card";
+
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.popup {
+    margin: 70px auto;
+    padding: 10px;
+    background: #2C3A47;
+    border-radius: 5px;
+    width: $verticalWith;
+    position: relative;
+}
+
+.popup .content {
+    width: 100%;
+    overflow: auto;
+    font-size: 20px;
+}
+
+.popup .title {
+    width: 100%;
+    overflow: auto;
+    font-size: 24px;
+}
+
+.popup .content .horizontalButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

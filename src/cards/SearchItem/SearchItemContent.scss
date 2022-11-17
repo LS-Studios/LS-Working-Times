@@ -1,0 +1,46 @@
+@import "../Card";
+
+.searchContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.searchInput {
+    width: 99%;
+    background-color: #3d4e60;
+    border: 2px solid #3c4c5d;
+    border-radius: 4px;
+    color: #CCCCCC;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.searchInput:focus {
+    border: 3px solid #46596e;
+    outline: none;
+}
+
+.searchItemHolder {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* On mouse-over, add a deeper shadow */
+.verticalSearchItemCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Add some padding inside the card container */
+.searchItemContainer {
+    padding-top: 6px;
+}
+
+.verticalSearchItemDivider {
+    @extend .divider;
+    width: $verticalWith;
+}

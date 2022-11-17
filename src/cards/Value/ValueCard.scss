@@ -1,0 +1,47 @@
+@import "../Card";
+
+.valueCard {
+    @extend .card;
+    cursor: pointer;
+}
+
+.horizontalValueCard {
+    @extend .valueCard;
+    flex: 1;
+    margin-right: 5px;
+    height: 70px;
+    width: 130px;
+    margin-top: 10px;
+}
+
+.horizontalValueCard:last-child {
+    margin-left: 5px;
+    margin-right: 0;
+}
+
+/* On mouse-over, add a deeper shadow */
+.verticalValueCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.horizontalValueCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Add some padding inside the card container */
+.valueContainer {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.verticalValueDivider {
+    @extend .divider;
+    width: $verticalWith;
+}
+
+.horizontalValueDivider {
+    @extend .divider;
+    width: 100%;
+}

@@ -1,6 +1,9 @@
 import {DateTime} from "./DateTime";
 import {getDatabase, ref, set} from "firebase/database";
 import {getAuth} from "firebase/auth";
+import {initializeApp} from "firebase/app";
+import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
+import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 
 export class TimerClass {
 
@@ -31,6 +34,7 @@ export class TimerClass {
     }
 
     setByTimeDiff(takeCurrent = true) {
+        console.log(this.stopTime)
         const dateTimeDiff = (takeCurrent ? new DateTime() : this.stopTime).getDiffToDateTime(DateTime.dateTimeFromDate(this.startTime), this.takenStop)
 
         this.setHours(dateTimeDiff.getHours)
@@ -39,37 +43,16 @@ export class TimerClass {
     };
 
     startTimer() {
-        const setStartTime = () => {
-            const newDate = new Date()
-            this.startTime = newDate
-            set(ref(getDatabase(), "/users/" + this.userId + "/start-time"), newDate.toLocaleTimeString("de"))
-        }
-
-        const setStopTime = () => {
-            const newDateTime = new DateTime()
-            this.stopTime = newDateTime
-
-            if (this.startTime == null)
-                set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), newDateTime.toTimeString())
-            else
-                set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), this.startTime.toLocaleTimeString("de"))
-        }
-
-        if (this.startTime == null) {
-            setStartTime()
-            setStopTime()
-        } else if (this.stopTime == null) {
-            setStopTime()
-        }
-
-        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-is-running"), true)
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + this.userId + "/" + this.timerType + "-is-running"), true)
         const newStopTime = this.takenStop.addDateTime(new DateTime().getDiffToDateTime(this.stopTime))
-        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-taken-stop"), newStopTime.toTimeString())
+        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + this.userId + "/" + this.timerType + "-taken-stop"), newStopTime.toTimeString())
     };
 
     stopTimer() {
-        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-is-running"), false)
-        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), new DateTime().toTimeString())
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + this.userId + "/" + this.timerType + "-is-running"), false)
+        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), new DateTime().toTimeString())
     }
 
     resetTimer() {
@@ -77,9 +60,12 @@ export class TimerClass {
         this.setHours(0)
         this.setMinutes(0)
         this.setSeconds(0)
-        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-is-running"), false)
-        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), "")
-        set(ref(getDatabase(), "/users/" + this.userId + "/" + this.timerType + "-taken-stop"), "00:00:00")
+
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+
+        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + this.userId + "/" + this.timerType + "-is-running"), false)
+        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + this.userId + "/" + this.timerType + "-stop-time"), "")
+        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + this.userId + "/" + this.timerType + "-taken-stop"), "00:00:00")
     }
 
     get getHours() {

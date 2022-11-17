@@ -4,15 +4,19 @@ import Timer from "./timer/Timer";
 import {TimerClass} from "./timer/TimerClass";
 import ContentCard from "./contentcard/ContentCard";
 import {DateTime} from "./timer/DateTime";
-import SavedCard from "./save/SavedCard";
 
-import { initializeApp } from "firebase/app"
-import { getDatabase, ref, onValue, set, push, onChildAdded, onChildChanged, onChildRemoved } from "firebase/database"
-import firebaseConfig from "../firebase/config";
-import {getAuth} from "firebase/auth";
+import { getDatabase, ref, onValue, set, push, onChildAdded, onChildRemoved } from "firebase/database"
+import {getAuth, signOut} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
+import Save from "./save/Save";
+import {formatDate} from "../helper/Helper";
+import {initializeApp} from "firebase/app";
+import {LSWalletConfig} from "../firebase/LSWalletConfig";
+import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
+import ValueCard from "../cards/Value/ValueCard";
+import ButtonCard from "../cards/Button/ButtonCard";
 
-function Timing() {
+function Timing({setCurrentMenu}) {
     const navigate = useNavigate()
 
     const [currentUser, setCurrentUser] = useState(null)
@@ -54,33 +58,73 @@ function Timing() {
         workTimer.resetTimer()
         breakTimer.resetTimer()
 
-        set(ref(getDatabase(), "/users/" + currentUser.uid + "/start-time"), "")
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
 
-        const newSaveRef = push(ref(getDatabase(), "/users/" + currentUser.uid + "/saved"));
+        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + currentUser.uid + "/start-time"), "")
+
+        const newSaveRef = push(ref(getDatabase(lsWorkingTimesApp), "/users/" + currentUser.uid + "/saved"));
         set(newSaveRef, {
             id:newSaveRef.key,
-            date:startTime.toLocaleDateString("de"),
+            date:formatDate(startTime),
             startTime: startTime.toLocaleTimeString("de"),
             worked: new DateTime(overallHours, overallMinutes, workSeconds).toTimeString(),
             break: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString()
         });
     }
 
+    const setTimerOnStartUp = () => {
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const db = getDatabase(lsWorkingTimesApp)
+        const setStartTime = () => {
+            const newDate = new Date()
+            set(ref(db, "/users/" + currentUser.uid + "/start-time"), newDate.toLocaleTimeString("de"))
+        }
+
+        const setStopTime = (type) => {
+            const newDateTime = new DateTime()
+
+            if (startTime == null)
+                set(ref(db, "/users/" + currentUser.uid + "/" + type + "-stop-time"), newDateTime.toTimeString())
+            else
+                set(ref(db, "/users/" + currentUser.uid + "/" + type + "-stop-time"), startTime.toLocaleTimeString("de"))
+        }
+
+        if (startTime == null) {
+            setStartTime()
+        }
+
+        if (workStopTime == null) {
+            setStopTime("work")
+        }
+
+        if (breakStopTime == null) {
+            setStopTime("break")
+        }
+    }
+
     const toggleOverallTimer = () => {
+        setTimerOnStartUp()
+
         if (workIsRunning) {
             workTimer.stopTimer()
         } else {
             workTimer.startTimer()
-            breakTimer.stopTimer()
+
+            if (breakIsRunning)
+                breakTimer.stopTimer()
         }
     }
 
     const toggleBreakTimer = () => {
+        setTimerOnStartUp()
+
         if (breakIsRunning) {
             breakTimer.stopTimer()
         } else {
             breakTimer.startTimer()
-            workTimer.stopTimer()
+
+            if (workIsRunning)
+                workTimer.stopTimer()
         }
     }
 
@@ -130,8 +174,12 @@ function Timing() {
     }, 1000);
 
     useEffect(() => {
-        const db = getDatabase()
-        const auth = getAuth()
+        setCurrentMenu(1)
+
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
+        const db = getDatabase(lsWorkingTimesApp)
+        const auth = getAuth(lsWalletApp)
 
         auth.onAuthStateChanged(function(user) {
             if (user == null) {
@@ -143,8 +191,11 @@ function Timing() {
             onValue(ref(db, "/users/" + user.uid + "/start-time"), snapshot => {
                 const data = snapshot.val()
 
-                if (data == null || data === "")
+                if (data == null || data === "") {
                     setStartTime(null)
+                    workTimer.resetTimer()
+                    breakTimer.resetTimer()
+                }
                 else
                     setStartTime(DateTime.dateTimeFromString(data).getDate())
             })
@@ -217,10 +268,9 @@ function Timing() {
 
     return (
         <div className="timing">
-            <h1>Timer</h1>
             <div className="timingTimers">
-                <ContentCard name="Date" content={startTime != null ? startTime.toLocaleDateString("de") : "Not started"}/>
-                <ContentCard name="Start time" content={startTime != null ? startTime.toLocaleTimeString("de") : "Not started"}/>
+                <ValueCard title="Date" value={startTime != null ? formatDate(startTime) : "Not started"}/>
+                <ValueCard title="Start time" value={startTime != null ? startTime.toLocaleTimeString("de") : "Not started"}/>
             </div>
 
             <div className="timingTimers">
@@ -229,22 +279,12 @@ function Timing() {
             </div>
 
             <div className="timerButtons">
-                <button onClick={toggleOverallTimer}>{workTimer.getIsRunning ? "Stop" : "Start"}</button>
-                <button onClick={toggleBreakTimer}>{breakTimer.getIsRunning ? "Stop break" : "Start break"}</button>
-                <button className={startTime != null ? "" : "disabled"} onClick={startTime != null ? resetTimers : null}>Reset and save</button>
+                <ButtonCard title={workTimer.getIsRunning ? "Stop working" : "Start working"} action={toggleOverallTimer}/>
+                <ButtonCard title={breakTimer.getIsRunning ? "Stop break" : "Start break"} action={toggleBreakTimer}/>
+                <ButtonCard className={ startTime != null ? "buttonCard" : "disabled"} title="Reset and save" action={startTime != null ? resetTimers : function (){}}/>
             </div>
 
-            <div className="saved">
-                <div className="saveTitle"><b>Saved</b></div>
-                {
-                    saved.map(save => {
-                        return <SavedCard key={save.id} save={save} isExpanded={false}/>
-                    })
-                }
-                {
-                    saved.length == 0 ? <div className="saveNoSaves">No saves</div> : null
-                }
-            </div>
+            <Save saved={saved}/>
         </div>
     );
 }
