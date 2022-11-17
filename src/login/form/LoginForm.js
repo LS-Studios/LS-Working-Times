@@ -51,7 +51,7 @@ function LoginForm()
 
                 setError(errorMessage)
 
-                if (errorMessage == "Firebase: Error (auth/wrong-passwordInput).") {
+                if (errorMessage == "Firebase: Error (auth/wrong-passwordInput)." || errorMessage == "Firebase: Error (auth/wrong-password).") {
                     setError("Password is wrong!")
                 }
 

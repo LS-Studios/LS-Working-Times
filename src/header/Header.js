@@ -34,6 +34,16 @@ const Header = ({ currentMenu, setCurrentMenu, menuIsOpened, setMenuIsOpen}) => 
         return auth.currentUser != null
     }
 
+    const getUserEmail = () => {
+        const app = initializeApp(LSWalletConfig, "LS-Wallet")
+        const auth = getAuth(app)
+
+        if (auth.currentUser != null)
+            return auth.currentUser.email
+        else
+            return ""
+    }
+
     return (
         <div className="header">
             <div className="headerTop" onClick={openMenu}>
@@ -42,6 +52,7 @@ const Header = ({ currentMenu, setCurrentMenu, menuIsOpened, setMenuIsOpen}) => 
             </div>
             <ul className={menuIsOpened ? "headerMenu" : "gone"}>
                 <li className={!getUserIsLoggedIn() ? (currentMenu === 0 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "gone"} value={0} onClick={setNewActiveMenu}><Link to="/login">Login</Link></li>
+                <li className={getUserIsLoggedIn() ? "headerMenuValueItem" : "gone"}><Link to="/timer">{getUserEmail()}</Link></li>
                 <li className={getUserIsLoggedIn() ? (currentMenu === 1 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "menuNotAvailable"} value={1} onClick={setNewActiveMenu}><Link to="/timer">Timer</Link></li>
                 <li className={getUserIsLoggedIn() ? (currentMenu === 2 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "menuNotAvailable"} value={2} onClick={setNewActiveMenu}><Link to="/settings">Settings</Link></li>
             </ul>

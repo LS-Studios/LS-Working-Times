@@ -8,16 +8,15 @@
     cursor: pointer;
 }
 
-.darkerButtonCard {
+.horizontalButtonCard {
     @extend .card;
     width: 271px;
     height: 40px;
     margin: 10px 10px;
-    background-color: #212A33;
     cursor: pointer;
 }
 
-.darkerButtonCard:hover {
+.horizontalButtonCard:hover {
     box-shadow: none;
 }
 

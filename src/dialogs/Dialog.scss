@@ -12,7 +12,7 @@
 .popup {
     margin: 70px auto;
     padding: 10px;
-    background: #2C3A47;
+    background: #212A33;
     border-radius: 5px;
     width: $verticalWith;
     position: relative;
@@ -28,10 +28,4 @@
     width: 100%;
     overflow: auto;
     font-size: 24px;
-}
-
-.popup .content .horizontalButtons {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }

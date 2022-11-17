@@ -11,7 +11,7 @@ const Settings = ({ setCurrentMenu }) => {
     const [currentLanguage, setCurrentLanguage] = useState(1)
     const [currentTheme, setCurrentTheme] = useState(1)
 
-    const { closeCurrentDialog, isOpen, openCurrentDialog } = useDialog('ResetDialog');
+    const { closeCurrentDialog, isOpen, openCurrentDialog } = useDialog('ResetDataDialog');
 
     const navigate = useNavigate()
 

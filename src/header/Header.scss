@@ -57,6 +57,16 @@
     background-color: #2C3A47;
 }
 
+.headerMenuValueItem {
+    @extend .headerMenuCategory;
+    background-color: #2C3A47;
+    pointer-events: none;
+}
+
+.headerMenuValueItem a:hover {
+    background-color: #2C3A47;
+}
+
 .headerMenuActiveItem {
     @extend .headerMenuCategory;
     background-color: #43586b;
