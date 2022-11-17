@@ -11,14 +11,16 @@ import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import Settings from "./settings/Settings";
 import {DialogProvider} from "use-react-dialog";
-import ResetDataDialog from "./dialogs/yesno/ResetDataDialog";
+import ResetDataDialog from "./dialogs/reset/ResetDataDialog";
+import DeleteAccountDialog from "./dialogs/delete/DeleteAccountDialog";
 
 function App() {
     const [currentMenu, setCurrentMenu] = useState(0)
     const [menuIsOpened, setMenuIsOpen] = useState(false);
 
     const dialogs = {
-        ResetDataDialog
+        ResetDataDialog,
+        DeleteAccountDialog
     }
 
     return (

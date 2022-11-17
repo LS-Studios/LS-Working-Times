@@ -1,4 +1,3 @@
-import React, {useEffect, useState} from 'react';
 import "./Timer.css"
 import ValueCard from "../../cards/Value/ValueCard";
 

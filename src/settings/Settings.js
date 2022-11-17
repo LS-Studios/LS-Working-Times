@@ -11,7 +11,7 @@ const Settings = ({ setCurrentMenu }) => {
     const [currentLanguage, setCurrentLanguage] = useState(1)
     const [currentTheme, setCurrentTheme] = useState(1)
 
-    const { closeCurrentDialog, isOpen, openCurrentDialog } = useDialog('ResetDataDialog');
+    const { dialogs, openDialog } = useDialog();
 
     const navigate = useNavigate()
 
@@ -40,11 +40,11 @@ const Settings = ({ setCurrentMenu }) => {
     }
 
     const resetData = () => {
-        openCurrentDialog()
+        openDialog("ResetDataDialog")
     }
 
     const deleteAccount = () => {
-
+        openDialog("DeleteAccountDialog")
     }
 
     return (

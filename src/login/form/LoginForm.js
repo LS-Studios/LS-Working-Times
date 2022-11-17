@@ -16,15 +16,6 @@ function LoginForm()
     const [passwordInput, setPasswordInput] = useState("")
     const navigate = useNavigate()
 
-    const updateUserInDatabase = (userId) => {
-        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        const db = getDatabase(lsWorkingTimesApp)
-
-        set(ref(db, "/users/"+userId), {email:emailInput, password:passwordInput})
-            .then(() => navigate("timing"))
-            .catch(error => setError(error.message))
-    }
-
     const submitLogin = (e) => {
         e.preventDefault()
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
@@ -44,7 +35,7 @@ function LoginForm()
 
         signInWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
-                updateUserInDatabase(userCredential.user.uid)
+                navigate("timing")
             })
             .catch((error) => {
                 const errorMessage = error.message;
@@ -60,7 +51,7 @@ function LoginForm()
                 }
 
                 if (errorMessage == "Firebase: Error (auth/user-not-found).") {
-                    setError("Email or passwordInput is wrong!")
+                    setError("Account with this email do not exist!")
                 }
             })
     }
@@ -79,18 +70,18 @@ function LoginForm()
 
         if (passwordInput.length < 6)
             setError("Password need to be at least 6 sings long!")
-        if (!passwordInput.contains("[A-Z]"))
+        if (!passwordInput.includes("[A-Z]"))
             setError("Password need to contain a uppercase letter!")
-        if (!passwordInput.contains("[a-z]"))
+        if (!passwordInput.includes("[a-z]"))
             setError("Password need to contain a lowercase letter!")
-        if (!passwordInput.contains("[0-9]"))
+        if (!passwordInput.includes("[0-9]"))
             setError("Password need to contain a number character!")
-        if (!passwordInput.contains("[#?!@\$%^&*-.,]"))
+        if (!passwordInput.includes("[#?!@\$%^&*-.,]"))
             setError("Password need to contain a special character!")
 
         createUserWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
-                updateUserInDatabase(userCredential.user.uid)
+                navigate("timing")
             })
             .catch((error) => {
                 const errorMessage = error.message;

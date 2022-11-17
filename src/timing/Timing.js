@@ -59,10 +59,11 @@ function Timing({setCurrentMenu}) {
         breakTimer.resetTimer()
 
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const db = getDatabase(lsWorkingTimesApp)
+        set(ref(db, "/users/" + currentUser.uid + "/start-time"), "")
 
-        set(ref(getDatabase(lsWorkingTimesApp), "/users/" + currentUser.uid + "/start-time"), "")
+        const newSaveRef = push(ref(db, "/users/" + currentUser.uid + "/saved"));
 
-        const newSaveRef = push(ref(getDatabase(lsWorkingTimesApp), "/users/" + currentUser.uid + "/saved"));
         set(newSaveRef, {
             id:newSaveRef.key,
             date:formatDate(startTime),
@@ -181,89 +182,105 @@ function Timing({setCurrentMenu}) {
         const db = getDatabase(lsWorkingTimesApp)
         const auth = getAuth(lsWalletApp)
 
-        auth.onAuthStateChanged(function(user) {
-            if (user == null) {
-                navigate("/login")
-            }
+        const unsubscribeArray = []
 
-            setCurrentUser(user)
-
-            onValue(ref(db, "/users/" + user.uid + "/start-time"), snapshot => {
-                const data = snapshot.val()
-
-                if (data == null || data === "") {
-                    setStartTime(null)
-                    workTimer.resetTimer()
-                    breakTimer.resetTimer()
+        unsubscribeArray.push(
+            auth.onAuthStateChanged(function(user) {
+                if (user == null) {
+                    unsubscribeArray.forEach(unsubscribe => unsubscribe())
+                    navigate("/login")
+                    return
                 }
-                else
-                    setStartTime(DateTime.dateTimeFromString(data).getDate())
-            })
-            onValue(ref(db, "/users/" + user.uid + "/work-stop-time"), snapshot => {
-                const data = snapshot.val()
 
-                if (data == null || data === "")
-                    setWorkStopTime(null)
-                else
-                    setWorkStopTime(DateTime.dateTimeFromString(data))
-            })
-            onValue(ref(db, "/users/" + user.uid + "/work-taken-stop"), snapshot => {
-                const data = snapshot.val()
+                setCurrentUser(user)
 
-                if (data == null || data === "")
-                    setWorkTakenStop(new DateTime(0,0,0))
-                else
-                    setWorkTakenStop(DateTime.dateTimeFromString(data))
-            })
-            onValue(ref(db, "/users/" + user.uid + "/break-stop-time"), snapshot => {
-                const data = snapshot.val()
+                set(ref(db, "/users/"+user.uid+"/email"), user.email)
 
-                if (data == null || data === "")
-                    setBreakStopTime(null)
-                else
-                    setBreakStopTime(DateTime.dateTimeFromString(data))
-            })
-            onValue(ref(db, "/users/" + user.uid + "/break-taken-stop"), snapshot => {
-                const data = snapshot.val()
+                unsubscribeArray.push(
+                    onValue(ref(db, "/users/" + user.uid + "/start-time"), snapshot => {
+                        const data = snapshot.val()
 
-                if (data == null || data === "")
-                    setBreakTakenStop(new DateTime(0,0,0))
-                else
-                    setBreakTakenStop(DateTime.dateTimeFromString(data))
-            })
-            onValue(ref(db, "/users/" + user.uid + "/work-is-running"), snapshot => {
-                const data = snapshot.val()
+                        if (data == null || data === "") {
+                            setStartTime(null)
+                            workTimer.resetTimer()
+                            breakTimer.resetTimer()
+                        }
+                        else
+                            setStartTime(DateTime.dateTimeFromString(data).getDate())
+                }))
+                unsubscribeArray.push(
+                    onValue(ref(db, "/users/" + user.uid + "/work-stop-time"), snapshot => {
+                        const data = snapshot.val()
 
-                if (data == null || data === "")
-                    setWorkIsRunning(false)
-                else
-                    setWorkIsRunning(data)
-            })
-            onValue(ref(db, "/users/" + user.uid + "/break-is-running"), snapshot => {
-                const data = snapshot.val()
+                        if (data == null || data === "")
+                            setWorkStopTime(null)
+                        else
+                            setWorkStopTime(DateTime.dateTimeFromString(data))
+                }))
+                unsubscribeArray.push(
+                    onValue(ref(db, "/users/" + user.uid + "/work-taken-stop"), snapshot => {
+                        const data = snapshot.val()
 
-                if (data == null || data === "")
-                    setBreakIsRunning(false)
-                else
-                    setBreakIsRunning(data)
-            })
-            onChildAdded(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
-                const value = snapshot.val()
-                if (value != null) {
-                    setSaved(prevState => (
-                        [value].concat(prevState)
-                    ))
-                }
-            });
-            onChildRemoved(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
-                const value = snapshot.val()
-                if (value != null) {
-                    setSaved((current) =>
-                        current.filter((save) => save.id !== value.id)
-                    );
-                }
-            });
-        });
+                        if (data == null || data === "")
+                            setWorkTakenStop(new DateTime(0,0,0))
+                        else
+                            setWorkTakenStop(DateTime.dateTimeFromString(data))
+                }))
+                unsubscribeArray.push(
+                    onValue(ref(db, "/users/" + user.uid + "/break-stop-time"), snapshot => {
+                        const data = snapshot.val()
+
+                        if (data == null || data === "")
+                            setBreakStopTime(null)
+                        else
+                            setBreakStopTime(DateTime.dateTimeFromString(data))
+                }))
+                unsubscribeArray.push(
+                    onValue(ref(db, "/users/" + user.uid + "/break-taken-stop"), snapshot => {
+                        const data = snapshot.val()
+
+                        if (data == null || data === "")
+                            setBreakTakenStop(new DateTime(0,0,0))
+                        else
+                            setBreakTakenStop(DateTime.dateTimeFromString(data))
+                }))
+                unsubscribeArray.push(
+                    onValue(ref(db, "/users/" + user.uid + "/work-is-running"), snapshot => {
+                        const data = snapshot.val()
+
+                        if (data == null || data === "")
+                            setWorkIsRunning(false)
+                        else
+                            setWorkIsRunning(data)
+                }))
+                unsubscribeArray.push(
+                    onValue(ref(db, "/users/" + user.uid + "/break-is-running"), snapshot => {
+                        const data = snapshot.val()
+
+                        if (data == null || data === "")
+                            setBreakIsRunning(false)
+                        else
+                            setBreakIsRunning(data)
+                }))
+                unsubscribeArray.push(
+                    onChildAdded(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
+                        const value = snapshot.val()
+                        if (value != null) {
+                            setSaved(prevState => (
+                                [value].concat(prevState)
+                            ))
+                        }
+                }))
+                unsubscribeArray.push(
+                    onChildRemoved(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
+                        const value = snapshot.val()
+                        if (value != null) {
+                            setSaved((current) =>
+                                current.filter((save) => save.id !== value.id)
+                            );
+                        }
+                }))
+        }))
     }, [])
 
     return (

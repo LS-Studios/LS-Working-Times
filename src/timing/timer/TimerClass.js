@@ -34,7 +34,6 @@ export class TimerClass {
     }
 
     setByTimeDiff(takeCurrent = true) {
-        console.log(this.stopTime)
         const dateTimeDiff = (takeCurrent ? new DateTime() : this.stopTime).getDiffToDateTime(DateTime.dateTimeFromDate(this.startTime), this.takenStop)
 
         this.setHours(dateTimeDiff.getHours)
