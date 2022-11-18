@@ -68,16 +68,26 @@ function LoginForm()
             return
         }
 
-        if (passwordInput.length < 6)
+        if (passwordInput.length < 6) {
             setError("Password need to be at least 6 sings long!")
-        if (!passwordInput.includes("[A-Z]"))
+            return;
+        }
+        if (!/[A-Z]/.test(passwordInput)) {
             setError("Password need to contain a uppercase letter!")
-        if (!passwordInput.includes("[a-z]"))
+            return;
+        }
+        if (!/[a-z]/.test(passwordInput)) {
             setError("Password need to contain a lowercase letter!")
-        if (!passwordInput.includes("[0-9]"))
+            return;
+        }
+        if (!/[0-9]/.test(passwordInput)) {
             setError("Password need to contain a number character!")
-        if (!passwordInput.includes("[#?!@\$%^&*-.,]"))
+            return;
+        }
+        if (!/[#?!@$%^&*-.,]/.test(passwordInput)) {
             setError("Password need to contain a special character!")
+            return;
+        }
 
         createUserWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
@@ -85,7 +95,12 @@ function LoginForm()
             })
             .catch((error) => {
                 const errorMessage = error.message;
+
                 setError(errorMessage)
+
+                if (errorMessage == "Firebase: Error (auth/email-already-in-use).") {
+                    setError("Account with this email already exist!")
+                }
             });
     }
 
@@ -93,7 +108,7 @@ function LoginForm()
             <div className="login-form">
                 <InputCard type="email" title="Email" currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
                 <InputCard type="password" title="Password" currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
-                { error != "" ? <div className="loginErrorText">{error}</div> : null }
+                <div>{ error != "" ? <div className="loginErrorText">{error}</div> : null }</div>
                 <div>
                     <ButtonCard title="Login" action={submitLogin}/>
                     <ButtonCard title="Create account" action={submitCreateUser}/>

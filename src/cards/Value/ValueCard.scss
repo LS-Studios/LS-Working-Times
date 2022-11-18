@@ -9,7 +9,7 @@
     @extend .valueCard;
     flex: 1;
     margin-right: 5px;
-    height: 70px;
+    height: 65px;
     width: 130px;
     margin-top: 10px;
 }
@@ -17,6 +17,14 @@
 .horizontalValueCard:last-child {
     margin-left: 5px;
     margin-right: 0;
+}
+
+.horizontalValueSingleLineCard {
+    @extend .valueCard;
+    flex: 1;
+    height: 65px;
+    width: $verticalWith;
+    margin-top: 10px;
 }
 
 /* On mouse-over, add a deeper shadow */

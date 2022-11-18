@@ -24,7 +24,7 @@ const ResetDataDialog = () => {
     }
 
     return (
-        <Dialog dialogContent={
+        <Dialog title="Deleting all saves" dialogContent={
             <div>
                 <div>Do you really want to delete all saves?</div>
                 <div className="horizontalButtons">
@@ -32,7 +32,7 @@ const ResetDataDialog = () => {
                     <ButtonCard className="horizontalButtonCard" title="Yes" action={deleteAllSaves}/>
                 </div>
             </div>
-        } title="Deleting all saves" />
+        } />
     );
 }
 

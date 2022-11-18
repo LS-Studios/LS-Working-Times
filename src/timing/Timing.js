@@ -9,7 +9,7 @@ import { getDatabase, ref, onValue, set, push, onChildAdded, onChildRemoved } fr
 import {getAuth, signOut} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 import Save from "./save/Save";
-import {formatDate} from "../helper/Helper";
+import {formatDate, getDateFromString, getDateWithoutTime, getEndOfWeek, getStartOfWeek} from "../helper/Helper";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
@@ -23,6 +23,8 @@ function Timing({setCurrentMenu}) {
 
     const [startTime, setStartTime] = useState(null);
     const [saved, setSaved] = useState([]);
+
+    const [selectedSaveDate, setSelectedSaveDate] = useState(new Date())
 
     const [overallHours, setOverallHours] = useState(0);
     const [overallMinutes, setOverallMinutes] = useState(0);
@@ -127,6 +129,25 @@ function Timing({setCurrentMenu}) {
             if (workIsRunning)
                 workTimer.stopTimer()
         }
+    }
+
+    const getWorkedTimeInCurrentWeek = () => {
+        const savesThisWeek = saved.filter(save => {
+            const saveDate = getDateFromString(save.date)
+            return saveDate >= getStartOfWeek(selectedSaveDate) && saveDate <= getEndOfWeek(selectedSaveDate)
+        })
+
+        const workedThisWeek = new DateTime(0, 0, 0)
+
+        savesThisWeek.forEach(save => {
+            workedThisWeek.addDateTime(DateTime.dateTimeFromString(save.worked))
+        })
+
+        if (getDateWithoutTime(selectedSaveDate) >= getStartOfWeek(new Date()) && getDateWithoutTime(selectedSaveDate) <= getEndOfWeek(new Date())) {
+            workedThisWeek.addDateTime(new DateTime(workTimer.getHours, workTimer.getMinutes, workTimer.getSeconds))
+        }
+
+        return workedThisWeek.toTimeString()
     }
 
     function useInterval(callback, delay) {
@@ -295,13 +316,17 @@ function Timing({setCurrentMenu}) {
                 <Timer name="Break" timer={breakTimer}/>
             </div>
 
+            <div className="timingTimers">
+                <ValueCard className="horizontalValueSingleLineCard" title="Worked time this week" value={getWorkedTimeInCurrentWeek()}/>
+            </div>
+
             <div className="timerButtons">
                 <ButtonCard title={workTimer.getIsRunning ? "Stop working" : "Start working"} action={toggleOverallTimer}/>
                 <ButtonCard title={breakTimer.getIsRunning ? "Stop break" : "Start break"} action={toggleBreakTimer}/>
                 <ButtonCard className={ startTime != null ? "buttonCard" : "disabled"} title="Reset and save" action={startTime != null ? resetTimers : function (){}}/>
             </div>
 
-            <Save saved={saved}/>
+            <Save saved={saved} selectedSaveDate={selectedSaveDate} setSelectedSaveDate={setSelectedSaveDate}/>
         </div>
     );
 }

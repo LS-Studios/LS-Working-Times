@@ -13,19 +13,19 @@ const DeleteAccountDialog = () => {
     const { closeCurrentDialog, isOpen, openCurrentDialog } = useDialog('DeleteAccountDialog');
 
     const deleteAccount = () => {
+        console.log("dds")
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
         const db = getDatabase(lsWorkingTimesApp)
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(app)
 
-        remove(ref(db, "/users/"+auth.currentUser.uid))
-        deleteUser(auth.currentUser)
+        remove(ref(db, "/users/"+auth.currentUser.uid)).then(_ => deleteUser(auth.currentUser))
 
         closeCurrentDialog()
     }
 
     return (
-        <Dialog dialogContent={
+        <Dialog title="Deleting account" dialogContent={
             <div>
                 <div>Do you really want to delete this account?</div>
                 <div className="horizontalButtons">
@@ -33,7 +33,7 @@ const DeleteAccountDialog = () => {
                     <ButtonCard className="horizontalButtonCard" title="Yes" action={deleteAccount}/>
                 </div>
             </div>
-        } title="Deleting all saves" />
+        } />
     );
 }
 

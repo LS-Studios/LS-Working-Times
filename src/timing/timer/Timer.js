@@ -1,14 +1,12 @@
 import "./Timer.css"
 import ValueCard from "../../cards/Value/ValueCard";
+import {getFormattedTime} from "../../helper/Helper";
+import {DateTime} from "./DateTime";
 
 function Timer({name, timer}) {
     return (
         <ValueCard title={name} value={
-            (timer.getHours.toString().length == 1 ? "0" + timer.getHours : timer.getHours)
-            + ":" +
-            (timer.getMinutes.toString().length == 1 ? "0" + timer.getMinutes : timer.getMinutes)
-            + ":" +
-            (timer.getSeconds.toString().length == 1 ? "0" + timer.getSeconds : timer.getSeconds)
+            new DateTime(timer.getHours, timer.getMinutes, timer.getSeconds).toTimeString()
         }/>
     );
 }

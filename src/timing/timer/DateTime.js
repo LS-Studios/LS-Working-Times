@@ -18,34 +18,40 @@ export class DateTime {
     }
 
     getDiffToDateTime(dateTime, takenStop) {
-        const date = this.getDate()
+        if (dateTime != null) {
+            const date = this.getDate()
 
-        date.setHours(date.getHours() - dateTime.getHours - (takenStop != null ? takenStop.getHours : 0))
-        date.setMinutes(date.getMinutes() - dateTime.getMinutes - (takenStop != null ? takenStop.getMinutes : 0))
-        date.setSeconds(date.getSeconds() - dateTime.getSeconds - (takenStop != null ? takenStop.getSeconds : 0))
+            date.setHours(date.getHours() - dateTime.getHours - (takenStop != null ? takenStop.getHours : 0))
+            date.setMinutes(date.getMinutes() - dateTime.getMinutes - (takenStop != null ? takenStop.getMinutes : 0))
+            date.setSeconds(date.getSeconds() - dateTime.getSeconds - (takenStop != null ? takenStop.getSeconds : 0))
 
-        return new DateTime(
-            date.getHours(),
-            date.getMinutes(),
-            date.getSeconds()
-        )
+            return new DateTime(
+                date.getHours(),
+                date.getMinutes(),
+                date.getSeconds()
+            )
+        }
     }
 
     addDateTime(dateTime) {
-        let dateTimeDate = this.getDate()
-        dateTimeDate.setHours(dateTimeDate.getHours() +dateTime.getHours)
-        dateTimeDate.setMinutes(dateTimeDate.getMinutes() +dateTime.getMinutes)
-        dateTimeDate.setSeconds(dateTimeDate.getSeconds() +dateTime.getSeconds)
+        if (dateTime != null) {
+            let dateTimeDate = this.getDate()
+            dateTimeDate.setHours(dateTimeDate.getHours() + dateTime.getHours)
+            dateTimeDate.setMinutes(dateTimeDate.getMinutes() + dateTime.getMinutes)
+            dateTimeDate.setSeconds(dateTimeDate.getSeconds() + dateTime.getSeconds)
 
-        this.hours = dateTimeDate.getHours()
-        this.minutes = dateTimeDate.getMinutes()
-        this.seconds = dateTimeDate.getSeconds()
+            this.hours = dateTimeDate.getHours()
+            this.minutes = dateTimeDate.getMinutes()
+            this.seconds = dateTimeDate.getSeconds()
 
-        return new DateTime(
-            this.hours,
-            this.minutes,
-            this.seconds
-        )
+            return new DateTime(
+                this.hours,
+                this.minutes,
+                this.seconds
+            )
+        } else {
+            return this
+        }
     }
 
     getDate() {

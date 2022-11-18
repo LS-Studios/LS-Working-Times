@@ -1,7 +1,6 @@
 .login-form {
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
 }
 
@@ -9,4 +8,6 @@
   color: red;
   margin-top: 10px;
   font-size: 14px;
+  overflow-wrap: break-word;
+  width: 240px;
 }
