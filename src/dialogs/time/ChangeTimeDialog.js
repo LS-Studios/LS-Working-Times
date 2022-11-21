@@ -45,6 +45,9 @@ const ChangeTimeDialog = () => {
         const db = getDatabase(lsWorkingTimesApp)
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(app)
+
+        //Todo wenn noch keine daten geladen black screen
+
         get(ref(db, "/users/"+auth.currentUser.uid+"/"+data.type)).then((snapshot) => {
             if (snapshot.exists()) {
                 const dateTime = DateTime.dateTimeFromString(snapshot.val())
