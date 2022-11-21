@@ -1,0 +1,17 @@
+.timeInputRow {
+    margin: 0 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.timeInputRowChangeButton {
+    background-color: #2C3A47;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-left: 3px;
+    height: 20px;
+}

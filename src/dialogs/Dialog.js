@@ -4,7 +4,7 @@ import React from "react";
 
 const Dialog = ({title, dialogContent}) => {
     return (
-        <div id="popup1" className="overlay">
+        <div id="popup" className="overlay">
             <div className="popup">
                 <div className="title"><b>{title}</b></div>
                 <div className="content">

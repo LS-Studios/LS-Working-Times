@@ -22,9 +22,6 @@ const InputContent = ({title, placeholder, type="text", charType=0, currentState
         e.preventDefault()
 
         input.current.blur()
-
-        // if (type==1)
-        //     setCurrentState(Math.round(currentState * 100) / 100)
     }
 
     return (

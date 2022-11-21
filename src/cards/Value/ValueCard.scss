@@ -2,11 +2,6 @@
 
 .valueCard {
     @extend .card;
-    cursor: pointer;
-}
-
-.horizontalValueCard {
-    @extend .valueCard;
     flex: 1;
     margin-right: 5px;
     height: 65px;
@@ -14,25 +9,30 @@
     margin-top: 10px;
 }
 
-.horizontalValueCard:last-child {
+.clickableValueCard {
+    @extend .valueCard;
+    cursor: pointer;
+}
+
+.notClickableValueCard {
+    @extend .valueCard;
+    cursor: default;
+}
+
+.valueCard:last-child {
     margin-left: 5px;
     margin-right: 0;
 }
 
-.horizontalValueSingleLineCard {
-    @extend .valueCard;
+.singleLineValueCard {
+    @extend .card;
     flex: 1;
     height: 65px;
     width: $verticalWith;
     margin-top: 10px;
 }
 
-/* On mouse-over, add a deeper shadow */
-.verticalValueCard:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
-}
-
-.horizontalValueCard:hover {
+.valueCard:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
 }
 
@@ -44,12 +44,7 @@
     margin-top: 5px;
 }
 
-.verticalValueDivider {
-    @extend .divider;
-    width: $verticalWith;
-}
-
-.horizontalValueDivider {
+.valueDivider {
     @extend .divider;
     width: 100%;
 }

@@ -15,8 +15,11 @@ import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import ValueCard from "../cards/Value/ValueCard";
 import ButtonCard from "../cards/Button/ButtonCard";
+import {useDialog} from "use-react-dialog";
 
 function Timing({setCurrentMenu}) {
+    const { dialogs, openDialog } = useDialog();
+
     const navigate = useNavigate()
 
     const [currentUser, setCurrentUser] = useState(null)
@@ -308,7 +311,7 @@ function Timing({setCurrentMenu}) {
         <div className="timing">
             <div className="timingTimers">
                 <ValueCard title="Date" value={startTime != null ? formatDate(startTime) : "Not started"}/>
-                <ValueCard title="Start time" value={startTime != null ? startTime.toLocaleTimeString("de") : "Not started"}/>
+                <ValueCard title="Start time" value={startTime != null ? startTime.toLocaleTimeString("de") : "Not started"} onClick={() => openDialog("ChangeTimeDialog", {type: "start-time"})} clickable={true}/>
             </div>
 
             <div className="timingTimers">
@@ -317,7 +320,7 @@ function Timing({setCurrentMenu}) {
             </div>
 
             <div className="timingTimers">
-                <ValueCard className="horizontalValueSingleLineCard" title="Worked time this week" value={getWorkedTimeInCurrentWeek()}/>
+                <ValueCard className="singleLineValueCard" title="Worked time this week" value={getWorkedTimeInCurrentWeek()}/>
             </div>
 
             <div className="timerButtons">
