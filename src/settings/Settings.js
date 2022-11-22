@@ -3,9 +3,11 @@ import ToggleCard from "../cards/ToggleInput/ToggleCard";
 import ButtonCard from "../cards/Button/ButtonCard";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
-import {getAuth, signOut} from "firebase/auth";
+import {deleteUser, getAuth, signOut} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 import {useDialog} from "use-react-dialog";
+import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
+import {getDatabase, ref, remove} from "firebase/database";
 
 const Settings = ({ setCurrentMenu }) => {
     const [currentLanguage, setCurrentLanguage] = useState(1)
@@ -40,11 +42,25 @@ const Settings = ({ setCurrentMenu }) => {
     }
 
     const resetData = () => {
-        openDialog("ResetDataDialog")
+        openDialog("YesNoDialog", {message:"Do you really want to delete all data?", yesAction:() => {
+            const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+            const db = getDatabase(lsWorkingTimesApp)
+            const app = initializeApp(LSWalletConfig, "LS-Wallet")
+            const auth = getAuth(app)
+
+            remove(ref(db, "/users/"+auth.currentUser.uid+"/saved"))
+        }})
     }
 
     const deleteAccount = () => {
-        openDialog("DeleteAccountDialog")
+        openDialog("YesNoDialog", {message:"Do you really want to delete this account?", yesAction:() => {
+            const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+            const db = getDatabase(lsWorkingTimesApp)
+            const app = initializeApp(LSWalletConfig, "LS-Wallet")
+            const auth = getAuth(app)
+
+            remove(ref(db, "/users/"+auth.currentUser.uid)).then(_ => deleteUser(auth.currentUser))
+        }})
     }
 
     return (

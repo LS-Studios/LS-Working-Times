@@ -8,11 +8,15 @@ import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import Dialog from "../Dialog";
-import {formatDate, padTo2Digits} from "../../helper/Helper";
+import {formatDate, getDateFromString, padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
 import DateTimeInput from "../time/TimeInput/DateTimeInput";
+import DateTimeContent from "../../cards/DateTime/DateTimeContent";
+import DatePicker from "react-multi-date-picker";
 
 const EditSaveTimeDialog = () => {
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
     const [startTimeHourState, setStartTimeHourState] = useState("00")
     const [startTimeMinuteState, setStartTimeMinuteState] = useState("00")
     const [startTimeSecondState, setStartTimeSecondState] = useState("00")
@@ -35,7 +39,7 @@ const EditSaveTimeDialog = () => {
 
         set(ref(db, "/users/"+auth.currentUser.uid+"/saved/"+data.save.id), {
             id:data.save.id,
-            date:data.save.date,
+            date:formatDate(selectedDate),
             startTime: new DateTime(startTimeHourState, startTimeMinuteState, startTimeSecondState).toTimeString(),
             worked: new DateTime(workedTimeHourState, workedTimeMinuteState, workedTimeSecondState).toTimeString(),
             break: new DateTime(breakTimeHourState, breakTimeMinuteState, breakTimeSecondState).toTimeString(),
@@ -45,27 +49,60 @@ const EditSaveTimeDialog = () => {
     }
 
     useEffect(() => {
+        const saveDate = getDateFromString(data.save.date)
+        setSelectedDate(saveDate)
+
         const startTimeDateTime = DateTime.dateTimeFromString(data.save.startTime)
-        setStartTimeHourState(startTimeDateTime.getHours)
-        setStartTimeMinuteState(startTimeDateTime.getMinutes)
-        setStartTimeSecondState(startTimeDateTime.getSeconds)
+        setStartTimeHourState(padTo2Digits(startTimeDateTime.getHours))
+        setStartTimeMinuteState(padTo2Digits(startTimeDateTime.getMinutes))
+        setStartTimeSecondState(padTo2Digits(startTimeDateTime.getSeconds))
 
         const workedTimeDateTime = DateTime.dateTimeFromString(data.save.worked)
-        setWorkedTimeHourState(workedTimeDateTime.getHours)
-        setWorkedTimeMinuteState(workedTimeDateTime.getMinutes)
-        setWorkedTimeSecondState(workedTimeDateTime.getSeconds)
+        setWorkedTimeHourState(padTo2Digits(workedTimeDateTime.getHours))
+        setWorkedTimeMinuteState(padTo2Digits(workedTimeDateTime.getMinutes))
+        setWorkedTimeSecondState(padTo2Digits(workedTimeDateTime.getSeconds))
 
         const breakTimeDateTime = DateTime.dateTimeFromString(data.save.break)
-        setBreakTimeHourState(breakTimeDateTime.getHours)
-        setBreakTimeMinuteState(breakTimeDateTime.getMinutes)
-        setBreakTimeSecondState(breakTimeDateTime.getSeconds)
+        setBreakTimeHourState(padTo2Digits(breakTimeDateTime.getHours))
+        setBreakTimeMinuteState(padTo2Digits(breakTimeDateTime.getMinutes))
+        setBreakTimeSecondState(padTo2Digits(breakTimeDateTime.getSeconds))
     }, [])
+
+    const DatePickerLayout = (props) => {
+        const open = () => {
+            props.openCalendar()
+        }
+        return (
+            <div onClick={open}>
+                {props.value}
+            </div>
+        )
+    }
 
     return (
         <Dialog title={"Change Time"} dialogContent={
             <div className="editSaveTimeDialog">
 
                 <div className="editSaveTimeDialogDivider"></div>
+
+                <h4>Date</h4>
+                <div className="editSaveTimeDialogDatePicker">
+                    <DatePicker
+                        portal
+                        inputMode="none"
+                        editable={false}
+                        hideOnScroll
+                        value={selectedDate}
+                        onChange={(dateObj) => {
+                            const date = new Date(dateObj.year, dateObj.month.number-1, dateObj.day)
+                            setSelectedDate(date)
+                        }}
+                        render={<DatePickerLayout/>}
+                        format="DD.MM.YYYY"
+                        calendarPosition={"bottom-center"}
+                        className="custom-picker"
+                    />
+                </div>
 
                 <h4>Start time</h4>
                 <DateTimeInput currentHourState={startTimeHourState} setCurrentHourState={setStartTimeHourState}

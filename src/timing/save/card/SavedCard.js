@@ -34,11 +34,14 @@ function SavedCard({save, isExpanded}) {
 
     const deleteSave = (e) => {
         e.stopPropagation();
-        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
 
-        const auth = getAuth(lsWalletApp)
-        remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/saved/"+save.id))
+        openDialog("YesNoDialog", {message:"Do you really want to delete this save?", yesAction:() => {
+            const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+            const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
+
+            const auth = getAuth(lsWalletApp)
+            remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/saved/"+save.id))
+        }})
     }
 
     const editSave = (e) => {

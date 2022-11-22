@@ -233,6 +233,13 @@ function Timing({setCurrentMenu}) {
 
                 set(ref(db, "/users/"+user.uid+"/email"), user.email)
 
+                get(ref(db, "/users/" + user.uid + "/saved")).then((snapshot) => {
+                    if (!snapshot.exists())
+                        setSavesIsLoading(false)
+                }).catch((error) => {
+                    console.error(error);
+                });
+
                 unsubscribeArray.push(
                     onValue(ref(db, "/users/" + user.uid + "/start-time"), snapshot => {
                         const data = snapshot.val()

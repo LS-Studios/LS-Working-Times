@@ -11,8 +11,7 @@ import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import Settings from "./settings/Settings";
 import {DialogProvider} from "use-react-dialog";
-import ResetDataDialog from "./dialogs/reset/ResetDataDialog";
-import DeleteAccountDialog from "./dialogs/delete/DeleteAccountDialog";
+import YesNoDialog from "./dialogs/choice/YesNoDialog";
 import ChangeTimeDialog from "./dialogs/time/ChangeTimeDialog";
 import EditSaveTimeDialog from "./dialogs/edit/EditSaveTimeDialog";
 
@@ -21,8 +20,7 @@ function App() {
     const [menuIsOpened, setMenuIsOpen] = useState(false);
 
     const dialogs = {
-        ResetDataDialog,
-        DeleteAccountDialog,
+        YesNoDialog,
         ChangeTimeDialog,
         EditSaveTimeDialog
     }

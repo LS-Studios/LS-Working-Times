@@ -8,7 +8,12 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
     const input = useRef(null);
 
     const onChange = (e) => {
-        if (/[0-9.]/.test(e.target.value[e.target.value.length - 1])) setCurrentState(e.target.value)
+        if (/[0-9.]/.test(e.target.value[e.target.value.length - 1])) {
+            if (parseInt(e.target.value) >= maxTimeVal)
+                setCurrentState(maxTimeVal-1)
+            else
+                setCurrentState(e.target.value)
+        }
         else setCurrentState(currentState)
     }
 
@@ -28,7 +33,7 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
 
     const onKeyDown = (e) => {
         if (e.key == "Backspace" && currentState.length == 1) {
-            setCurrentState("")
+            setCurrentState("0")
         }
     }
 
