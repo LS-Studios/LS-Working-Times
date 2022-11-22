@@ -70,7 +70,7 @@ const ChangeTimeDialog = () => {
                                currentMinuteState={currentMinuteState} setCurrentMinuteState={setCurrentMinuteState}
                                currentSecondState={currentSecondState} setCurrentSecondState={setCurrentSecondState}/>
 
-                <div className="horizontalButtons">
+                <div className="changeTimeActionButtons">
                     <ButtonCard className="horizontalButtonCard" title="Cancel" action={closeCurrentDialog}/>
                     <ButtonCard className="horizontalButtonCard" title="Confirm" action={changeTime}/>
                 </div>

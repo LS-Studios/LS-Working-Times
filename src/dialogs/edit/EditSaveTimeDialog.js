@@ -121,7 +121,7 @@ const EditSaveTimeDialog = () => {
 
                 <div className="editSaveTimeDialogDivider"></div>
 
-                <div className="horizontalButtons">
+                <div className="editSaveTimeDialogActionButtons">
                     <ButtonCard className="horizontalButtonCard" title="Cancel" action={closeCurrentDialog}/>
                     <ButtonCard className="horizontalButtonCard" title="Confirm" action={updateSave}/>
                 </div>

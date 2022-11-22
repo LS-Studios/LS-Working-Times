@@ -17,7 +17,7 @@ const YesNoDialog = () => {
         <Dialog title="Deleting account" dialogContent={
             <div>
                 <div>{data.message}</div>
-                <div className="horizontalButtons">
+                <div className="yesNoDialogButtons">
                     <ButtonCard className="horizontalButtonCard" title="No" action={closeCurrentDialog}/>
                     <ButtonCard className="horizontalButtonCard" title="Yes" action={deleteAccount}/>
                 </div>
