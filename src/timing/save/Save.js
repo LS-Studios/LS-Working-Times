@@ -45,6 +45,7 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
             <div className="saveTitle"><b>Saved</b></div>
             <div className="saveWeekSelect">
                 <IoCaretBack className="icon" onClick={getSavesOfPreviousWeek}/>
+                {console.log("lol")}
                 <DatePicker
                     portal
                     ref={datePickerRef}

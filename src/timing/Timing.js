@@ -36,6 +36,7 @@ function Timing({setCurrentMenu}) {
 
     const [startTimeIsLoading, setStartTimeIsLoading] = useState(true)
     const [savesIsLoading, setSavesIsLoading] = useState(true)
+    const [timersAreLoading, setTimersAreLoading] = useState(true)
 
     const [startTime, setStartTime] = useState(null);
     const [saved, setSaved] = useState([]);
@@ -170,30 +171,18 @@ function Timing({setCurrentMenu}) {
         const intervalRef = React.useRef();
         const callbackRef = React.useRef(callback);
 
-        // Remember the latest callback:
-        //
-        // Without this, if you change the callback, when setInterval ticks again, it
-        // will still call your old callback.
-        //
-        // If you add `callback` to useEffect's deps, it will work fine but the
-        // interval will be reset.
-
         React.useEffect(() => {
             callbackRef.current = callback;
         }, [callback]);
-
-        // Set up the interval:
 
         React.useEffect(() => {
             if (typeof delay === 'number') {
                 intervalRef.current = setInterval(() => callbackRef.current(), delay);
 
-                // Clear interval if the components is unmounted or the delay changes:
                 return () => clearInterval(intervalRef.current);
             }
         }, [delay]);
 
-        // Returns a ref to the interval ID in case you want to clear it manually:
         return intervalRef;
     }
 
@@ -202,6 +191,8 @@ function Timing({setCurrentMenu}) {
             workTimer.setByTimeDiff(false)
             breakTimer.setByTimeDiff(false)
         }
+
+        setTimersAreLoading(false)
 
         if (workIsRunning) {
             workTimer.setByTimeDiff()
@@ -380,8 +371,8 @@ function Timing({setCurrentMenu}) {
             </div>
 
             <div className="timingTimers">
-                <Timer name="Worked" timer={workTimer} isLoading={startTimeIsLoading}/>
-                <Timer name="Break" timer={breakTimer} clickable={startTime != null} isLoading={startTimeIsLoading} onClick={() => {
+                <Timer name="Worked" timer={workTimer} isLoading={timersAreLoading}/>
+                <Timer name="Break" timer={breakTimer} clickable={!timersAreLoading} isLoading={timersAreLoading} onClick={() => {
                     if (startTime != null) {
                         openDialog("ChangeTimeDialog", {
                             value: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString(),
@@ -395,7 +386,7 @@ function Timing({setCurrentMenu}) {
                 <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={workTimer.getIsRunning ? "Stop working" : "Start working"} action={toggleOverallTimer}/>
                 <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={breakTimer.getIsRunning ? "Stop break" : "Start break"} action={toggleBreakTimer}/>
                 <ButtonCard className={startTimeIsLoading ? "disabled" : (startTime != null ? "buttonCard" : "disabled")} title="Reset and save" action={startTime != null ? resetTimers : function (){}}/>
-                <ValueCard className={startTimeIsLoading ? "disabled" : "singleLineValueCard"} title="Worked time this week" value={startTimeIsLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
+                <ValueCard className="singleLineValueCard" title="Worked time this week" value={timersAreLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
             </div>
 
             <Save saved={saved} selectedSaveDate={selectedSaveDate} setSelectedSaveDate={setSelectedSaveDate} isLoading={savesIsLoading}/>
