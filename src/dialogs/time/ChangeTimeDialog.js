@@ -47,7 +47,20 @@ const ChangeTimeDialog = () => {
         });
 
         if (data.type == "start-time") {
-            set(ref(db, "/users/"+auth.currentUser.uid+"/"+data.type), newDateTime.toTimeString())
+            set(ref(db, "/users/"+auth.currentUser.uid+"/start-time"), newDateTime.toTimeString())
+        } else if (data.type == "break-time") {
+            get(ref(db, "/users/"+auth.currentUser.uid+"/work-taken-stop")).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const dateTime = originalTime.getAbsoluteDiffToDateTime(newDateTime)
+                    const newBreakTakenStopTime = DateTime.dateTimeFromString(snapshot.val()).subtractDateTime(dateTime)
+
+                    set(ref(db, "/users/"+auth.currentUser.uid+"/work-taken-stop"), newBreakTakenStopTime.toTimeString())
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
         }
 
         closeCurrentDialog()

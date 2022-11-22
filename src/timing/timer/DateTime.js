@@ -35,13 +35,10 @@ export class DateTime {
 
     getAbsoluteDiffToDateTime(dateTime) {
         if (dateTime != null) {
-            this.hours = this.hours - dateTime.getHours
-            this.minutes = this.minutes - dateTime.getMinutes
-            this.seconds = this.seconds - dateTime.getSeconds
             return new DateTime(
-                this.hours,
-                this.minutes,
-                this.seconds
+                this.hours - dateTime.getHours,
+                this.minutes - dateTime.getMinutes,
+                this.seconds - dateTime.getSeconds
             )
         }
     }
