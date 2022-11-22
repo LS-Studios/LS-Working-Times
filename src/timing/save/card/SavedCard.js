@@ -6,8 +6,11 @@ import {getAuth} from "firebase/auth";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../../firebase/LSWalletConfig";
+import {useDialog} from "use-react-dialog";
 
 function SavedCard({save, isExpanded}) {
+    const { dialogs, openDialog } = useDialog();
+
     const [expanded, setExpanded] = useState(isExpanded)
 
     const getDateNameByString = (string) => {
@@ -29,12 +32,18 @@ function SavedCard({save, isExpanded}) {
         setExpanded(!expanded)
     }
 
-    const deleteSave = () => {
+    const deleteSave = (e) => {
+        e.stopPropagation();
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
         const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
 
         const auth = getAuth(lsWalletApp)
         remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/saved/"+save.id))
+    }
+
+    const editSave = (e) => {
+        e.stopPropagation()
+        openDialog("EditSaveTimeDialog", {save: save})
     }
 
     return (
@@ -59,7 +68,10 @@ function SavedCard({save, isExpanded}) {
                     <div>{save.worked}</div>
                     <div>{save.break}</div>
                 </div>
-                <button className="saveCardDeleteButton" onClick={deleteSave}>Delete</button>
+                <div className="saveCardActionBar">
+                    <button className="saveCardActionButton" onClick={deleteSave}>Delete</button>
+                    <button className="saveCardActionButton" onClick={editSave}>Edit</button>
+                </div>
             </div>
         </div>
     );

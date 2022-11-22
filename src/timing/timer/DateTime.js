@@ -4,7 +4,7 @@ export class DateTime {
         this.minutes = minutes != null ? minutes : DateTime.dateTimeFromDate(new Date()).getMinutes
         this.seconds = seconds != null ? seconds : DateTime.dateTimeFromDate(new Date()).getSeconds
 
-        this.getDiffToDateTime = this.getDiffToDateTime.bind(this)
+        this.getDateDiffToDateTime = this.getDateDiffToDateTime.bind(this)
     }
 
     static dateTimeFromString(stringTime) {
@@ -17,7 +17,7 @@ export class DateTime {
         )
     }
 
-    getDiffToDateTime(dateTime, takenStop) {
+    getDateDiffToDateTime(dateTime, takenStop) {
         if (dateTime != null) {
             const date = this.getDate()
 
@@ -33,12 +33,46 @@ export class DateTime {
         }
     }
 
+    getAbsoluteDiffToDateTime(dateTime) {
+        if (dateTime != null) {
+            this.hours = this.hours - dateTime.getHours
+            this.minutes = this.minutes - dateTime.getMinutes
+            this.seconds = this.seconds - dateTime.getSeconds
+            return new DateTime(
+                this.hours,
+                this.minutes,
+                this.seconds
+            )
+        }
+    }
+
     addDateTime(dateTime) {
         if (dateTime != null) {
             let dateTimeDate = this.getDate()
             dateTimeDate.setHours(dateTimeDate.getHours() + dateTime.getHours)
             dateTimeDate.setMinutes(dateTimeDate.getMinutes() + dateTime.getMinutes)
             dateTimeDate.setSeconds(dateTimeDate.getSeconds() + dateTime.getSeconds)
+
+            this.hours = dateTimeDate.getHours()
+            this.minutes = dateTimeDate.getMinutes()
+            this.seconds = dateTimeDate.getSeconds()
+
+            return new DateTime(
+                this.hours,
+                this.minutes,
+                this.seconds
+            )
+        } else {
+            return this
+        }
+    }
+
+    subtractDateTime(dateTime) {
+        if (dateTime != null) {
+            let dateTimeDate = this.getDate()
+            dateTimeDate.setHours(dateTimeDate.getHours() - dateTime.getHours)
+            dateTimeDate.setMinutes(dateTimeDate.getMinutes() - dateTime.getMinutes)
+            dateTimeDate.setSeconds(dateTimeDate.getSeconds() - dateTime.getSeconds)
 
             this.hours = dateTimeDate.getHours()
             this.minutes = dateTimeDate.getMinutes()

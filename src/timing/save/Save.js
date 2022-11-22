@@ -5,8 +5,9 @@ import SavedCard from "./card/SavedCard";
 import "./DateTimePicker.scss"
 import "./Save.css"
 import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfWeekDayValue} from "../../helper/Helper";
+import ClipLoader from "react-spinners/ClipLoader";
 
-function Save({saved, selectedSaveDate, setSelectedSaveDate}) {
+function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
     const datePickerRef = useRef()
 
     const getSavesOfPreviousWeek = () => {
@@ -31,6 +32,13 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate}) {
             </div>
         )
     }
+
+    const loadingSpinner = <ClipLoader
+        cssOverride={{marginBottom: 8}}
+        color="#CCCCCC"
+        size={15}
+        speedMultiplier={0.8}
+    />
 
     return (
         <div className="saved">
@@ -68,10 +76,10 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate}) {
                 })
             }
             {
-                saved.filter(save => {
+                isLoading ? loadingSpinner : (saved.filter(save => {
                     const saveDate = getDateFromString(save.date)
                     return saveDate >= getStartOfWeek(selectedSaveDate) && saveDate <= getEndOfWeek(selectedSaveDate)
-                }).length === 0 ? <div className="saveNoSaves">No saves</div> : null
+                }).length === 0 ? <div className="saveNoSaves">No saves</div> : null)
             }
         </div>
     );

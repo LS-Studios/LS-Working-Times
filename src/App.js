@@ -14,6 +14,7 @@ import {DialogProvider} from "use-react-dialog";
 import ResetDataDialog from "./dialogs/reset/ResetDataDialog";
 import DeleteAccountDialog from "./dialogs/delete/DeleteAccountDialog";
 import ChangeTimeDialog from "./dialogs/time/ChangeTimeDialog";
+import EditSaveTimeDialog from "./dialogs/edit/EditSaveTimeDialog";
 
 function App() {
     const [currentMenu, setCurrentMenu] = useState(0)
@@ -22,7 +23,8 @@ function App() {
     const dialogs = {
         ResetDataDialog,
         DeleteAccountDialog,
-        ChangeTimeDialog
+        ChangeTimeDialog,
+        EditSaveTimeDialog
     }
 
     return (

@@ -1,0 +1,24 @@
+.popup .content .horizontalButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 3px;
+    width: 250px;
+}
+
+.editSaveTimeDialog {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.editSaveTimeDialog > h4 {
+    margin: 5px -2px -2px;
+}
+
+.editSaveTimeDialogDivider {
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    width: 271px;
+    margin: 8px 0;
+}

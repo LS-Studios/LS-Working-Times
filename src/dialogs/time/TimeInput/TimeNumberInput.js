@@ -1,10 +1,10 @@
 import React, {useRef, useState} from 'react';
-import "./TimeInput.css"
+import "./TimeNumberInput.css"
 import {AiFillCaretUp} from "react-icons/ai"
 import {AiFillCaretDown} from "react-icons/ai"
-import {padTo2Digits} from "../../helper/Helper";
+import {padTo2Digits} from "../../../helper/Helper";
 
-function TimeInput({currentState, setCurrentState, maxTimeVal, increasePartner}) {
+function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
     const input = useRef(null);
 
     const onChange = (e) => {
@@ -13,22 +13,17 @@ function TimeInput({currentState, setCurrentState, maxTimeVal, increasePartner})
     }
 
     const increase = () => {
-        if (parseInt(currentState)+1 <= maxTimeVal) {
+        if (parseInt(currentState)+1 < maxTimeVal)
             setCurrentState(padTo2Digits(parseInt(currentState)+1))
-        } else {
-            if (increasePartner != null) {
-                increasePartner()
-                setCurrentState("00")
-            }
-        }
+        else
+            setCurrentState("00")
     }
 
     const decrease = () => {
-        if (parseInt(currentState)-1 >= 0) {
+        if (parseInt(currentState)-1 >= 0)
             setCurrentState(padTo2Digits(parseInt(currentState)-1))
-        } else {
-            setCurrentState(maxTimeVal.toString())
-        }
+        else
+            setCurrentState((maxTimeVal-1).toString())
     }
 
     const onKeyDown = (e) => {
@@ -54,4 +49,4 @@ function TimeInput({currentState, setCurrentState, maxTimeVal, increasePartner})
     );
 }
 
-export default TimeInput;
+export default TimeNumberInput;

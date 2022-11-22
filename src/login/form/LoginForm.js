@@ -4,8 +4,6 @@ import {useNavigate} from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
-import {getDatabase, ref, set} from "firebase/database";
-import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import InputCard from "../../cards/Input/InputCard";
 import ButtonCard from "../../cards/Button/ButtonCard";
 

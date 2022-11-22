@@ -13,6 +13,11 @@
     flex-direction: row;
 }
 
+.timingButtons {
+    margin-bottom: 10px;
+}
+
 .disabled {
     opacity: 0.5;
+    pointer-events: none;
 }

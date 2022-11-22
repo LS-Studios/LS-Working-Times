@@ -1,0 +1,34 @@
+.timeInputRow {
+    margin: 0 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.timeInputRowChangeButton {
+    background-color: #2C3A47;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-left: 3px;
+    height: 20px;
+}
+
+.changeTimeDialogInput {
+    width: 94%;
+    background-color: #3d4e60;
+    border: 2px solid #3c4c5d;
+    border-radius: 4px;
+    color: #CCCCCC;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.changeTimeDialogInput:focus {
+    border: 3px solid #46596e;
+    outline: none;
+}

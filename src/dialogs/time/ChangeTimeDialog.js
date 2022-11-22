@@ -8,26 +8,19 @@ import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import Dialog from "../Dialog";
-import TimeInput from "./TimeInput";
+import TimeNumberInput from "./TimeInput/TimeNumberInput";
 import {padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
+import DateTimeInput from "./TimeInput/DateTimeInput";
 
 const ChangeTimeDialog = () => {
     const [currentHourState, setCurrentHourState] = useState("00")
     const [currentMinuteState, setCurrentMinuteState] = useState("00")
     const [currentSecondState, setCurrentSecondState] = useState("00")
 
-    const increaseHour = () => {
-        if (parseInt(currentHourState)+1 <= 24)
-            setCurrentHourState(padTo2Digits(parseInt(currentHourState)+1))
-    }
+    const [originalTime, setOriginalTime] = useState(new DateTime())
 
-    const increaseMinute = () => {
-        if (parseInt(currentMinuteState)+1 <= 24)
-            setCurrentMinuteState(padTo2Digits(parseInt(currentMinuteState)+1))
-    }
-
-    const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('ChangeTimeDialog', {type: "start-time"});
+    const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('ChangeTimeDialog', {value: "00:00:00", type: "break-time"});
 
     const changeTime = () => {
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
@@ -35,41 +28,47 @@ const ChangeTimeDialog = () => {
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(app)
 
-        set(ref(db, "/users/"+auth.currentUser.uid+"/"+data.type), new DateTime(parseInt(currentHourState), parseInt(currentMinuteState), parseInt(currentSecondState)).toTimeString())
+        const newDateTime = new DateTime(
+            parseInt(currentHourState),
+            parseInt(currentMinuteState),
+            parseInt(currentSecondState)
+        )
 
-        closeCurrentDialog()
-    }
-
-    useEffect(() => {
-        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        const db = getDatabase(lsWorkingTimesApp)
-        const app = initializeApp(LSWalletConfig, "LS-Wallet")
-        const auth = getAuth(app)
-
-        //Todo wenn noch keine daten geladen black screen
-
-        get(ref(db, "/users/"+auth.currentUser.uid+"/"+data.type)).then((snapshot) => {
+        get(ref(db, "/users/"+auth.currentUser.uid+"/break-taken-stop")).then((snapshot) => {
             if (snapshot.exists()) {
-                const dateTime = DateTime.dateTimeFromString(snapshot.val())
-                setCurrentHourState(padTo2Digits(dateTime.getHours))
-                setCurrentMinuteState(padTo2Digits(dateTime.getMinutes))
-                setCurrentSecondState(padTo2Digits(dateTime.getSeconds))
+                const dateTime = originalTime.getAbsoluteDiffToDateTime(newDateTime)
+                const newBreakTakenStopTime = DateTime.dateTimeFromString(snapshot.val()).addDateTime(dateTime)
+                set(ref(db, "/users/"+auth.currentUser.uid+"/break-taken-stop"), newBreakTakenStopTime.toTimeString())
             } else {
                 console.log("No data available");
             }
         }).catch((error) => {
             console.error(error);
         });
+
+        if (data.type == "start-time") {
+            set(ref(db, "/users/"+auth.currentUser.uid+"/"+data.type), newDateTime.toTimeString())
+        }
+
+        closeCurrentDialog()
+    }
+
+    useEffect(() => {
+        const dateTime = DateTime.dateTimeFromString(data.value)
+
+        setCurrentHourState(padTo2Digits(dateTime.getHours))
+        setCurrentMinuteState(padTo2Digits(dateTime.getMinutes))
+        setCurrentSecondState(padTo2Digits(dateTime.getSeconds))
+
+        setOriginalTime(dateTime)
     }, [])
 
     return (
         <Dialog title={"Change Time"} dialogContent={
             <div>
-                <div className="changeTimeDialogInputRow">
-                    <TimeInput currentState={currentHourState} setCurrentState={setCurrentHourState} maxTimeVal={24}/>
-                    <TimeInput currentState={currentMinuteState} setCurrentState={setCurrentMinuteState} maxTimeVal={60} increasePartner={increaseHour}/>
-                    <TimeInput currentState={currentSecondState} setCurrentState={setCurrentSecondState} maxTimeVal={60} increasePartner={increaseMinute}/>
-                </div>
+                <DateTimeInput currentHourState={currentHourState} setCurrentHourState={setCurrentHourState}
+                               currentMinuteState={currentMinuteState} setCurrentMinuteState={setCurrentMinuteState}
+                               currentSecondState={currentSecondState} setCurrentSecondState={setCurrentSecondState}/>
 
                 <div className="horizontalButtons">
                     <ButtonCard className="horizontalButtonCard" title="Cancel" action={closeCurrentDialog}/>

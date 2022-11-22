@@ -2,10 +2,20 @@ import React, {useEffect, useRef, useState} from 'react';
 import "./Timing.css"
 import Timer from "./timer/Timer";
 import {TimerClass} from "./timer/TimerClass";
-import ContentCard from "./contentcard/ContentCard";
+import ClipLoader from "react-spinners/ClipLoader";
 import {DateTime} from "./timer/DateTime";
 
-import { getDatabase, ref, onValue, set, push, onChildAdded, onChildRemoved } from "firebase/database"
+import {
+    getDatabase,
+    ref,
+    onValue,
+    set,
+    push,
+    onChildAdded,
+    onChildChanged,
+    onChildRemoved,
+    get
+} from "firebase/database"
 import {getAuth, signOut} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 import Save from "./save/Save";
@@ -23,6 +33,9 @@ function Timing({setCurrentMenu}) {
     const navigate = useNavigate()
 
     const [currentUser, setCurrentUser] = useState(null)
+
+    const [startTimeIsLoading, setStartTimeIsLoading] = useState(true)
+    const [savesIsLoading, setSavesIsLoading] = useState(true)
 
     const [startTime, setStartTime] = useState(null);
     const [saved, setSaved] = useState([]);
@@ -224,6 +237,8 @@ function Timing({setCurrentMenu}) {
                     onValue(ref(db, "/users/" + user.uid + "/start-time"), snapshot => {
                         const data = snapshot.val()
 
+                        setStartTimeIsLoading(false)
+
                         if (data == null || data === "") {
                             setStartTime(null)
                             workTimer.resetTimer()
@@ -290,11 +305,41 @@ function Timing({setCurrentMenu}) {
                     onChildAdded(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
                         const value = snapshot.val()
                         if (value != null) {
+                            setSavesIsLoading(false)
+
                             setSaved(prevState => (
                                 [value].concat(prevState)
                             ))
                         }
                 }))
+                unsubscribeArray.push(
+                    onChildChanged(ref(db, "/users/" + user.uid + "/saved"), changedSnapshot => {
+                        const value = changedSnapshot.val()
+                        if (value != null) {
+                            get(ref(db, "/users/" + user.uid + "/saved")).then((snapshot) => {
+                                if (snapshot.exists()) {
+                                    const saves = []
+                                    snapshot.forEach(childSnapshot => {
+                                        saves.push(childSnapshot.val())
+                                    })
+
+                                    const newState = saves.map(obj => {
+                                        if (obj.id === value.id) {
+                                            return value;
+                                        }
+
+                                        return obj;
+                                    });
+
+                                    setSaved(newState);
+                                } else {
+                                    console.log("No data available");
+                                }
+                            }).catch((error) => {
+                                console.error(error);
+                            });
+                        }
+                    }))
                 unsubscribeArray.push(
                     onChildRemoved(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
                         const value = snapshot.val()
@@ -307,29 +352,46 @@ function Timing({setCurrentMenu}) {
         }))
     }, [])
 
+    const loadingSpinner = <ClipLoader
+        color="#CCCCCC"
+        size={15}
+        speedMultiplier={0.8}
+    />
+
     return (
         <div className="timing">
             <div className="timingTimers">
-                <ValueCard title="Date" value={startTime != null ? formatDate(startTime) : "Not started"}/>
-                <ValueCard title="Start time" value={startTime != null ? startTime.toLocaleTimeString("de") : "Not started"} onClick={() => openDialog("ChangeTimeDialog", {type: "start-time"})} clickable={true}/>
+                <ValueCard title="Date" value={startTimeIsLoading ? loadingSpinner : (startTime != null ? formatDate(startTime) : "Not started")}/>
+                <ValueCard title="Start time" value={startTimeIsLoading ? loadingSpinner : (startTime != null ? startTime.toLocaleTimeString("de") : "Not started")} onClick={() => {
+                    if (startTime != null) {
+                        openDialog("ChangeTimeDialog", {
+                            value: DateTime.dateTimeFromDate(startTime).toTimeString(),
+                            type: "start-time"
+                        })
+                    }
+                }} clickable={startTime != null}/>
             </div>
 
             <div className="timingTimers">
-                <Timer name="Worked" timer={workTimer}/>
-                <Timer name="Break" timer={breakTimer}/>
+                <Timer name="Worked" timer={workTimer} isLoading={startTimeIsLoading}/>
+                <Timer name="Break" timer={breakTimer} clickable={startTime != null} isLoading={startTimeIsLoading} onClick={() => {
+                    if (startTime != null) {
+                        openDialog("ChangeTimeDialog", {
+                            value: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString(),
+                            type: "break-time"
+                        })
+                    }
+                }}/>
             </div>
 
-            <div className="timingTimers">
-                <ValueCard className="singleLineValueCard" title="Worked time this week" value={getWorkedTimeInCurrentWeek()}/>
+            <div className="timingButtons">
+                <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={workTimer.getIsRunning ? "Stop working" : "Start working"} action={toggleOverallTimer}/>
+                <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={breakTimer.getIsRunning ? "Stop break" : "Start break"} action={toggleBreakTimer}/>
+                <ButtonCard className={startTimeIsLoading ? "disabled" : (startTime != null ? "buttonCard" : "disabled")} title="Reset and save" action={startTime != null ? resetTimers : function (){}}/>
+                <ValueCard className={startTimeIsLoading ? "disabled" : "singleLineValueCard"} title="Worked time this week" value={startTimeIsLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
             </div>
 
-            <div className="timerButtons">
-                <ButtonCard title={workTimer.getIsRunning ? "Stop working" : "Start working"} action={toggleOverallTimer}/>
-                <ButtonCard title={breakTimer.getIsRunning ? "Stop break" : "Start break"} action={toggleBreakTimer}/>
-                <ButtonCard className={ startTime != null ? "buttonCard" : "disabled"} title="Reset and save" action={startTime != null ? resetTimers : function (){}}/>
-            </div>
-
-            <Save saved={saved} selectedSaveDate={selectedSaveDate} setSelectedSaveDate={setSelectedSaveDate}/>
+            <Save saved={saved} selectedSaveDate={selectedSaveDate} setSelectedSaveDate={setSelectedSaveDate} isLoading={savesIsLoading}/>
         </div>
     );
 }

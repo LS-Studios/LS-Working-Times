@@ -1,13 +1,20 @@
 import "./Timer.css"
 import ValueCard from "../../cards/Value/ValueCard";
-import {getFormattedTime} from "../../helper/Helper";
+import ClipLoader from "react-spinners/ClipLoader";
 import {DateTime} from "./DateTime";
+import React from "react";
 
-function Timer({name, timer}) {
+function Timer({name, timer, isLoading, clickable, onClick}) {
+    const loadingSpinner = <ClipLoader
+        color="#CCCCCC"
+        size={15}
+        speedMultiplier={0.8}
+    />
+
     return (
-        <ValueCard title={name} value={
-            new DateTime(timer.getHours, timer.getMinutes, timer.getSeconds).toTimeString()
-        }/>
+        <ValueCard title={name} value={isLoading ? loadingSpinner : (
+            new DateTime(timer.getHours, timer.getMinutes, timer.getSeconds).toTimeString())
+        } clickable={clickable} onClick={onClick}/>
     );
 }
 
