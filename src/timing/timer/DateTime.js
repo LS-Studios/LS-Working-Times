@@ -45,14 +45,45 @@ export class DateTime {
 
     addDateTime(dateTime) {
         if (dateTime != null) {
-            let dateTimeDate = this.getDate()
-            dateTimeDate.setHours(dateTimeDate.getHours() + dateTime.getHours)
-            dateTimeDate.setMinutes(dateTimeDate.getMinutes() + dateTime.getMinutes)
-            dateTimeDate.setSeconds(dateTimeDate.getSeconds() + dateTime.getSeconds)
+            const addMinutes = (value) => {
+                if (value%60===0) {
+                    this.hours += value/60
+                } else {
+                    while(value-60>0) {
+                        this.minutes -= 60
+                        this.hours++
+                    }
+                    if (this.minutes + value - 60 >= 0) {
+                        this.minutes += value - 60
+                        this.hours++
+                    } else {
+                        this.minutes += value
+                    }
+                }
+            }
 
-            this.hours = dateTimeDate.getHours()
-            this.minutes = dateTimeDate.getMinutes()
-            this.seconds = dateTimeDate.getSeconds()
+            const addSeconds = (value) => {
+                if (value%60===0) {
+                    addMinutes(value/60)
+                } else {
+                    while(value-60>0) {
+                        this.seconds -= 60
+                        addMinutes(1)
+                    }
+                    if (this.seconds + value - 60 >= 0) {
+                        this.seconds += value - 60
+                        addMinutes(1)
+                    } else {
+                        this.seconds += value
+                    }
+                }
+            }
+
+            //Use date to auto increase hours
+            this.hours = this.hours + dateTime.getHours
+
+            addMinutes(dateTime.getMinutes)
+            addSeconds(dateTime.getSeconds)
 
             return new DateTime(
                 this.hours,

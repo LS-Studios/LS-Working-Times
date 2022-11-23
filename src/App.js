@@ -14,6 +14,7 @@ import {DialogProvider} from "use-react-dialog";
 import YesNoDialog from "./dialogs/choice/YesNoDialog";
 import ChangeTimeDialog from "./dialogs/time/ChangeTimeDialog";
 import EditSaveTimeDialog from "./dialogs/edit/EditSaveTimeDialog";
+import {DateTime} from "./timing/timer/DateTime";
 
 function App() {
     const [currentMenu, setCurrentMenu] = useState(0)
@@ -27,6 +28,7 @@ function App() {
 
     return (
         <DialogProvider dialogs={dialogs}>
+            {new DateTime(0,0,0).addDateTime(new DateTime(14, 2, 0)).toTimeString()}
             <Router className="holder">
                 <div className="spacer1"/>
                 <div className={menuIsOpened ? "blur" : ""}>
