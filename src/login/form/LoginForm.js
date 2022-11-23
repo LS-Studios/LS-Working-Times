@@ -14,8 +14,7 @@ function LoginForm()
     const [passwordInput, setPasswordInput] = useState("")
     const navigate = useNavigate()
 
-    const submitLogin = (e) => {
-        e.preventDefault()
+    const submitLogin = () => {
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(app)
 
@@ -54,8 +53,7 @@ function LoginForm()
             })
     }
 
-    const submitCreateUser = (e) => {
-        e.preventDefault()
+    const submitCreateUser = () => {
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(app)
 
@@ -103,15 +101,15 @@ function LoginForm()
     }
 
     return (
-            <div className="login-form">
-                <InputCard type="email" title="Email" currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
-                <InputCard type="password" title="Password" currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
-                <div>{ error != "" ? <div className="loginErrorText">{error}</div> : null }</div>
-                <div>
-                    <ButtonCard title="Login" action={submitLogin}/>
-                    <ButtonCard title="Create account" action={submitCreateUser}/>
-                </div>
+        <div className="login-form">
+            <InputCard type="email" title="Email" submitFunc={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
+            <InputCard type="password" title="Password" submitFunc={submitLogin} currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
+            <div>{ error != "" ? <div className="loginErrorText">{error}</div> : null }</div>
+            <div>
+                <ButtonCard title="Login" action={submitLogin}/>
+                <ButtonCard title="Create account" action={submitCreateUser}/>
             </div>
+        </div>
     )
 }
 

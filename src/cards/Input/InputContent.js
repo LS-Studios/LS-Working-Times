@@ -1,7 +1,7 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import "./InputContent.scss"
 
-const InputContent = ({title, placeholder, type="text", charType=0, currentState, setCurrentState}) => {
+const InputContent = ({title, placeholder, type="text", charType=0, submitFunc, currentState, setCurrentState}) => {
     const input = useRef(null);
 
     const onChange = (e) => {
@@ -18,10 +18,17 @@ const InputContent = ({title, placeholder, type="text", charType=0, currentState
         }
     }
 
+    const changeFocus = () => {
+        input.current.blur()
+    }
+
     const submit = (e) => {
         e.preventDefault()
 
-        input.current.blur()
+        changeFocus()
+
+        if (submitFunc != null)
+            submitFunc()
     }
 
     return (
@@ -29,7 +36,7 @@ const InputContent = ({title, placeholder, type="text", charType=0, currentState
             <div><b>{title}</b></div>
             <div className="inputDivider"/>
             <form onSubmit={submit}>
-                <input className="inputInput" ref={input} value={currentState} type={type} placeholder={placeholder} onBlur={submit} onChange={onChange} onKeyDown={onKeyDown}/>
+                <input className="inputInput" ref={input} value={currentState} type={type} placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown}/>
             </form>
         </div>
     );
