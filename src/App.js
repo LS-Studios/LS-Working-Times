@@ -14,11 +14,10 @@ import {DialogProvider} from "use-react-dialog";
 import YesNoDialog from "./dialogs/choice/YesNoDialog";
 import ChangeTimeDialog from "./dialogs/time/ChangeTimeDialog";
 import EditSaveTimeDialog from "./dialogs/edit/EditSaveTimeDialog";
-import {DateTime} from "./timing/timer/DateTime";
-import {setDefaultLanguage, setLanguage, setLanguageCookie, setTranslations, translate} from "react-switch-lang";
-import en from "./languages/en.json"
-import de from "./languages/de.json"
-import PropTypes from "prop-types";
+import {setDefaultLanguage, setLanguage, setLanguageCookie, setTranslations, translate} from "./helper/Translation/Transalation";
+import en from "./helper/Translation/languages/en.json"
+import de from "./helper/Translation/languages/de.json"
+import {getThemeClass, setDefaultTheme, setThemeUp} from "./helper/Theme/Theme";
 
 function App(props) {
     const [currentMenu, setCurrentMenu] = useState(0)
@@ -33,7 +32,9 @@ function App(props) {
     useEffect(() => {
         setTranslations({en,de});
         setDefaultLanguage('en');
-        setLanguageCookie();
+
+        setDefaultTheme("dark")
+        document.body.classList.add("darkBody")
     }, [])
 
     return (
@@ -65,8 +66,4 @@ function App(props) {
     );
 }
 
-App.propTypes={
-    t:PropTypes.func.isRequired,
-};
-
-export default translate(App);
+export default setThemeUp(translate(App));

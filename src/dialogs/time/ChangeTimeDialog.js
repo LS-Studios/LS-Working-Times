@@ -12,7 +12,7 @@ import TimeNumberInput from "./TimeInput/TimeNumberInput";
 import {padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
 import DateTimeInput from "./TimeInput/DateTimeInput";
-import {t} from "react-switch-lang";
+import {t} from "../../helper/Translation/Transalation";
 
 const ChangeTimeDialog = () => {
     const [currentHourState, setCurrentHourState] = useState("00")

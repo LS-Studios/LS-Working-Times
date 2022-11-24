@@ -1,24 +1,3 @@
-.header {
-    position: fixed;
-    color: #CCCCCC;
-    top: 0;
-    left: 0;
-    right: 0;
-}
-
-.headerTop {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background: #2C3A47;
-    cursor: pointer;
-}
-
-.headerTop > * {
-    margin: 10px;
-}
-
 .gone {
     display: none;
 }
@@ -37,44 +16,129 @@
     align-items: center;
 }
 
-.headerMenuCategory a {
-    display: block;
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.darkHeader {
+    @extend .header;
     color: #CCCCCC;
+}
+
+.brightHeader {
+    @extend .header;
+    color: #000000;
+}
+
+.headerTop {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.headerTop > * {
+    margin: 10px;
+}
+
+.darkHeaderTop {
+    @extend .headerTop;
+    background: #2C3A47;
+}
+
+.brightHeaderTop {
+    @extend .headerTop;
+    background: #DBDBDB;
+}
+
+.headerMenuCategory {
+    display: block;
     width: 50vw;
     padding: 8px 16px;
     text-decoration: none;
-    border: 1px solid #CCCCCC;
     border-radius: 8px;
 }
 
-.headerMenuCategory a:hover {
+.darkHeaderMenuCategory a {
+    @extend .headerMenuCategory;
+    color: #CCCCCC;
+    border: 1px solid #CCCCCC;
+}
+
+.darkHeaderMenuCategory a:hover {
     background-color: #43586b;
     color: #CCCCCC;
 }
 
-.headerMenuNotActiveItem {
+.brightHeaderMenuCategory a {
     @extend .headerMenuCategory;
-    background-color: #2C3A47;
+    color: #000000;
+    border: 1px solid #000000;
 }
 
-.headerMenuValueItem {
-    @extend .headerMenuCategory;
-    background-color: #2C3A47;
-    pointer-events: none;
+.brightHeaderMenuCategory a:hover {
+    background-color: #b4b4b4;
+    color: #000000;
 }
 
-.headerMenuValueItem a:hover {
+.darkHeaderMenuNotActiveItem {
+    @extend .darkHeaderMenuCategory;
     background-color: #2C3A47;
+    border-radius: 8px;
 }
 
-.headerMenuActiveItem {
-    @extend .headerMenuCategory;
+.brightHeaderMenuNotActiveItem {
+    @extend .brightHeaderMenuCategory;
+    background-color: #DBDBDB;
+    border-radius: 8px;
+}
+
+.darkHeaderMenuActiveItem {
+    @extend .darkHeaderMenuCategory;
     background-color: #43586b;
     border-radius: 8px;
 }
 
-.menuNotAvailable {
-    @extend .headerMenuNotActiveItem;
+.brightHeaderMenuActiveItem {
+    @extend .brightHeaderMenuCategory;
+    background-color: #b4b4b4;
+    border-radius: 8px;
+}
+
+.darkMenuNotAvailable {
+    @extend .darkHeaderMenuNotActiveItem;
     opacity: 0.8;
     pointer-events: none;
+}
+
+.brightMenuNotAvailable {
+    @extend .brightHeaderMenuNotActiveItem;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.darkHeaderMenuValueItem {
+    @extend .darkHeaderMenuCategory;
+    background-color: #2C3A47;
+    pointer-events: none;
+    border-radius: 8px;
+}
+
+.darkHeaderMenuValueItem a:hover {
+    background-color: #2C3A47;
+}
+
+.brightHeaderMenuValueItem {
+    @extend .brightHeaderMenuCategory;
+    background-color: #DBDBDB;
+    pointer-events: none;
+    border-radius: 8px;
+}
+
+.brightHeaderMenuValueItem a:hover {
+    background-color: #DBDBDB;
 }

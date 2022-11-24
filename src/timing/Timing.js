@@ -19,6 +19,8 @@ import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import TimingMenu from "./TimingMenu";
 import {useNavigate} from "react-router-dom";
+import {setLanguage} from "../helper/Translation/Transalation";
+import {getThemeClass, setTheme} from "../helper/Theme/Theme";
 
 function Timing({setCurrentMenu}) {
     const navigate = useNavigate()
@@ -41,6 +43,30 @@ function Timing({setCurrentMenu}) {
 
         unsubscribeArray.push(
             auth.onAuthStateChanged(function(user) {
+                get(ref(db, "/users/"+user.uid+"/language")).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        setLanguage(snapshot.val())
+                    } else {
+                        console.log("No data available");
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
+
+                get(ref(db, "/users/"+user.uid+"/theme")).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        setTheme(snapshot.val())
+                        document.body.classList.forEach((v, k, p) => {
+                            document.body.classList.remove(v)
+                        })
+                        document.body.classList.add(getThemeClass("body"))
+                    } else {
+                        console.log("No data available");
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
+
                 if (user == null) {
                     unsubscribeArray.forEach(unsubscribe => unsubscribe())
                     navigate("/login")
@@ -102,6 +128,10 @@ function Timing({setCurrentMenu}) {
                         }
                 }))
         }))
+
+        return () => {
+            unsubscribeArray.forEach(unsub => unsub())
+        }
     }, [])
 
     return (

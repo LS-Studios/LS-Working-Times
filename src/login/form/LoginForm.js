@@ -6,7 +6,9 @@ import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import InputCard from "../../cards/Input/InputCard";
 import ButtonCard from "../../cards/Button/ButtonCard";
-import {t} from "react-switch-lang";
+import {t} from "../../helper/Translation/Transalation";
+import {get, getDatabase, ref, set} from "firebase/database";
+import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 
 function LoginForm()
 {
@@ -15,7 +17,25 @@ function LoginForm()
     const [passwordInput, setPasswordInput] = useState("")
     const navigate = useNavigate()
 
+    const createFieldIfNotExist = (fieldName, defaultValue, navigateTo, uid, db) => {
+        get(ref(db, "/users/"+uid+"/"+fieldName)).then((snapshot) => {
+            if (!snapshot.exists()) {
+                set(ref(db, "/users/"+uid+"/"+fieldName), defaultValue).then((snapshot) => {
+                    if (navigateTo != null)
+                        navigate(navigateTo)
+                })
+            } else {
+                if (navigateTo != null)
+                    navigate(navigateTo)
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+
     const submitLogin = () => {
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const db = getDatabase(lsWorkingTimesApp)
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(app)
 
@@ -33,7 +53,8 @@ function LoginForm()
 
         signInWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
-                navigate("timing")
+                createFieldIfNotExist("language", "en", null, userCredential.user.uid, db)
+                createFieldIfNotExist("theme", "dark", "/timing", userCredential.user.uid, db)
             })
             .catch((error) => {
                 const errorMessage = error.message;
@@ -55,6 +76,8 @@ function LoginForm()
     }
 
     const submitCreateUser = () => {
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const db = getDatabase(lsWorkingTimesApp)
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(app)
 
@@ -88,7 +111,8 @@ function LoginForm()
 
         createUserWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
-                navigate("timing")
+                createFieldIfNotExist("language", "en", null, userCredential.user.uid, db)
+                createFieldIfNotExist("theme", "dark", "/timing", userCredential.user.uid, db)
             })
             .catch((error) => {
                 const errorMessage = error.message;

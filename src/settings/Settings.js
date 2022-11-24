@@ -7,12 +7,14 @@ import {deleteUser, getAuth, signOut} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 import {useDialog} from "use-react-dialog";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
-import {getDatabase, ref, remove} from "firebase/database";
-import {setLanguage, t} from "react-switch-lang";
+import {get, getDatabase, ref, remove, set} from "firebase/database";
+import {t} from "../helper/Translation/Transalation";
+import {setLanguage} from "../helper/Translation/Transalation";
+import {getThemeClass, setTheme} from "../helper/Theme/Theme";
 
-const Settings = ({ setCurrentMenu, setLanguage }) => {
-    const [currentLanguage, setCurrentLanguage] = useState(1)
-    const [currentTheme, setCurrentTheme] = useState(1)
+const Settings = ({ setCurrentMenu }) => {
+    const [currentLanguage, setCurrentLanguage] = useState(-1)
+    const [currentTheme, setCurrentTheme] = useState(-1)
 
     const { dialogs, openDialog } = useDialog();
 
@@ -23,24 +25,103 @@ const Settings = ({ setCurrentMenu, setLanguage }) => {
 
         const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(lsWalletApp)
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const db = getDatabase(lsWorkingTimesApp)
 
-        auth.onAuthStateChanged(function(user) {
+        const unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user == null) {
                 navigate("/login")
             }
+
+            //Language
+            get(ref(db, "/users/"+user.uid+"/language")).then((snapshot) => {
+                if (snapshot.exists()) {
+                    switch (snapshot.val()) {
+                        case "de":
+                            setCurrentLanguage(0)
+                            break
+                        case "en":
+                            setCurrentLanguage(1)
+                            break
+                    }
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
+
+            //Theme
+            get(ref(db, "/users/"+user.uid+"/theme")).then((snapshot) => {
+                if (snapshot.exists()) {
+                    switch (snapshot.val()) {
+                        case "bright":
+                            setCurrentTheme(0)
+                            break
+                        case "dark":
+                            setCurrentTheme(1)
+                            break
+                    }
+                } else {
+                    console.log("No data available");
+                }
+            }).catch((error) => {
+                console.error(error);
+            });
         });
+
+        return () => {
+            unsubscribe()
+        }
     }, [])
 
     useEffect(() => {
-        switch (currentLanguage) {
-            case 0:
-                setLanguage("de")
-                break
-            case 1:
-                setLanguage("en")
-                break
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const db = getDatabase(lsWorkingTimesApp)
+        const app = initializeApp(LSWalletConfig, "LS-Wallet")
+        const auth = getAuth(app)
+
+        if (auth.currentUser != null) {
+            switch (currentLanguage) {
+                case 0:
+                    setLanguage("de")
+                    set(ref(db, "/users/" + auth.currentUser.uid + "/language"), "de")
+                    break
+                case 1:
+                    setLanguage("en")
+                    set(ref(db, "/users/" + auth.currentUser.uid + "/language"), "en")
+                    break
+            }
         }
     }, [currentLanguage])
+
+    useEffect(() => {
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const db = getDatabase(lsWorkingTimesApp)
+        const app = initializeApp(LSWalletConfig, "LS-Wallet")
+        const auth = getAuth(app)
+
+        if (auth.currentUser != null) {
+            switch (currentTheme) {
+                case 0:
+                    setTheme("bright")
+                    document.body.classList.forEach((v, k, p) => {
+                        document.body.classList.remove(v)
+                    })
+                    document.body.classList.add(getThemeClass("body"))
+                    set(ref(db, "/users/" + auth.currentUser.uid + "/theme"), "bright")
+                    break
+                case 1:
+                    setTheme("dark")
+                    document.body.classList.forEach((v, k, p) => {
+                        document.body.classList.remove(v)
+                    })
+                    document.body.classList.add(getThemeClass("body"))
+                    set(ref(db, "/users/" + auth.currentUser.uid + "/theme"), "dark")
+                    break
+            }
+        }
+    }, [currentTheme])
 
     const logout = () => {
         const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")

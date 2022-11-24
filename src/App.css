@@ -1,4 +1,4 @@
-body {
+.darkBody {
     text-align: center;
     display: flex;
     align-items: center;
@@ -6,8 +6,12 @@ body {
     background-color: #212A33;
 }
 
-* {
-    color: #CCCCCC;
+.brightBody {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #BCBCBC;
 }
 
 .holder {

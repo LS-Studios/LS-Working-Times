@@ -13,7 +13,7 @@ import {DateTime} from "../../timing/timer/DateTime";
 import DateTimeInput from "../time/TimeInput/DateTimeInput";
 import DateTimeContent from "../../cards/DateTime/DateTimeContent";
 import DatePicker from "react-multi-date-picker";
-import {t} from "react-switch-lang";
+import {t} from "../../helper/Translation/Transalation";
 
 const EditSaveTimeDialog = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
