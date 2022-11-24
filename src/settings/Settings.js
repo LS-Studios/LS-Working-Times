@@ -8,8 +8,9 @@ import {useNavigate} from "react-router-dom";
 import {useDialog} from "use-react-dialog";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import {getDatabase, ref, remove} from "firebase/database";
+import {setLanguage, t} from "react-switch-lang";
 
-const Settings = ({ setCurrentMenu }) => {
+const Settings = ({ setCurrentMenu, setLanguage }) => {
     const [currentLanguage, setCurrentLanguage] = useState(1)
     const [currentTheme, setCurrentTheme] = useState(1)
 
@@ -30,6 +31,17 @@ const Settings = ({ setCurrentMenu }) => {
         });
     }, [])
 
+    useEffect(() => {
+        switch (currentLanguage) {
+            case 0:
+                setLanguage("de")
+                break
+            case 1:
+                setLanguage("en")
+                break
+        }
+    }, [currentLanguage])
+
     const logout = () => {
         const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(lsWalletApp)
@@ -42,7 +54,7 @@ const Settings = ({ setCurrentMenu }) => {
     }
 
     const resetData = () => {
-        openDialog("YesNoDialog", {message:"Do you really want to delete all data?", yesAction:() => {
+        openDialog("YesNoDialog", {message:t("dialog.doYouReallyWantToDeleteAllData"), yesAction:() => {
             const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
             const db = getDatabase(lsWorkingTimesApp)
             const app = initializeApp(LSWalletConfig, "LS-Wallet")
@@ -53,7 +65,7 @@ const Settings = ({ setCurrentMenu }) => {
     }
 
     const deleteAccount = () => {
-        openDialog("YesNoDialog", {message:"Do you really want to delete this account?", yesAction:() => {
+        openDialog("YesNoDialog", {message:t("dialog.doYouReallyWantToDeleteThisAccount"), yesAction:() => {
             const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
             const db = getDatabase(lsWorkingTimesApp)
             const app = initializeApp(LSWalletConfig, "LS-Wallet")
@@ -65,12 +77,12 @@ const Settings = ({ setCurrentMenu }) => {
 
     return (
         <div>
-            <ToggleCard title="Language" toggleList={["German", "English"]} currentState={currentLanguage} setCurrentState={setCurrentLanguage}/>
-            <ToggleCard title="Color theme" toggleList={["Bright", "Dark"]} currentState={currentTheme} setCurrentState={setCurrentTheme}/>
-            <ButtonCard title="Logout" action={logout}/>
-            <ButtonCard title="Edit account" action={editAccount}/>
-            <ButtonCard title="Reset data" action={resetData}/>
-            <ButtonCard title="Delete account" action={deleteAccount}/>
+            <ToggleCard title={t("settings.language")} toggleList={[t("settings.german"), t("settings.english")]} currentState={currentLanguage} setCurrentState={setCurrentLanguage}/>
+            <ToggleCard title={t("settings.colorTheme")} toggleList={[t("settings.bright"), t("settings.dark")]} currentState={currentTheme} setCurrentState={setCurrentTheme}/>
+            <ButtonCard title={t("settings.logout")} action={logout}/>
+            <ButtonCard title={t("settings.editAccount")} action={editAccount}/>
+            <ButtonCard title={t("settings.resetSaves")} action={resetData}/>
+            <ButtonCard title={t("settings.deleteAccount")} action={deleteAccount}/>
         </div>
     );
 }

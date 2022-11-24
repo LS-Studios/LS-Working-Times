@@ -21,6 +21,7 @@ import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import ClipLoader from "react-spinners/ClipLoader";
+import {t} from "react-switch-lang";
 
 function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     const { dialogs, openDialog } = useDialog();
@@ -300,8 +301,8 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     return (
         <div className="timingMenu">
             <div className="timingMenuTimers">
-                <ValueCard title="Date" value={startTimeIsLoading ? loadingSpinner : (startTime != null ? formatDate(startTime) : "Not started")}/>
-                <ValueCard title="Start time" value={startTimeIsLoading ? loadingSpinner : (startTime != null ? startTime.toLocaleTimeString("de") : "Not started")} onClick={() => {
+                <ValueCard title={t("timer.date")} value={startTimeIsLoading ? loadingSpinner : (startTime != null ? formatDate(startTime) : t("timer.notStarted"))}/>
+                <ValueCard title={t("timer.startTime")} value={startTimeIsLoading ? loadingSpinner : (startTime != null ? startTime.toLocaleTimeString("de") : t("timer.notStarted"))} onClick={() => {
                     if (startTime != null) {
                         openDialog("ChangeTimeDialog", {
                             value: DateTime.dateTimeFromDate(startTime).toTimeString(),
@@ -312,8 +313,8 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
             </div>
 
             <div className="timingMenuTimers">
-                <Timer name="Worked" timer={workTimer} isLoading={timersAreLoading}/>
-                <Timer name="Break" timer={breakTimer} clickable={!timersAreLoading} isLoading={timersAreLoading} onClick={() => {
+                <Timer name={t("timer.worked")} timer={workTimer} isLoading={timersAreLoading}/>
+                <Timer name={t("timer.break")} timer={breakTimer} clickable={!timersAreLoading} isLoading={timersAreLoading} onClick={() => {
                     if (startTime != null) {
                         openDialog("ChangeTimeDialog", {
                             value: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString(),
@@ -324,10 +325,10 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
             </div>
 
             <div className="timingMenuButtons">
-                <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={workTimer.getIsRunning ? "Stop working" : "Start working"} action={toggleOverallTimer}/>
-                <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={breakTimer.getIsRunning ? "Stop break" : "Start break"} action={toggleBreakTimer}/>
-                <ButtonCard className={startTimeIsLoading ? "disabled" : (startTime != null ? "buttonCard" : "disabled")} title="Reset and save" action={startTime != null ? resetTimers : function (){}}/>
-                <ValueCard className="singleLineValueCard" title="Worked time this week" value={timersAreLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
+                <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={workTimer.getIsRunning ? t("timer.stopWorking") : t("timer.startWorking")} action={toggleOverallTimer}/>
+                <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={breakTimer.getIsRunning ? t("timer.stopBreak") : t("timer.startBreak")} action={toggleBreakTimer}/>
+                <ButtonCard className={startTimeIsLoading ? "disabled" : (startTime != null ? "buttonCard" : "disabled")} title={t("timer.resetAndSave")} action={startTime != null ? resetTimers : function (){}}/>
+                <ValueCard className="singleLineValueCard" title={t("timer.workedTimeThisWeek")} value={timersAreLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
             </div>
         </div>
     );

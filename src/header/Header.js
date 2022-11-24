@@ -5,16 +5,17 @@ import {Link} from "react-router-dom";
 import {getAuth} from "firebase/auth";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
+import {t} from "react-switch-lang";
 
 const Header = ({ currentMenu, setCurrentMenu, menuIsOpened, setMenuIsOpen}) => {
     const getCurrentMenuName = () => {
         switch (currentMenu) {
             case 0:
-                return "Login"
+                return t("login.menuName")
             case 1:
-                return "Timer"
+                return t("timer.menuName")
             case 2:
-                return "Settings"
+                return t("settings.menuName")
         }
     }
 
@@ -51,10 +52,10 @@ const Header = ({ currentMenu, setCurrentMenu, menuIsOpened, setMenuIsOpen}) => 
                 <TfiMenu/>
             </div>
             <ul className={menuIsOpened ? "headerMenu" : "gone"}>
-                <li className={!getUserIsLoggedIn() ? (currentMenu === 0 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "gone"} value={0} onClick={setNewActiveMenu}><Link to="/login">Login</Link></li>
+                <li className={!getUserIsLoggedIn() ? (currentMenu === 0 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "gone"} value={0} onClick={setNewActiveMenu}><Link to="/login">{t("login.menuName")}</Link></li>
                 <li className={getUserIsLoggedIn() ? "headerMenuValueItem" : "gone"}><Link to="/timer">{getUserEmail()}</Link></li>
-                <li className={getUserIsLoggedIn() ? (currentMenu === 1 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "menuNotAvailable"} value={1} onClick={setNewActiveMenu}><Link to="/timer">Timer</Link></li>
-                <li className={getUserIsLoggedIn() ? (currentMenu === 2 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "menuNotAvailable"} value={2} onClick={setNewActiveMenu}><Link to="/settings">Settings</Link></li>
+                <li className={getUserIsLoggedIn() ? (currentMenu === 1 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "menuNotAvailable"} value={1} onClick={setNewActiveMenu}><Link to="/timer">{t("timer.menuName")}</Link></li>
+                <li className={getUserIsLoggedIn() ? (currentMenu === 2 ? "headerMenuActiveItem" : "headerMenuNotActiveItem") : "menuNotAvailable"} value={2} onClick={setNewActiveMenu}><Link to="/settings">{t("settings.menuName")}</Link></li>
             </ul>
         </div>
     );

@@ -1,0 +1,56 @@
+{
+  "langKey": "de",
+  "login": {
+    "menuName": "Login",
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "createAccount": "Create account"
+  },
+  "timer": {
+    "menuName": "Timer",
+    "date": "Date",
+    "notStarted": "Not started",
+    "startTime": "Start time",
+    "worked": "Worked",
+    "break": "Break",
+    "stopWorking": "Stop working",
+    "startWorking": "Start working",
+    "stopBreak": "Stop break",
+    "startBreak": "Start break",
+    "resetAndSave": "Reset and save",
+    "workedTimeThisWeek": "Worked time this week",
+    "saved": "Saved times",
+    "noSaves": "No saved times",
+    "the": "the",
+    "startedAt": "Started at",
+    "endedAt": "Ended at",
+    "workedTime": "Worked time",
+    "breakTime": "Break time",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "settings": {
+    "menuName": "Settings",
+    "language": "Language",
+    "colorTheme": "Color theme",
+    "logout": "Logout",
+    "editAccount": "Edit account",
+    "resetSaves": "Reset saved time",
+    "deleteAccount": "Delete account",
+    "german": "German",
+    "english": "English",
+    "bright": "Bright",
+    "dark": "Dark"
+  },
+  "dialog": {
+    "changeTime": "Change time",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "doYouRelayWantToDeleteThisSave": "Do you relay want to delete this save?",
+    "doYouReallyWantToDeleteAllData": "Do you really want to delete all data?",
+    "doYouReallyWantToDeleteThisAccount": "Do yiu really want to delete this account?"
+  }
+}

@@ -6,6 +6,7 @@ import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import InputCard from "../../cards/Input/InputCard";
 import ButtonCard from "../../cards/Button/ButtonCard";
+import {t} from "react-switch-lang";
 
 function LoginForm()
 {
@@ -102,12 +103,12 @@ function LoginForm()
 
     return (
         <div className="login-form">
-            <InputCard type="email" title="Email" submitFunc={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
-            <InputCard type="password" title="Password" submitFunc={submitLogin} currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
+            <InputCard type="email" title={t("login.email")} submitFunc={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
+            <InputCard type="password" title={t("login.password")} submitFunc={submitLogin} currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
             <div>{ error != "" ? <div className="loginErrorText">{error}</div> : null }</div>
             <div>
-                <ButtonCard title="Login" action={submitLogin}/>
-                <ButtonCard title="Create account" action={submitCreateUser}/>
+                <ButtonCard title={t("login.login")} action={submitLogin}/>
+                <ButtonCard title={t("login.createAccount")} action={submitCreateUser}/>
             </div>
         </div>
     )

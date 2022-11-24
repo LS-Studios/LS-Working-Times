@@ -1,0 +1,56 @@
+{
+  "langKey": "de",
+  "login": {
+    "menuName": "Anmeldung",
+    "email": "Email",
+    "password": "Passwort",
+    "login": "Anmelden",
+    "createAccount": "Account erstellen"
+  },
+  "timer": {
+    "menuName": "Timer",
+    "date": "Datum",
+    "notStarted": "Nicht gestarted",
+    "startTime": "Startzeit",
+    "worked": "Gearbeitet",
+    "break": "Pause",
+    "stopWorking": "Arbeit stoppen",
+    "startWorking": "Arbeit starten",
+    "stopBreak": "Pause stoppen",
+    "startBreak": "Pause starten",
+    "resetAndSave": "Zurücksetzen und Speichern",
+    "workedTimeThisWeek": "Gearbeitete Zeit diese Woche",
+    "saved": "Gespeicherte zeiten",
+    "noSaves": "Keine gespeicherten zeiten",
+    "the": "der",
+    "startedAt": "Gestartet um",
+    "endedAt": "Beendet um",
+    "workedTime": "Gearbeitete Zeit",
+    "breakTime": "Pausenzeit",
+    "delete": "Löschen",
+    "edit": "Bearbeiten"
+  },
+  "settings": {
+    "menuName": "Einstellungen",
+    "language": "Sprache",
+    "colorTheme": "Farbthema",
+    "logout": "Abmelden",
+    "editAccount": "Konto bearbeiten",
+    "resetSaves": "Gepeicherte Zeiten zurücksetzen",
+    "deleteAccount": "Konto löschen",
+    "german": "Deutsch",
+    "english": "Englisch",
+    "bright": "Hell",
+    "dark": "Dunkel"
+  },
+  "dialog": {
+    "changeTime": "Zeit ändern",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein",
+    "doYouRelayWantToDeleteThisSave": "Möchtest du diese gespeichte Zeit wirklich löschen?",
+    "doYouReallyWantToDeleteAllData": "Möchtest du wirklich alle gepeicheten Zeit löschen?",
+    "doYouReallyWantToDeleteThisAccount": "Möchtest du dieses Konto wirklich löschen?"
+  }
+}

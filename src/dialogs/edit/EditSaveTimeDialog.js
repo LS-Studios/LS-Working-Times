@@ -13,6 +13,7 @@ import {DateTime} from "../../timing/timer/DateTime";
 import DateTimeInput from "../time/TimeInput/DateTimeInput";
 import DateTimeContent from "../../cards/DateTime/DateTimeContent";
 import DatePicker from "react-multi-date-picker";
+import {t} from "react-switch-lang";
 
 const EditSaveTimeDialog = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -80,12 +81,11 @@ const EditSaveTimeDialog = () => {
     }
 
     return (
-        <Dialog title={"Change Time"} dialogContent={
+        <Dialog title={t("dialog.changeTime")} dialogContent={
             <div className="editSaveTimeDialog">
-
                 <div className="editSaveTimeDialogDivider"></div>
 
-                <h4>Date</h4>
+                <h4>{t("timer.date")}</h4>
                 <div className="editSaveTimeDialogDatePicker">
                     <DatePicker
                         portal
@@ -104,17 +104,17 @@ const EditSaveTimeDialog = () => {
                     />
                 </div>
 
-                <h4>Start time</h4>
+                <h4>{t("timer.startTime")}</h4>
                 <DateTimeInput currentHourState={startTimeHourState} setCurrentHourState={setStartTimeHourState}
                                currentMinuteState={startTimeMinuteState} setCurrentMinuteState={setStartTimeMinuteState}
                                currentSecondState={startTimeSecondState} setCurrentSecondState={setStartTimeSecondState}/>
 
-                <h4>Worked time</h4>
+                <h4>{t("timer.workedTime")}</h4>
                 <DateTimeInput currentHourState={workedTimeHourState} setCurrentHourState={setWorkedTimeHourState}
                                currentMinuteState={workedTimeMinuteState} setCurrentMinuteState={setWorkedTimeMinuteState}
                                currentSecondState={workedTimeSecondState} setCurrentSecondState={setWorkedTimeSecondState}/>
 
-                <h4>Break time</h4>
+                <h4>{t("timer.breakTime")}</h4>
                 <DateTimeInput currentHourState={breakTimeHourState} setCurrentHourState={setBreakTimeHourState}
                                currentMinuteState={breakTimeMinuteState} setCurrentMinuteState={setBreakTimeMinuteState}
                                currentSecondState={breakTimeSecondState} setCurrentSecondState={setBreakTimeSecondState}/>
@@ -122,8 +122,8 @@ const EditSaveTimeDialog = () => {
                 <div className="editSaveTimeDialogDivider"></div>
 
                 <div className="editSaveTimeDialogActionButtons">
-                    <ButtonCard className="horizontalButtonCard" title="Cancel" action={closeCurrentDialog}/>
-                    <ButtonCard className="horizontalButtonCard" title="Confirm" action={updateSave}/>
+                    <ButtonCard className="horizontalButtonCard" title={t("dialog.cancel")} action={closeCurrentDialog}/>
+                    <ButtonCard className="horizontalButtonCard" title={t("dialog.confirm")} action={updateSave}/>
                 </div>
             </div>
         } />

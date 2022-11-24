@@ -6,7 +6,7 @@ import {
     Routes
 } from "react-router-dom";
 import Timing from "./timing/Timing";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
 import Settings from "./settings/Settings";
@@ -15,8 +15,12 @@ import YesNoDialog from "./dialogs/choice/YesNoDialog";
 import ChangeTimeDialog from "./dialogs/time/ChangeTimeDialog";
 import EditSaveTimeDialog from "./dialogs/edit/EditSaveTimeDialog";
 import {DateTime} from "./timing/timer/DateTime";
+import {setDefaultLanguage, setLanguage, setLanguageCookie, setTranslations, translate} from "react-switch-lang";
+import en from "./languages/en.json"
+import de from "./languages/de.json"
+import PropTypes from "prop-types";
 
-function App() {
+function App(props) {
     const [currentMenu, setCurrentMenu] = useState(0)
     const [menuIsOpened, setMenuIsOpen] = useState(false);
 
@@ -26,9 +30,14 @@ function App() {
         EditSaveTimeDialog
     }
 
+    useEffect(() => {
+        setTranslations({en,de});
+        setDefaultLanguage('en');
+        setLanguageCookie();
+    }, [])
+
     return (
         <DialogProvider dialogs={dialogs}>
-            {new DateTime(0,0,0).addDateTime(new DateTime(14, 2, 0)).toTimeString()}
             <Router className="holder">
                 <div className="spacer1"/>
                 <div className={menuIsOpened ? "blur" : ""}>
@@ -40,7 +49,7 @@ function App() {
                         />
                         <Route
                             path="/settings"
-                            element={<Settings setCurrentMenu={setCurrentMenu}/>}
+                            element={<Settings setCurrentMenu={setCurrentMenu} setLanguage={setLanguage}/>}
                         />
                         <Route
                             path="*"
@@ -56,4 +65,8 @@ function App() {
     );
 }
 
-export default App;
+App.propTypes={
+    t:PropTypes.func.isRequired,
+};
+
+export default translate(App);

@@ -12,6 +12,7 @@ import TimeNumberInput from "./TimeInput/TimeNumberInput";
 import {padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
 import DateTimeInput from "./TimeInput/DateTimeInput";
+import {t} from "react-switch-lang";
 
 const ChangeTimeDialog = () => {
     const [currentHourState, setCurrentHourState] = useState("00")
@@ -77,15 +78,15 @@ const ChangeTimeDialog = () => {
     }, [])
 
     return (
-        <Dialog title={"Change Time"} dialogContent={
+        <Dialog title={t("dialog.changeTime")} dialogContent={
             <div>
                 <DateTimeInput currentHourState={currentHourState} setCurrentHourState={setCurrentHourState}
                                currentMinuteState={currentMinuteState} setCurrentMinuteState={setCurrentMinuteState}
                                currentSecondState={currentSecondState} setCurrentSecondState={setCurrentSecondState}/>
 
                 <div className="changeTimeActionButtons">
-                    <ButtonCard className="horizontalButtonCard" title="Cancel" action={closeCurrentDialog}/>
-                    <ButtonCard className="horizontalButtonCard" title="Confirm" action={changeTime}/>
+                    <ButtonCard className="horizontalButtonCard" title={t("dialog.cancel")} action={closeCurrentDialog}/>
+                    <ButtonCard className="horizontalButtonCard" title={t("dialog.confirm")} action={changeTime}/>
                 </div>
             </div>
         } />

@@ -107,7 +107,6 @@ function Timing({setCurrentMenu}) {
     return (
         <div>
             <TimingMenu saved={saved} selectedSaveDate={selectedSaveDate} setSavesIsLoading={setSavesIsLoading}/>
-
             <Save saved={saved} selectedSaveDate={selectedSaveDate} setSelectedSaveDate={setSelectedSaveDate} isLoading={savesIsLoading}/>
         </div>
     );

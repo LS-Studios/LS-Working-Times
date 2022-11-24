@@ -6,6 +6,7 @@ import "./DateTimePicker.scss"
 import "./Save.css"
 import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfWeekDayValue} from "../../helper/Helper";
 import ClipLoader from "react-spinners/ClipLoader";
+import {t} from "react-switch-lang";
 
 function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
     const datePickerRef = useRef()
@@ -42,7 +43,7 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
 
     return (
         <div className="saved">
-            <div className="saveTitle"><b>Saved</b></div>
+            <div className="saveTitle"><b>{t("timer.saved")}</b></div>
             <div className="saveWeekSelect">
                 <IoCaretBack className="icon" onClick={getSavesOfPreviousWeek}/>
                 <DatePicker
@@ -79,7 +80,7 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
                 isLoading ? loadingSpinner : (saved.filter(save => {
                     const saveDate = getDateFromString(save.date)
                     return saveDate >= getStartOfWeek(selectedSaveDate) && saveDate <= getEndOfWeek(selectedSaveDate)
-                }).length === 0 ? <div className="saveNoSaves">No saves</div> : null)
+                }).length === 0 ? <div className="saveNoSaves">{t("timer.noSaves")}</div> : null)
             }
         </div>
     );

@@ -7,6 +7,7 @@ import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../../firebase/LSWalletConfig";
 import {useDialog} from "use-react-dialog";
+import {t} from "react-switch-lang";
 
 function SavedCard({save, isExpanded}) {
     const { dialogs, openDialog } = useDialog();
@@ -16,7 +17,7 @@ function SavedCard({save, isExpanded}) {
     const getDateNameByString = (string) => {
         const splitList = string.split(".")
         const date = new Date(splitList[2]+"/"+splitList[1]+"/"+splitList[0])
-        return date.toLocaleDateString("en", {weekday: 'long'})
+        return date.toLocaleDateString(t("langKey"), {weekday: 'long'})
     }
 
     const getEndTimeString = () => {
@@ -35,7 +36,7 @@ function SavedCard({save, isExpanded}) {
     const deleteSave = (e) => {
         e.stopPropagation();
 
-        openDialog("YesNoDialog", {message:"Do you really want to delete this save?", yesAction:() => {
+        openDialog("YesNoDialog", {message:t("dialog.doYouRelayWantToDeleteThisSave"), yesAction:() => {
             const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
             const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
 
@@ -52,28 +53,28 @@ function SavedCard({save, isExpanded}) {
     return (
         <div className="saveCardBg" onClick={expand}>
             <div className={expanded ? "saveCardTitleExpanded" : ""}>
-                <div><b>{getDateNameByString(save.date)} the {save.date}</b></div>
+                <div><b>{getDateNameByString(save.date)} {t("timer.the")} {save.date}</b></div>
             </div>
             <div className={expanded ? "" : "gone"}>
                 <div className="saveCardRowTitle">
-                    <div>Started at</div>
-                    <div>Ended at</div>
+                    <div>{t("timer.startedAt")}</div>
+                    <div>{t("timer.endedAt")}</div>
                 </div>
                 <div className="saveCardRowValue">
                     <div>{save.startTime}</div>
                     <div>{getEndTimeString()}</div>
                 </div>
                 <div className="saveCardRowTitle">
-                    <div>Worked time</div>
-                    <div>Break time</div>
+                    <div>{t("timer.workedTime")}</div>
+                    <div>{t("timer.breakTime")}</div>
                 </div>
                 <div className="saveCardRowValue">
                     <div>{save.worked}</div>
                     <div>{save.break}</div>
                 </div>
                 <div className="saveCardActionBar">
-                    <button className="saveCardActionButton" onClick={deleteSave}>Delete</button>
-                    <button className="saveCardActionButton" onClick={editSave}>Edit</button>
+                    <button className="saveCardActionButton" onClick={deleteSave}>{t("timer.delete")}</button>
+                    <button className="saveCardActionButton" onClick={editSave}>{t("timer.edit")}</button>
                 </div>
             </div>
         </div>
