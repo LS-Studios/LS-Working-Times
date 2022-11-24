@@ -6,7 +6,7 @@ import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import InputCard from "../../cards/Input/InputCard";
 import ButtonCard from "../../cards/Button/ButtonCard";
-import {t} from "../../helper/Translation/Transalation";
+import {t} from "../../helper/LanguageTransaltion/Transalation";
 import {get, getDatabase, ref, set} from "firebase/database";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 

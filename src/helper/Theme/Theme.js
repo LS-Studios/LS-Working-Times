@@ -8,18 +8,18 @@ let defaultTheme = 'dark';
 let currentTheme = 'dark';
 let count = 0;
 
-function subscribe(cb) {
+export function subscribe(cb) {
     const newId = count;
     subscribes[newId] = cb;
     count += 1;
     return newId;
 }
 
-function unsubscribe(id) {
+export function unsubscribe(id) {
     delete subscribes[id];
 }
 
-function triggerSubscriptions() {
+export function triggerSubscriptions() {
     Object.keys(subscribes).forEach((id) => {
         new Promise((resolve) => {
             subscribes[id]();
@@ -28,25 +28,25 @@ function triggerSubscriptions() {
     });
 }
 
-function getDefaultTheme() {
+export function getDefaultTheme() {
     return defaultTheme;
 }
 
-function getCurrentTheme() {
+export function getCurrentTheme() {
     return currentTheme;
 }
 
-function setDefaultTheme(lang) {
+export function setDefaultTheme(lang) {
     defaultTheme = lang;
     currentTheme = lang;
 }
 
-function setTheme(theme) {
+export function setTheme(theme) {
     currentTheme = theme;
     triggerSubscriptions();
 }
 
-function getThemeClass(path, theme) {
+export function getThemeClass(path, theme) {
     path = path.charAt(0).toUpperCase() + path.slice(1)
 
     if (!theme)
@@ -55,7 +55,7 @@ function getThemeClass(path, theme) {
         return theme + path
 }
 
-function setThemeUp(Component) {
+export function setThemeUp(Component) {
     class ThemeComponet extends React.Component {
         componentDidMount() {
             this.id = subscribe(() => this.forceUpdate());
@@ -75,14 +75,3 @@ function setThemeUp(Component) {
 
     return hoistStatics(ThemeComponet, Component);
 }
-
-module.exports = {
-    getDefaultTheme,
-    getCurrentTheme,
-    setDefaultTheme,
-    setTheme,
-    setThemeUp,
-    subscribe,
-    unsubscribe,
-    getThemeClass,
-};

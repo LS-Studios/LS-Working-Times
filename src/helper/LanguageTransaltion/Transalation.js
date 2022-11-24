@@ -1,7 +1,6 @@
 const React = require('react');
 const hoistStatics = require('hoist-non-react-statics');
 const objectAssign = require('object-assign');
-const Cookies = require('universal-cookie');
 
 const subscribes = {};
 
@@ -9,22 +8,19 @@ let translations = {};
 let defaultLanguage = 'en';
 let language = 'en';
 let count = 0;
-let cookies;
-let cookieName = 'language';
-let cookieOption = { path: '/', maxAge: 157680000 };
 
-function subscribe(cb) {
+export function subscribe(cb) {
     const newId = count;
     subscribes[newId] = cb;
     count += 1;
     return newId;
 }
 
-function unsubscribe(id) {
+export function unsubscribe(id) {
     delete subscribes[id];
 }
 
-function triggerSubscriptions() {
+export function triggerSubscriptions() {
     Object.keys(subscribes).forEach((id) => {
         new Promise((resolve) => {
             subscribes[id]();
@@ -33,24 +29,24 @@ function triggerSubscriptions() {
     });
 }
 
-function getLanguages() {
+export function getLanguages() {
     return Object.keys(translations);
 }
 
-function getDefaultLanguage() {
+export function getDefaultLanguage() {
     return defaultLanguage;
 }
 
-function getLanguage() {
+export function getLanguage() {
     return language;
 }
 
-function setDefaultLanguage(lang) {
+export function setDefaultLanguage(lang) {
     defaultLanguage = lang;
     language = lang;
 }
 
-function setLanguage(lang) {
+export function setLanguage(lang) {
     if (getLanguages().indexOf(lang) === -1) {
         return;
     }
@@ -59,24 +55,12 @@ function setLanguage(lang) {
     triggerSubscriptions();
 }
 
-function setLanguageCookie(name, option, reqCookie) {
-    cookies = new Cookies(reqCookie);
-    cookieName = name || cookieName;
-    cookieOption = Object.assign({}, cookieOption, option);
-
-    const lang = cookies.get(cookieName);
-
-    if (lang) {
-        setLanguage(lang);
-    }
-}
-
-function setTranslations(userTranslations) {
+export function setTranslations(userTranslations) {
     translations = userTranslations;
     triggerSubscriptions();
 }
 
-function setDefaultTranslations(userTranslations) {
+export function setDefaultTranslations(userTranslations) {
     if (getLanguages().length !== 0) {
         setTranslations(userTranslations);
         return;
@@ -84,11 +68,11 @@ function setDefaultTranslations(userTranslations) {
     translations = userTranslations;
 }
 
-function getTranslation(lang) {
+export function getTranslation(lang) {
     return translations[lang];
 }
 
-function t(path, params, lang) {
+export function t(path, params, lang) {
     const selectLang = lang || language;
 
     function fallback() {
@@ -130,7 +114,7 @@ function t(path, params, lang) {
     return translation;
 }
 
-function translate(Component) {
+export function translate(Component) {
     class TranslatedComponet extends React.Component {
         componentDidMount() {
             this.id = subscribe(() => this.forceUpdate());
@@ -150,18 +134,3 @@ function translate(Component) {
 
     return hoistStatics(TranslatedComponet, Component);
 }
-
-module.exports = {
-    getLanguages,
-    getDefaultLanguage,
-    getLanguage,
-    setDefaultLanguage,
-    setLanguage,
-    setLanguageCookie,
-    setDefaultTranslations,
-    setTranslations,
-    translate,
-    subscribe,
-    unsubscribe,
-    t,
-};

@@ -3,7 +3,7 @@ import "./YesNoDialog.css"
 import ButtonCard from "../../cards/Button/ButtonCard";
 import React from "react";
 import Dialog from "../Dialog";
-import {t} from "../../helper/Translation/Transalation";
+import {t} from "../../helper/LanguageTransaltion/Transalation";
 
 const YesNoDialog = () => {
     const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('YesNoDialog', {title: "None", message:"None", yesAction:()=>{}});

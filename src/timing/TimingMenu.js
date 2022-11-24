@@ -21,7 +21,7 @@ import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import ClipLoader from "react-spinners/ClipLoader";
-import {t} from "../helper/Translation/Transalation";
+import {t} from "../helper/LanguageTransaltion/Transalation";
 
 function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     const { dialogs, openDialog } = useDialog();

@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {getAuth} from "firebase/auth";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
-import {t} from "../helper/Translation/Transalation";
+import {t} from "../helper/LanguageTransaltion/Transalation";
 import {getThemeClass} from "../helper/Theme/Theme";
 
 const Header = ({ currentMenu, setCurrentMenu, menuIsOpened, setMenuIsOpen}) => {

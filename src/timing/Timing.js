@@ -19,7 +19,7 @@ import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import TimingMenu from "./TimingMenu";
 import {useNavigate} from "react-router-dom";
-import {setLanguage} from "../helper/Translation/Transalation";
+import {setLanguage} from "../helper/LanguageTransaltion/Transalation";
 import {getThemeClass, setTheme} from "../helper/Theme/Theme";
 
 function Timing({setCurrentMenu}) {

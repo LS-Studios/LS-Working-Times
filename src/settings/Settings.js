@@ -8,8 +8,8 @@ import {useNavigate} from "react-router-dom";
 import {useDialog} from "use-react-dialog";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import {get, getDatabase, ref, remove, set} from "firebase/database";
-import {t} from "../helper/Translation/Transalation";
-import {setLanguage} from "../helper/Translation/Transalation";
+import {t} from "../helper/LanguageTransaltion/Transalation";
+import {setLanguage} from "../helper/LanguageTransaltion/Transalation";
 import {getThemeClass, setTheme} from "../helper/Theme/Theme";
 
 const Settings = ({ setCurrentMenu }) => {

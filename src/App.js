@@ -14,10 +14,10 @@ import {DialogProvider} from "use-react-dialog";
 import YesNoDialog from "./dialogs/choice/YesNoDialog";
 import ChangeTimeDialog from "./dialogs/time/ChangeTimeDialog";
 import EditSaveTimeDialog from "./dialogs/edit/EditSaveTimeDialog";
-import {setDefaultLanguage, setLanguage, setLanguageCookie, setTranslations, translate} from "./helper/Translation/Transalation";
-import en from "./helper/Translation/languages/en.json"
-import de from "./helper/Translation/languages/de.json"
-import {getThemeClass, setDefaultTheme, setThemeUp} from "./helper/Theme/Theme";
+import {setTranslations, translate} from "./helper/LanguageTransaltion/Transalation";
+import en from "./helper/LanguageTransaltion/languages/en.json"
+import de from "./helper/LanguageTransaltion/languages/de.json"
+import {setDefaultTheme, setThemeUp} from "./helper/Theme/Theme";
 
 function App(props) {
     const [currentMenu, setCurrentMenu] = useState(0)
@@ -31,7 +31,6 @@ function App(props) {
 
     useEffect(() => {
         setTranslations({en,de});
-        setDefaultLanguage('en');
 
         setDefaultTheme("dark")
         document.body.classList.add("darkBody")
@@ -50,7 +49,7 @@ function App(props) {
                         />
                         <Route
                             path="/settings"
-                            element={<Settings setCurrentMenu={setCurrentMenu} setLanguage={setLanguage}/>}
+                            element={<Settings setCurrentMenu={setCurrentMenu}/>}
                         />
                         <Route
                             path="*"

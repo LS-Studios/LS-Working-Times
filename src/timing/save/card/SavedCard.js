@@ -7,7 +7,7 @@ import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../../firebase/LSWalletConfig";
 import {useDialog} from "use-react-dialog";
-import {t} from "../../../helper/Translation/Transalation";
+import {t} from "../../../helper/LanguageTransaltion/Transalation";
 
 function SavedCard({save, isExpanded}) {
     const { dialogs, openDialog } = useDialog();

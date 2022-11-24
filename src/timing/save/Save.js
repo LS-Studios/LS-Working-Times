@@ -6,7 +6,7 @@ import "./DateTimePicker.scss"
 import "./Save.css"
 import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfWeekDayValue} from "../../helper/Helper";
 import ClipLoader from "react-spinners/ClipLoader";
-import {t} from "../../helper/Translation/Transalation";
+import {t} from "../../helper/LanguageTransaltion/Transalation";
 
 function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
     const datePickerRef = useRef()
