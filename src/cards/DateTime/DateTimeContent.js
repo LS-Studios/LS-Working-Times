@@ -44,7 +44,7 @@ const DateTimeContent = ({title, value, type}) => {
                         render={<DatePickerLayout/>}
                         format="DD.MM.YYYY"
                         calendarPosition={"bottom-center"}
-                        className="custom-picker"
+                        className={getThemeClass("customPicker")}
                     />
                     :
                     <DatePicker
@@ -60,7 +60,7 @@ const DateTimeContent = ({title, value, type}) => {
                         ]}
                         render={<DatePickerLayout/>}
                         calendarPosition={"bottom-center"}
-                        className="custom-picker"
+                        className={getThemeClass("customPicker")}
                     />
             }
         </div>

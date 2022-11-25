@@ -1,8 +1,9 @@
 import React, {useRef, useState} from 'react';
-import "./TimeNumberInput.css"
+import "./TimeNumberInput.scss"
 import {AiFillCaretUp} from "react-icons/ai"
 import {AiFillCaretDown} from "react-icons/ai"
 import {padTo2Digits} from "../../../helper/Helper";
+import {getThemeClass} from "../../../helper/Theme/Theme";
 
 function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
     const input = useRef(null);
@@ -45,11 +46,11 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
 
     return (
         <div className="timeInputRow">
-            <AiFillCaretUp className="timeInputRowChangeButton" onClick={increase}/>
+            <AiFillCaretUp className={getThemeClass("timeInputRowChangeButton")} onClick={increase}/>
             <form onSubmit={submit}>
-                <input className="changeTimeDialogInput" value={currentState} ref={input} type="text" onChange={onChange} onKeyDown={onKeyDown}/>
+                <input className={getThemeClass("changeTimeDialogInput")} value={currentState} ref={input} type="text" onChange={onChange} onKeyDown={onKeyDown}/>
             </form>
-            <AiFillCaretDown className="timeInputRowChangeButton" onClick={decrease}/>
+            <AiFillCaretDown className={getThemeClass("timeInputRowChangeButton")} onClick={decrease}/>
         </div>
     );
 }

@@ -3,17 +3,31 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
     border: 0;
     border-radius: 6px;
-    background-color: #2C3A47;
     width: 271px;
+}
+
+.darkSaved {
+    @extend .saved;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    background-color: #2C3A47;
     color: #CCCCCC;
 }
 
-.saved:hover {
+.darkSaved:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+}
+
+.brightSaved {
+    @extend .saved;
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2);
+    background-color: #DBDBDB;
+    color: #000000;
+}
+
+.brightSaved:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 .saveTitle {
@@ -33,8 +47,16 @@
     cursor: pointer;
 }
 
-.saveWeekSelect > .icon {
+.darkSaveWeekSelectIcon {
     background-color: #212A33;
+    border: 0;
+    border-radius: 6px;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.brightSaveWeekSelectIcon {
+    background-color: #BCBCBC;
     border: 0;
     border-radius: 6px;
     padding: 3px;

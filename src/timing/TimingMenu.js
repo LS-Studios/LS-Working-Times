@@ -22,7 +22,7 @@ import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../helper/LanguageTransaltion/Transalation";
-import {getThemeClass} from "../helper/Theme/Theme";
+import {getCurrentTheme, getThemeClass} from "../helper/Theme/Theme";
 
 function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     const { dialogs, openDialog } = useDialog();
@@ -299,8 +299,17 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
         }
     }, [])
 
+    const getThemeSpinnerColor = () => {
+        switch (getCurrentTheme()) {
+            case "dark":
+                return "#CCCCCC";
+            case "bright":
+                return "#000000";
+        }
+    }
+
     const loadingSpinner = <ClipLoader
-        color="#CCCCCC"
+        color={getThemeSpinnerColor()}
         size={15}
         speedMultiplier={0.8}
     />
@@ -335,7 +344,7 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
                 <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : null} title={workTimer.getIsRunning ? t("timer.stopWorking") : t("timer.startWorking")} action={toggleOverallTimer}/>
                 <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : null} title={breakTimer.getIsRunning ? t("timer.stopBreak") : t("timer.startBreak")} action={toggleBreakTimer}/>
                 <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : (startTime != null ? getThemeClass("buttonCard") : getThemeClass("disabled"))} title={t("timer.resetAndSave")} action={startTime != null ? resetTimers : function (){}}/>
-                <ValueCard className="singleLineValueCard" title={t("timer.workedTimeThisWeek")} value={timersAreLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
+                <ValueCard className={getThemeClass("singleLineValueCard")} title={t("timer.workedTimeThisWeek")} value={timersAreLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
             </div>
         </div>
     );

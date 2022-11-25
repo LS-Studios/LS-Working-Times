@@ -1,0 +1,59 @@
+.timeInputRow {
+    margin: 0 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.timeInputRowChangeButton {
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-left: 3px;
+    height: 20px;
+}
+
+.darkTimeInputRowChangeButton {
+    @extend .timeInputRowChangeButton;
+    background-color: #2C3A47;
+}
+
+.brightTimeInputRowChangeButton {
+    @extend .timeInputRowChangeButton;
+    background-color: #DBDBDB;
+}
+
+.changeTimeDialogInput {
+    width: 94%;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.darkChangeTimeDialogInput {
+    @extend .changeTimeDialogInput;
+    background-color: #3d4e60;
+    border: 2px solid #3c4c5d;
+    color: #CCCCCC;
+}
+
+.darkChangeTimeDialogInput:focus {
+    border: 3px solid #46596e;
+    outline: none;
+}
+
+.brightChangeTimeDialogInput {
+    @extend .changeTimeDialogInput;
+    background-color: #DBDBDB;
+    border: 2px solid #b6b6b6;
+    color: #000000;
+}
+
+.brightChangeTimeDialogInput:focus {
+    border: 3px solid #9d9d9d;
+    outline: none;
+}

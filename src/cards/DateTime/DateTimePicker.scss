@@ -1,127 +1,255 @@
-:root {
-  --rmdp-primary: rgba(204, 204, 204, 1);
-  --rmdp-secondary: rgba(204, 204, 204, 0.5);
-  --rmdp-bg: #2C3A47;
-  --rmdp-shadow: rgba(204, 204, 204, 0.1);
-  --rmdp-today: rgba(204, 204, 204, 0.1);
-  --rmdp-selected: rgba(204, 204, 204, 0.5);
-  --rmdp-hover: rgba(204, 204, 204, 0.2);
-  --rmdp-deselect: rgba(204, 204, 204, 0.8);
+//region Dark
+$darkPrimary: rgba(204, 204, 204);
+$darkSecondary: rgba(204, 204, 204, 0.5) ;
+$darkBg: #2C3A47;
+$darkShadow: rgba(204, 204, 204, 0.1);
+$darkToday: rgba(204, 204, 204, 0.1);
+$darkSelected: rgba(204, 204, 204, 0.5);
+$darkHover: rgba(204, 204, 204, 0.2);
+$darkDeselect: rgba(204, 204, 204, 0.8);
+
+.darkCustomPicker.rmdp-wrapper,
+.darkCustomPicker .rmdp-month-picker,
+.darkCustomPicker .rmdp-year-picker,
+.darkCustomPicker .rmdp-time-picker div input,
+.rmdp-container .darkCustomPicker.ep-arrow::after {
+  background-color: $darkBg;
+  color: $darkPrimary;
 }
 
-.custom-picker.rmdp-wrapper,
-.custom-picker .rmdp-month-picker,
-.custom-picker .rmdp-year-picker,
-.custom-picker .rmdp-time-picker div input,
-.rmdp-container .custom-picker.ep-arrow::after {
-  background-color: var(--rmdp-bg);
-  color: var(--rmdp-primary);
+.darkCustomPicker .rmdp-day:not(.rmdp-deactive),
+.darkCustomPicker .rmdp-time-picker div .rmdp-am,
+.darkCustomPicker .rmdp-header-values,
+.darkCustomPicker .rmdp-panel-header {
+  color: $darkPrimary;
 }
 
-.custom-picker .rmdp-day:not(.rmdp-deactive),
-.custom-picker .rmdp-time-picker div .rmdp-am,
-.custom-picker .rmdp-header-values,
-.custom-picker .rmdp-panel-header {
-  color: var(--rmdp-primary);
+.darkCustomPicker .rmdp-day.rmdp-range {
+  color: $darkPrimary;
 }
 
-.custom-picker .rmdp-day.rmdp-range {
-  color: var(--rmdp-primary);
+.darkCustomPicker .rmdp-panel-body li {
+  color: $darkPrimary;
 }
 
-.custom-picker .rmdp-panel-body li {
-  color: var(--rmdp-primary);
+.darkCustomPicker .rmdp-day.rmdp-deactive,
+.darkCustomPicker .rmdp-day.rmdp-disabled {
+  color: $darkPrimary;
 }
 
-.custom-picker .rmdp-day.rmdp-deactive,
-.custom-picker .rmdp-day.rmdp-disabled {
-  color: var(--rmdp-primary);
+.rmdp-container .darkCustomPicker.ep-arrow[direction="top"] {
+  border-bottom: 1px solid $darkBg;
 }
 
-.rmdp-container .custom-picker.ep-arrow[direction="top"] {
-  border-bottom: 1px solid var(--rmdp-bg);
+.rmdp-container .darkCustomPicker.ep-arrow[direction="left"] {
+  border-right: 1px solid $darkBg;
 }
 
-.rmdp-container .custom-picker.ep-arrow[direction="left"] {
-  border-right: 1px solid var(--rmdp-bg);
+.rmdp-container .darkCustomPicker.ep-arrow[direction="right"] {
+  border-left: 1px solid $darkBg;
 }
 
-.rmdp-container .custom-picker.ep-arrow[direction="right"] {
-  border-left: 1px solid var(--rmdp-bg);
+.rmdp-container .darkCustomPicker.ep-arrow[direction="bottom"] {
+  border-top: 1px solid $darkBg;
 }
 
-.rmdp-container .custom-picker.ep-arrow[direction="bottom"] {
-  border-top: 1px solid var(--rmdp-bg);
+.darkCustomPicker .rmdp-wrapper {
+  border: 1px solid $darkDeselect;
+  box-shadow: 0 0 5px $darkDeselect;
 }
 
-.custom-picker .rmdp-wrapper {
-  border: 1px solid var(--rmdp-secondary);
-  box-shadow: 0 0 5px var(--rmdp-secondary);
+.darkCustomPicker .rmdp-panel-body li {
+  background-color: $darkPrimary;
+  box-shadow: 0 0 2px $darkDeselect;
 }
 
-.custom-picker .rmdp-panel-body li {
-  background-color: var(--rmdp-primary);
-  box-shadow: 0 0 2px var(--rmdp-secondary);
+.darkCustomPicker .rmdp-week-day {
+  color: $darkPrimary;
 }
 
-.custom-picker .rmdp-week-day {
-  color: var(--rmdp-primary);
+.darkCustomPicker .rmdp-day.rmdp-deactive {
+  color: $darkDeselect;
 }
 
-.custom-picker .rmdp-day.rmdp-deactive {
-  color: var(--rmdp-secondary);
+.darkCustomPicker .rmdp-range {
+  background-color: $darkSelected;
+  box-shadow: 0 0 3px $darkShadow;
 }
 
-.custom-picker .rmdp-range {
-  background-color: var(--rmdp-selected);
-  box-shadow: 0 0 3px var(--rmdp-shadow);
-}
-
-.custom-picker .rmdp-arrow {
-  border: solid var(--rmdp-primary);
+.darkCustomPicker .rmdp-arrow {
+  border: solid $darkPrimary;
   border-width: 0 2px 2px 0;
 }
 
-.custom-picker .rmdp-arrow-container:hover {
-  background-color: var(--rmdp-hover);
-  box-shadow: 0 0 3px var(--rmdp-secondary);
+.darkCustomPicker .rmdp-arrow-container:hover {
+  background-color: $darkHover;
+  box-shadow: 0 0 3px $darkDeselect;
 }
 
-.custom-picker .rmdp-panel-body::-webkit-scrollbar-thumb {
-  background: var(--rmdp-primary);
+.darkCustomPicker .rmdp-panel-body::-webkit-scrollbar-thumb {
+  background: $darkPrimary;
 }
 
-.custom-picker .rmdp-day.rmdp-today span {
-  background-color: var(--rmdp-today);
+.darkCustomPicker .rmdp-day.rmdp-today span {
+  background-color: $darkToday;
 }
 
-.custom-picker .rmdp-rtl .rmdp-panel {
+.darkCustomPicker .rmdp-rtl .rmdp-panel {
   border-left: unset;
-  border-right: 1px solid var(--rmdp-secondary);
+  border-right: 1px solid $darkDeselect;
 }
 
-.custom-picker .rmdp-day.rmdp-selected span:not(.highlight) {
-  background-color: var(--rmdp-selected);
-  box-shadow: 0 0 3px var(--rmdp-shadow);
+.darkCustomPicker .rmdp-day.rmdp-selected span:not(.highlight) {
+  background-color: $darkSelected;
+  box-shadow: 0 0 3px $darkShadow;
 }
 
-.custom-picker .rmdp-day:not(.rmdp-day-hidden) span:hover {
-  background-color: var(--rmdp-hover) !important;
+.darkCustomPicker .rmdp-day:not(.rmdp-day-hidden) span:hover {
+  background-color: $darkHover !important;
 }
 
-.custom-picker .b-deselect {
-  color: var(--rmdp-deselect);
+.darkCustomPicker .b-deselect {
+  color: $darkDeselect;
   background-color: white;
 }
 
-.custom-picker .rmdp-action-button {
-  color: var(--rmdp-primary);
+.darkCustomPicker .rmdp-action-button {
+  color: $darkPrimary;
 }
 
-.custom-picker .rmdp-button:not(.rmdp-action-button) {
-  background-color: var(--rmdp-primary);
+.darkCustomPicker .rmdp-button:not(.rmdp-action-button) {
+  background-color: $darkPrimary;
 }
 
-.custom-picker .rmdp-button:not(.rmdp-action-button):hover {
-  background-color: var(--rmdp-deselect);
+.darkCustomPicker .rmdp-button:not(.rmdp-action-button):hover {
+  background-color: $darkDeselect;
 }
+//endregion
+
+//region bright
+$brightPrimary: rgb(0, 0, 0);
+$brightSecondary: rgba(0, 0, 0, 0.5);
+$brightBg: #DBDBDB;
+$brightShadow: rgba(0, 0, 0, 0.1);
+$brightToday: rgba(0, 0, 0, 0.1);
+$brightSelected: rgba(0, 0, 0, 0.5);
+$brightHover: rgba(0, 0, 0, 0.2);
+$brightDeselect: rgba(0, 0, 0, 0.8);
+
+.brightCustomPicker.rmdp-wrapper,
+.brightCustomPicker .rmdp-month-picker,
+.brightCustomPicker .rmdp-year-picker,
+.brightCustomPicker .rmdp-time-picker div input,
+.rmdp-container .brightCustomPicker.ep-arrow::after {
+  background-color: $brightBg;
+  color: $brightPrimary;
+}
+
+.brightCustomPicker .rmdp-day:not(.rmdp-deactive),
+.brightCustomPicker .rmdp-time-picker div .rmdp-am,
+.brightCustomPicker .rmdp-header-values,
+.brightCustomPicker .rmdp-panel-header {
+  color: $brightPrimary;
+}
+
+.brightCustomPicker .rmdp-day.rmdp-range {
+  color: $brightPrimary;
+}
+
+.brightCustomPicker .rmdp-panel-body li {
+  color: $brightPrimary;
+}
+
+.brightCustomPicker .rmdp-day.rmdp-deactive,
+.brightCustomPicker .rmdp-day.rmdp-disabled {
+  color: $brightPrimary;
+}
+
+.rmdp-container .brightCustomPicker.ep-arrow[direction="top"] {
+  border-bottom: 1px solid $brightBg;
+}
+
+.rmdp-container .brightCustomPicker.ep-arrow[direction="left"] {
+  border-right: 1px solid $brightBg;
+}
+
+.rmdp-container .brightCustomPicker.ep-arrow[direction="right"] {
+  border-left: 1px solid $brightBg;
+}
+
+.rmdp-container .brightCustomPicker.ep-arrow[direction="bottom"] {
+  border-top: 1px solid $brightBg;
+}
+
+.brightCustomPicker .rmdp-wrapper {
+  border: 1px solid $brightDeselect;
+  box-shadow: 0 0 5px $brightDeselect;
+}
+
+.brightCustomPicker .rmdp-panel-body li {
+  background-color: $brightPrimary;
+  box-shadow: 0 0 2px $brightDeselect;
+}
+
+.brightCustomPicker .rmdp-week-day {
+  color: $brightPrimary;
+}
+
+.brightCustomPicker .rmdp-day.rmdp-deactive {
+  color: $brightDeselect;
+}
+
+.brightCustomPicker .rmdp-range {
+  background-color: $brightSelected;
+  box-shadow: 0 0 3px $brightShadow;
+}
+
+.brightCustomPicker .rmdp-arrow {
+  border: solid $brightPrimary;
+  border-width: 0 2px 2px 0;
+}
+
+.brightCustomPicker .rmdp-arrow-container:hover {
+  background-color: $brightHover;
+  box-shadow: 0 0 3px $brightDeselect;
+}
+
+.brightCustomPicker .rmdp-panel-body::-webkit-scrollbar-thumb {
+  background: $brightPrimary;
+}
+
+.brightCustomPicker .rmdp-day.rmdp-today span {
+  background-color: $brightToday;
+}
+
+.brightCustomPicker .rmdp-rtl .rmdp-panel {
+  border-left: unset;
+  border-right: 1px solid $brightDeselect;
+}
+
+.brightCustomPicker .rmdp-day.rmdp-selected span:not(.highlight) {
+  background-color: $brightSelected;
+  box-shadow: 0 0 3px $brightShadow;
+}
+
+.brightCustomPicker .rmdp-day:not(.rmdp-day-hidden) span:hover {
+  background-color: $brightHover !important;
+}
+
+.brightCustomPicker .b-deselect {
+  color: $brightDeselect;
+  background-color: white;
+}
+
+.brightCustomPicker .rmdp-action-button {
+  color: $brightPrimary;
+}
+
+.brightCustomPicker .rmdp-button:not(.rmdp-action-button) {
+  background-color: $brightPrimary;
+}
+
+.brightCustomPicker .rmdp-button:not(.rmdp-action-button):hover {
+  background-color: $brightDeselect;
+}
+//endregion

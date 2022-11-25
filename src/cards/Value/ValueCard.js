@@ -10,7 +10,7 @@ const ValueCard = ({className, title, value, clickable, onClick=null}) => {
         <div className={className == null ? (clickable ? getThemeClass("clickableValueCard") : getThemeClass("notClickableValueCard")) : className} onClick={onClick}>
             <div className="valueContainer">
                 <div><b>{title}</b></div>
-                <div className="valueDivider"/>
+                <div className={getThemeClass("divider")}/>
                 <div>{value}</div>
             </div>
         </div>

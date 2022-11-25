@@ -12,11 +12,25 @@
 .popup {
     margin: 70px auto;
     padding: 10px;
-    background: #212A33;
+
     border-radius: 5px;
     width: $verticalWith;
     position: relative;
+
+}
+
+.darkPopup {
+    @extend .popup;
+
+    background: #212A33;
     color: #CCCCCC;
+}
+
+.brightPopup {
+    @extend .popup;
+
+    background: #BCBCBC;
+    color: #000000;
 }
 
 .popup .content {

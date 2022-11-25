@@ -3,13 +3,22 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    background-color: #212A33;
     border: 0;
     border-radius: 6px;
     width: 240px;
     padding: 6px;
     margin: 5px;
     cursor: pointer;
+}
+
+.darkSaveCardBg {
+    @extend .saveCardBg;
+    background-color: #212A33;
+}
+
+.brightSaveCardBg {
+    @extend .saveCardBg;
+    background-color: #BCBCBC;
 }
 
 .saveCardTitleExpanded {
@@ -48,16 +57,54 @@
     font-size: 14px;
     border: 0;
     border-radius: 6px;
-    background-color: #2C3A47;
     margin-top: 5px;
     margin-right: 3px;
     cursor: pointer;
-    color: #CCCCCC;
 }
 
 .saveCardActionButton:last-child {
     margin-right: 0px;
     margin-left: 3px;
+}
+
+.darkSaveCardActionButton {
+    @extend .saveCardActionButton;
+    background-color: #2C3A47;
+}
+
+.brightSaveCardActionButton {
+    @extend .saveCardActionButton;
+    background-color: #DBDBDB;
+}
+
+.darkSaveCardDivider {
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    width: 245px;
+}
+
+.darkSaveCardDividerTop {
+    @extend .darkSaveCardDivider;
+    margin-bottom: 3px;
+}
+
+.darkSaveCardDividerBottom {
+    @extend .darkSaveCardDivider;
+    margin-top: 3px;
+}
+
+.brightSaveCardDivider {
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
+    width: 245px;
+}
+
+.brightSaveCardDividerTop {
+    @extend .brightSaveCardDivider;
+    margin-bottom: 3px;
+}
+
+.brightSaveCardDividerBottom {
+    @extend .brightSaveCardDivider;
+    margin-top: 3px;
 }
 
 .gone {

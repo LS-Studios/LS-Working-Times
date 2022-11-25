@@ -1,3 +1,7 @@
+* {
+    transition: 0.2s;
+}
+
 .darkBody {
     text-align: center;
     display: flex;

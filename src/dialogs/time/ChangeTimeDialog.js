@@ -13,6 +13,7 @@ import {padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
 import DateTimeInput from "./TimeInput/DateTimeInput";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
+import {getThemeClass} from "../../helper/Theme/Theme";
 
 const ChangeTimeDialog = () => {
     const [currentHourState, setCurrentHourState] = useState("00")
@@ -85,8 +86,8 @@ const ChangeTimeDialog = () => {
                                currentSecondState={currentSecondState} setCurrentSecondState={setCurrentSecondState}/>
 
                 <div className="changeTimeActionButtons">
-                    <ButtonCard className="horizontalButtonCard" title={t("dialog.cancel")} action={closeCurrentDialog}/>
-                    <ButtonCard className="horizontalButtonCard" title={t("dialog.confirm")} action={changeTime}/>
+                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={closeCurrentDialog}/>
+                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={changeTime}/>
                 </div>
             </div>
         } />

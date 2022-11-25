@@ -18,15 +18,35 @@
 }
 
 .editSaveTimeDialogDatePicker {
-    background-color: #3c4c5d;
+
     border: 0;
     border-radius: 5px;
     margin-top: 10px;
     width: 250px;
 }
 
+.darkEditSaveTimeDialogDatePicker {
+    @extend .editSaveTimeDialogDatePicker;
+    background-color: #3c4c5d;
+}
+
+.brightEditSaveTimeDialogDatePicker {
+    @extend .editSaveTimeDialogDatePicker;
+    background-color: #818181;
+    color: #CCCCCC;
+}
+
 .editSaveTimeDialogDivider {
-    border-top: 2px solid rgba(255, 255, 255, 0.1);
     width: 271px;
     margin-top: 8px;
+}
+
+.darkEditSaveTimeDialogDivider {
+    @extend .editSaveTimeDialogDivider;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.brightEditSaveTimeDialogDivider {
+    @extend .editSaveTimeDialogDivider;
+    border-top: 2px solid rgba(0, 0, 0, 0.1);
 }

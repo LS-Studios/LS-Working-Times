@@ -2,11 +2,11 @@ import React, {useRef, useState} from 'react';
 import {IoCaretBack, IoCaretForward} from "react-icons/io5";
 import DatePicker, {Calendar} from "react-multi-date-picker";
 import SavedCard from "./card/SavedCard";
-import "./DateTimePicker.scss"
-import "./Save.css"
+import "./Save.scss"
 import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfWeekDayValue} from "../../helper/Helper";
 import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
+import {getCurrentTheme, getThemeClass} from "../../helper/Theme/Theme";
 
 function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
     const datePickerRef = useRef()
@@ -34,18 +34,27 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
         )
     }
 
+    const getThemeSpinnerColor = () => {
+        switch (getCurrentTheme()) {
+            case "dark":
+                return "#CCCCCC";
+            case "bright":
+                return "#000000";
+        }
+    }
+
     const loadingSpinner = <ClipLoader
         cssOverride={{marginBottom: 8}}
-        color="#CCCCCC"
+        color={getThemeSpinnerColor()}
         size={15}
         speedMultiplier={0.8}
     />
 
     return (
-        <div className="saved">
+        <div className={getThemeClass("saved")}>
             <div className="saveTitle"><b>{t("timer.saved")}</b></div>
             <div className="saveWeekSelect">
-                <IoCaretBack className="icon" onClick={getSavesOfPreviousWeek}/>
+                <IoCaretBack className={getThemeClass("daveWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
                 <DatePicker
                     portal
                     ref={datePickerRef}
@@ -60,9 +69,9 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
                     render={<DatePickerLayout/>}
                     format="DD.MM.YYYY"
                     calendarPosition={"bottom-center"}
-                    className="custom-picker"
+                    className={getThemeClass("customPicker")}
                 />
-                <IoCaretForward className="icon" onClick={getSavesOfNextWeek}/>
+                <IoCaretForward className={getThemeClass("daveWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
             </div>
             {
                 saved.filter(save => {

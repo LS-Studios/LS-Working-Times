@@ -3,10 +3,20 @@ import ValueCard from "../../cards/Value/ValueCard";
 import ClipLoader from "react-spinners/ClipLoader";
 import {DateTime} from "./DateTime";
 import React from "react";
+import {getCurrentTheme} from "../../helper/Theme/Theme";
 
 function Timer({name, timer, isLoading, clickable, onClick}) {
+    const getThemeSpinnerColor = () => {
+        switch (getCurrentTheme()) {
+            case "dark":
+                return "#CCCCCC";
+            case "bright":
+                return "#000000";
+        }
+    }
+
     const loadingSpinner = <ClipLoader
-        color="#CCCCCC"
+        color={getThemeSpinnerColor()}
         size={15}
         speedMultiplier={0.8}
     />

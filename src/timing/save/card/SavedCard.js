@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import "./SaveCard.css"
+import "./SaveCard.scss"
 import {DateTime} from "../../timer/DateTime";
 import {getDatabase, ref, remove} from "firebase/database"
 import {getAuth} from "firebase/auth";
@@ -8,6 +8,7 @@ import {LSWorkingTimesConfig} from "../../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../../firebase/LSWalletConfig";
 import {useDialog} from "use-react-dialog";
 import {t} from "../../../helper/LanguageTransaltion/Transalation";
+import {getThemeClass} from "../../../helper/Theme/Theme";
 
 function SavedCard({save, isExpanded}) {
     const { dialogs, openDialog } = useDialog();
@@ -51,11 +52,12 @@ function SavedCard({save, isExpanded}) {
     }
 
     return (
-        <div className="saveCardBg" onClick={expand}>
+        <div className={getThemeClass("saveCardBg")} onClick={expand}>
             <div className={expanded ? "saveCardTitleExpanded" : ""}>
                 <div><b>{getDateNameByString(save.date)} {t("timer.the")} {save.date}</b></div>
             </div>
             <div className={expanded ? "" : "gone"}>
+                <div className={getThemeClass("saveCardDividerTop")}></div>
                 <div className="saveCardRowTitle">
                     <div>{t("timer.startedAt")}</div>
                     <div>{t("timer.endedAt")}</div>
@@ -72,9 +74,10 @@ function SavedCard({save, isExpanded}) {
                     <div>{save.worked}</div>
                     <div>{save.break}</div>
                 </div>
+                <div className={getThemeClass("saveCardDividerBottom")}></div>
                 <div className="saveCardActionBar">
-                    <button className="saveCardActionButton" onClick={deleteSave}>{t("timer.delete")}</button>
-                    <button className="saveCardActionButton" onClick={editSave}>{t("timer.edit")}</button>
+                    <button className={getThemeClass("saveCardActionButton")} onClick={deleteSave}>{t("timer.delete")}</button>
+                    <button className={getThemeClass("saveCardActionButton")} onClick={editSave}>{t("timer.edit")}</button>
                 </div>
             </div>
         </div>

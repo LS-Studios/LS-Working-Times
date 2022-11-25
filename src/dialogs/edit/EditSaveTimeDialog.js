@@ -1,5 +1,5 @@
 import {useDialog} from "use-react-dialog";
-import "./EditSaveDialog.css"
+import "./EditSaveDialog.scss"
 import ButtonCard from "../../cards/Button/ButtonCard";
 import React, {useEffect, useRef, useState} from "react";
 import {getDatabase, ref, set, get} from "firebase/database";
@@ -11,9 +11,9 @@ import Dialog from "../Dialog";
 import {formatDate, getDateFromString, padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
 import DateTimeInput from "../time/TimeInput/DateTimeInput";
-import DateTimeContent from "../../cards/DateTime/DateTimeContent";
 import DatePicker from "react-multi-date-picker";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
+import {getThemeClass} from "../../helper/Theme/Theme";
 
 const EditSaveTimeDialog = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
@@ -83,10 +83,10 @@ const EditSaveTimeDialog = () => {
     return (
         <Dialog title={t("dialog.changeTime")} dialogContent={
             <div className="editSaveTimeDialog">
-                <div className="editSaveTimeDialogDivider"></div>
+                <div className={getThemeClass("editSaveTimeDialogDivider")}></div>
 
                 <h4>{t("timer.date")}</h4>
-                <div className="editSaveTimeDialogDatePicker">
+                <div className={getThemeClass("editSaveTimeDialogDatePicker")}>
                     <DatePicker
                         portal
                         inputMode="none"
@@ -100,7 +100,7 @@ const EditSaveTimeDialog = () => {
                         render={<DatePickerLayout/>}
                         format="DD.MM.YYYY"
                         calendarPosition={"bottom-center"}
-                        className="custom-picker"
+                        className="brightCustomPicker"
                     />
                 </div>
 
@@ -119,11 +119,11 @@ const EditSaveTimeDialog = () => {
                                currentMinuteState={breakTimeMinuteState} setCurrentMinuteState={setBreakTimeMinuteState}
                                currentSecondState={breakTimeSecondState} setCurrentSecondState={setBreakTimeSecondState}/>
 
-                <div className="editSaveTimeDialogDivider"></div>
+                <div className={getThemeClass("editSaveTimeDialogDivider")}></div>
 
                 <div className="editSaveTimeDialogActionButtons">
-                    <ButtonCard className="horizontalButtonCard" title={t("dialog.cancel")} action={closeCurrentDialog}/>
-                    <ButtonCard className="horizontalButtonCard" title={t("dialog.confirm")} action={updateSave}/>
+                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={closeCurrentDialog}/>
+                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={updateSave}/>
                 </div>
             </div>
         } />

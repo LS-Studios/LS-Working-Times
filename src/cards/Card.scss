@@ -2,11 +2,11 @@ $verticalWith: 271px;
 $itemMarginTop: 10px;
 
 .card {
-  transition: 0.3s;
   border-radius: 5px; /* 5px rounded corners */
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin-top: 10px;
 }
 
 //Dark
@@ -27,7 +27,6 @@ $itemMarginTop: 10px;
   margin: 6px 0;
 }
 
-
 //Bright
 .brightCard {
   @extend .card;
@@ -37,7 +36,7 @@ $itemMarginTop: 10px;
 }
 
 .brightCard:hover {
-  box-shadow: 0 8px 16px 0 rgba(187, 187, 187, 0.2);
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 
 .brightDivider {
