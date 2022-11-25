@@ -70,11 +70,13 @@
 .darkSaveCardActionButton {
     @extend .saveCardActionButton;
     background-color: #2C3A47;
+    color: #CCCCCC;
 }
 
 .brightSaveCardActionButton {
     @extend .saveCardActionButton;
     background-color: #DBDBDB;
+    color: #000000;
 }
 
 .darkSaveCardDivider {

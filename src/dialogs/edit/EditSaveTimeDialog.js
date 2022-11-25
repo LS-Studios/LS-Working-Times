@@ -74,7 +74,7 @@ const EditSaveTimeDialog = () => {
             props.openCalendar()
         }
         return (
-            <div onClick={open}>
+            <div style={{width: 250}} onClick={open}>
                 {props.value}
             </div>
         )
@@ -100,7 +100,7 @@ const EditSaveTimeDialog = () => {
                         render={<DatePickerLayout/>}
                         format="DD.MM.YYYY"
                         calendarPosition={"bottom-center"}
-                        className="brightCustomPicker"
+                        className={getThemeClass("customPicker")}
                     />
                 </div>
 

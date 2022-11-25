@@ -3,6 +3,7 @@ import {IoCaretBack, IoCaretForward} from "react-icons/io5";
 import DatePicker, {Calendar} from "react-multi-date-picker";
 import SavedCard from "./card/SavedCard";
 import "./Save.scss"
+import "../../cards/DateTime/DateTimePicker.scss"
 import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfWeekDayValue} from "../../helper/Helper";
 import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../../helper/LanguageTransaltion/Transalation";

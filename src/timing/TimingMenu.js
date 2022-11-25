@@ -215,8 +215,6 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
 
                 set(ref(db, "/users/"+user.uid+"/email"), user.email)
 
-                console.log(user.uid)
-
                 get(ref(db, "/users/" + user.uid + "/saved")).then((snapshot) => {
                     if (!snapshot.exists())
                         setSavesIsLoading(false)
