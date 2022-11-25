@@ -2,19 +2,20 @@
     transition: 0.2s;
 }
 
-.darkBody {
+.body {
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.darkBody {
+    @extend .body;
     background-color: #212A33;
 }
 
 .brightBody {
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @extend .body;
     background-color: #BCBCBC;
 }
 

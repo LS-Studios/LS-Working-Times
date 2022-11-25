@@ -9,13 +9,12 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
     const input = useRef(null);
 
     const onChange = (e) => {
-        if (/[0-9.]/.test(e.target.value[e.target.value.length - 1])) {
-            if (parseInt(e.target.value) >= maxTimeVal)
-                setCurrentState(maxTimeVal-1)
-            else
-                setCurrentState(e.target.value)
-        }
-        else setCurrentState(currentState)
+        const justNumberResult = e.target.value.replace(/\D/g, '')
+
+        if (parseInt(justNumberResult) >= maxTimeVal)
+            setCurrentState(maxTimeVal-1)
+        else
+            setCurrentState(justNumberResult)
     }
 
     const increase = () => {
@@ -34,7 +33,7 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
 
     const onKeyDown = (e) => {
         if (e.key == "Backspace" && currentState.length == 1) {
-            setCurrentState("0")
+            setCurrentState("")
         }
     }
 
@@ -44,11 +43,17 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
         input.current.blur()
     }
 
+    const changeFocus = () => {
+        if (currentState == "") {
+            setCurrentState("00")
+        }
+    }
+
     return (
         <div className="timeInputRow">
             <AiFillCaretUp className={getThemeClass("timeInputRowChangeButton")} onClick={increase}/>
             <form onSubmit={submit}>
-                <input className={getThemeClass("changeTimeDialogInput")} value={currentState} ref={input} type="text" onChange={onChange} onKeyDown={onKeyDown}/>
+                <input className={getThemeClass("changeTimeDialogInput")} value={currentState} onBlur={changeFocus} ref={input} type="text" onChange={onChange} onKeyDown={onKeyDown}/>
             </form>
             <AiFillCaretDown className={getThemeClass("timeInputRowChangeButton")} onClick={decrease}/>
         </div>

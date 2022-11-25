@@ -5,7 +5,17 @@
     "email": "Email",
     "password": "Passwort",
     "login": "Anmelden",
-    "createAccount": "Account erstellen"
+    "createAccount": "Account erstellen",
+    "noEmailEntered": "Es wurde keine Email eingegeben!",
+    "noPasswordEntered": "Es wurde kein Passwort eingegeben!",
+    "wrongPassword": "Das Passwort ist falsch!",
+    "wrongEmail": "Die Email ist falsch!",
+    "invalidEmail": "Die Email ist ungültig!",
+    "noAccountWithThisEmail": "Es exestiert kein Konto mit dieser Email!",
+    "passwordNeedToContainAUppercaseLetter": "Das passwort muss einen Großbuchstaben enthalten!",
+    "passwordNeedToContainALowercaseLetter": "Das passwort muss einen Kleinbuchstaben enthalten!",
+    "passwordNeedToContainANumberCharacter": "Das passwort muss eine Nummer enthalten!",
+    "passwordNeedToContainASpecialCharacter": "Das passwort muss ein Sonderzeichen enthalten!"
   },
   "timer": {
     "menuName": "Timer",

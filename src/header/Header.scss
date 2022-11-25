@@ -30,7 +30,7 @@
 
 .brightHeader {
     @extend .header;
-    color: #000000;
+    color: #353535;
 }
 
 .headerTop {
@@ -76,13 +76,13 @@
 
 .brightHeaderMenuCategory a {
     @extend .headerMenuCategory;
-    color: #000000;
-    border: 1px solid #000000;
+    color: #353535;
+    border: 1px solid #353535;
 }
 
 .brightHeaderMenuCategory a:hover {
     background-color: #b4b4b4;
-    color: #000000;
+    color: #353535;
 }
 
 .darkHeaderMenuNotActiveItem {

@@ -9,6 +9,7 @@ import ButtonCard from "../../cards/Button/ButtonCard";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
 import {get, getDatabase, ref, set} from "firebase/database";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
+import {validateEmail, validatePassword} from "../../helper/Helper";
 
 function LoginForm()
 {
@@ -44,18 +45,20 @@ function LoginForm()
         setError("")
 
         if (emailInput == "") {
-            setError("No email entered!")
+            setError(t("noEmailEntered"))
             return
         }
 
         if (passwordInput == "") {
-            setError("No password entered!")
+            setError(t("noPasswordEntered"))
             return
         }
 
         signInWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
                 createFieldIfNotExist("language", "en", null, userCredential.user.uid, db)
+                createFieldIfNotExist("email", emailInput, null, userCredential.user.uid, db)
+                createFieldIfNotExist("password", passwordInput, null, userCredential.user.uid, db)
                 createFieldIfNotExist("theme", "dark", "/timing", userCredential.user.uid, db)
             })
             .catch((error) => {
@@ -64,15 +67,15 @@ function LoginForm()
                 setError(errorMessage)
 
                 if (errorMessage == "Firebase: Error (auth/wrong-passwordInput)." || errorMessage == "Firebase: Error (auth/wrong-password).") {
-                    setError("Password is wrong!")
+                    setError(t("login.wrongPassword"))
                 }
 
                 if (errorMessage == "Firebase: Error (auth/invalid-email).") {
-                    setError("Email is wrong!")
+                    setError(t("login.wrongEmail"))
                 }
 
                 if (errorMessage == "Firebase: Error (auth/user-not-found).") {
-                    setError("Account with this email do not exist!")
+                    setError(t("login.noAccountWithThisEmail"))
                 }
             })
     }
@@ -86,34 +89,32 @@ function LoginForm()
         setError("")
 
         if (emailInput == "") {
-            setError("No emailInput entered!")
+            setError(t("noEmailEntered"))
             return
         }
 
-        if (passwordInput.length < 6) {
-            setError("Password need to be at least 6 sings long!")
-            return;
+        if (passwordInput == "") {
+            setError(t("noPasswordEntered"))
+            return
         }
-        if (!/[A-Z]/.test(passwordInput)) {
-            setError("Password need to contain a uppercase letter!")
-            return;
+
+        if (!validateEmail(emailInput)) {
+            setError(t("invalidEmail"))
+            return
         }
-        if (!/[a-z]/.test(passwordInput)) {
-            setError("Password need to contain a lowercase letter!")
-            return;
-        }
-        if (!/[0-9]/.test(passwordInput)) {
-            setError("Password need to contain a number character!")
-            return;
-        }
-        if (!/[#?!@$%^&*-.,]/.test(passwordInput)) {
-            setError("Password need to contain a special character!")
+
+        const passwordValidity = validatePassword(passwordInput)
+
+        if (passwordValidity != "") {
+            setError(passwordValidity)
             return;
         }
 
         createUserWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
                 createFieldIfNotExist("language", "en", null, userCredential.user.uid, db)
+                createFieldIfNotExist("email", emailInput, null, userCredential.user.uid, db)
+                createFieldIfNotExist("password", passwordInput, null, userCredential.user.uid, db)
                 createFieldIfNotExist("theme", "dark", "/timing", userCredential.user.uid, db)
             })
             .catch((error) => {
@@ -122,14 +123,14 @@ function LoginForm()
                 setError(errorMessage)
 
                 if (errorMessage == "Firebase: Error (auth/email-already-in-use).") {
-                    setError("Account with this email already exist!")
+                    setError(t("accountWithThisEmailAlreadyExist"))
                 }
             });
     }
 
     return (
         <div className="login-form">
-            <InputCard type="email" title={t("login.email")} submitFunc={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
+            <InputCard type="text" title={t("login.email")} submitFunc={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
             <InputCard type="password" title={t("login.password")} submitFunc={submitLogin} currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
             <div>{ error != "" ? <div className="loginErrorText">{error}</div> : null }</div>
             <div>

@@ -1,4 +1,4 @@
-import './App.css';
+import './App.scss';
 import Login from "./login/Login";
 import {
     BrowserRouter as Router, Navigate,
@@ -18,6 +18,7 @@ import {setTranslations, translate} from "./helper/LanguageTransaltion/Transalat
 import en from "./helper/LanguageTransaltion/languages/en.json"
 import de from "./helper/LanguageTransaltion/languages/de.json"
 import {setDefaultTheme, setThemeUp} from "./helper/Theme/Theme";
+import ChangeCredentialsDialog from "./dialogs/credentials/ChangeCredentialsDialog";
 
 function App(props) {
     const [currentMenu, setCurrentMenu] = useState(0)
@@ -26,7 +27,8 @@ function App(props) {
     const dialogs = {
         YesNoDialog,
         ChangeTimeDialog,
-        EditSaveTimeDialog
+        EditSaveTimeDialog,
+        ChangeCredentialsDialog
     }
 
     useEffect(() => {

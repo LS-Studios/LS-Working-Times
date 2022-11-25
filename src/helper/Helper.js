@@ -1,3 +1,5 @@
+import {t} from "./LanguageTransaltion/Transalation";
+
 export function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
 }
@@ -39,3 +41,29 @@ export const getEndOfWeek = (date) => {
     const endDate = new Date(date.setDate(getStartOfWeekDayValue(date)+6))
     return getDateWithoutTime(endDate)
 }
+
+export const validatePassword = (password) => {
+    if (password.length < 6) {
+        return "Password need to be at least 6 sings long!";
+    }
+    if (!/[A-Z]/.test(password)) {
+        return t("login.passwordNeedToContainAUppercaseLetter");
+    }
+    if (!/[a-z]/.test(password)) {
+        return t("login.passwordNeedToContainALowercaseLetter");
+    }
+    if (!/[0-9]/.test(password)) {
+        return t("login.passwordNeedToContainANumberCharacter");
+    }
+    if (!/[#?!@$%^&*-.,]/.test(password)) {
+        return t("login.passwordNeedToContainASpecialCharacter");
+    }
+
+    return ""
+}
+
+export const validateEmail = (email) => {
+    return email.match(
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};

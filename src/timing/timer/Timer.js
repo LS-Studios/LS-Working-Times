@@ -11,7 +11,7 @@ function Timer({name, timer, isLoading, clickable, onClick}) {
             case "dark":
                 return "#CCCCCC";
             case "bright":
-                return "#000000";
+                return "#353535";
         }
     }
 

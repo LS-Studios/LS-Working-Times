@@ -38,7 +38,6 @@ const DateTimeContent = ({title, value, type}) => {
                         ref={datePickerRef}
                         inputMode="none"
                         editable={false}
-                        hideOnScroll
                         value={startDate}
                         onChange={(date) => setStartDate(date)}
                         render={<DatePickerLayout/>}
@@ -51,7 +50,6 @@ const DateTimeContent = ({title, value, type}) => {
                         ref={datePickerRef}
                         portal
                         disableDayPicker
-                        hideOnScroll
                         editable={false}
                         value={startDate}
                         format="HH:mm"

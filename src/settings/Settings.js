@@ -131,7 +131,7 @@ const Settings = ({ setCurrentMenu }) => {
     }
 
     const editAccount = () => {
-
+        openDialog("ChangeCredentialsDialog")
     }
 
     const resetData = () => {

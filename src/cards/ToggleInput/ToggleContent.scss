@@ -93,9 +93,9 @@
     border-radius: 50%;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em #000000;
+    box-shadow: inset 1em 1em #353535;
     /* Windows High Contrast Mode */
-    background-color: #000000;
+    background-color: #353535;
 }
 
 .brightToggleInput:checked::before {
