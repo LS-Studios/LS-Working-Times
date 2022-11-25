@@ -328,7 +328,7 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
 
             <div className="timingMenuTimers">
                 <Timer name={t("timer.worked")} timer={workTimer} isLoading={timersAreLoading}/>
-                <Timer name={t("timer.break")} timer={breakTimer} clickable={!timersAreLoading} isLoading={timersAreLoading} onClick={() => {
+                <Timer name={t("timer.break")} timer={breakTimer} clickable={startTime != null} isLoading={timersAreLoading} onClick={() => {
                     if (startTime != null) {
                         openDialog("ChangeTimeDialog", {
                             value: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString(),
