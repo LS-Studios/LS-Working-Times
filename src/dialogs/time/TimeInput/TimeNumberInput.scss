@@ -22,7 +22,7 @@
 
 .brightTimeInputRowChangeButton {
     @extend .timeInputRowChangeButton;
-    background-color: #DBDBDB;
+    background-color: #BCBCBC;
 }
 
 .changeTimeDialogInput {
@@ -37,7 +37,7 @@
 .darkChangeTimeDialogInput {
     @extend .changeTimeDialogInput;
     background-color: #3d4e60;
-    border: 2px solid #3c4c5d;
+    border: 2px solid #34414f;
     color: #CCCCCC;
 }
 
@@ -48,8 +48,8 @@
 
 .brightChangeTimeDialogInput {
     @extend .changeTimeDialogInput;
-    background-color: #DBDBDB;
-    border: 2px solid #b6b6b6;
+    background-color: #c5c5c5;
+    border: 2px solid #bbbbbb;
     color: #000000;
 }
 

@@ -37,7 +37,7 @@ const InputContent = ({title, placeholder, type="text", charType=0, submitFunc, 
             <div><b>{title}</b></div>
             <div className={getThemeClass("divider")}/>
             <form onSubmit={submit}>
-                <input className="inputInput" ref={input} value={currentState} type={type} placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown}/>
+                <input className={getThemeClass("input")} ref={input} value={currentState} type={type} placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown}/>
             </form>
         </div>
     );
