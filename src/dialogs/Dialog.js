@@ -1,9 +1,12 @@
-import {useDialog} from "use-react-dialog";
 import "./Dialog.scss"
-import React from "react";
+import React, {useEffect} from "react";
 import {getThemeClass} from "../helper/Theme/Theme";
 
 const Dialog = ({title, dialogContent}) => {
+    useEffect(() => {
+        document.body.style.overflow = "hidden"
+    }, [])
+
     return (
         <div id="popup" className="overlay">
             <div className={getThemeClass("popup")}>

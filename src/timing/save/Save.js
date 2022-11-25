@@ -40,7 +40,7 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
             case "dark":
                 return "#CCCCCC";
             case "bright":
-                return "#000000";
+                return "#353535";
         }
     }
 
@@ -61,7 +61,6 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
                     ref={datePickerRef}
                     inputMode="none"
                     editable={false}
-                    hideOnScroll
                     value={getStartOfWeek(selectedSaveDate)}
                     onChange={(dateObj) => {
                         const date = new Date(dateObj.year, dateObj.month.number-1, dateObj.day)

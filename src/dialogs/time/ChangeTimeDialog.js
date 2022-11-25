@@ -24,6 +24,11 @@ const ChangeTimeDialog = () => {
 
     const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('ChangeTimeDialog', {value: "00:00:00", type: "break-time"});
 
+    const close = () => {
+        document.body.style.overflow = "visible"
+        closeCurrentDialog()
+    }
+
     const changeTime = () => {
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
         const db = getDatabase(lsWorkingTimesApp)
@@ -65,7 +70,7 @@ const ChangeTimeDialog = () => {
             });
         }
 
-        closeCurrentDialog()
+        close()
     }
 
     useEffect(() => {
@@ -86,7 +91,7 @@ const ChangeTimeDialog = () => {
                                currentSecondState={currentSecondState} setCurrentSecondState={setCurrentSecondState}/>
 
                 <div className="changeTimeActionButtons">
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={closeCurrentDialog}/>
+                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={close}/>
                     <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={changeTime}/>
                 </div>
             </div>

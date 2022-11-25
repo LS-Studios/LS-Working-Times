@@ -32,6 +32,11 @@ const EditSaveTimeDialog = () => {
 
     const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('EditSaveTimeDialog', {save: null});
 
+    const close = () => {
+        document.body.style.overflow = "visible"
+        closeCurrentDialog()
+    }
+
     const updateSave = () => {
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
         const db = getDatabase(lsWorkingTimesApp)
@@ -46,7 +51,7 @@ const EditSaveTimeDialog = () => {
             break: new DateTime(breakTimeHourState, breakTimeMinuteState, breakTimeSecondState).toTimeString(),
         })
 
-        closeCurrentDialog()
+        close()
     }
 
     useEffect(() => {
@@ -91,7 +96,6 @@ const EditSaveTimeDialog = () => {
                         portal
                         inputMode="none"
                         editable={false}
-                        hideOnScroll
                         value={selectedDate}
                         onChange={(dateObj) => {
                             const date = new Date(dateObj.year, dateObj.month.number-1, dateObj.day)
@@ -122,7 +126,7 @@ const EditSaveTimeDialog = () => {
                 <div className={getThemeClass("editSaveTimeDialogDivider")}></div>
 
                 <div className="editSaveTimeDialogActionButtons">
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={closeCurrentDialog}/>
+                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={close}/>
                     <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={updateSave}/>
                 </div>
             </div>
