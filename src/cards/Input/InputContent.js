@@ -1,5 +1,6 @@
 import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import "./InputContent.scss"
+import {getThemeClass} from "../../helper/Theme/Theme";
 
 const InputContent = ({title, placeholder, type="text", charType=0, submitFunc, currentState, setCurrentState}) => {
     const input = useRef(null);
@@ -34,7 +35,7 @@ const InputContent = ({title, placeholder, type="text", charType=0, submitFunc, 
     return (
         <div className="inputContainer" onClick={() => input.current.focus()}>
             <div><b>{title}</b></div>
-            <div className="inputDivider"/>
+            <div className={getThemeClass("divider")}/>
             <form onSubmit={submit}>
                 <input className="inputInput" ref={input} value={currentState} type={type} placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown}/>
             </form>

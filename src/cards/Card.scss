@@ -2,35 +2,46 @@ $verticalWith: 271px;
 $itemMarginTop: 10px;
 
 .card {
-  background: #2C3A47;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
   border-radius: 5px; /* 5px rounded corners */
-  color: #CCCCCC;
   display: flex;
   align-items: center;
   flex-direction: column;
 }
 
-.card:hover {
+//Dark
+.darkCard {
+  @extend .card;
+  background: #2C3A47;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  color: #CCCCCC;
+}
+
+.darkCard:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
 }
 
-.noPointerCard {
-  @extend .card;
-  align-self: baseline;
-  width: $verticalWith;
-  margin-top: $itemMarginTop;
-}
-
-.pointerCard {
-  @extend .noPointerCard;
-  width: $verticalWith;
-  cursor: pointer;
-}
-
-.divider {
+.darkDivider {
   border-top: 2px solid rgba(255, 255, 255, 0.1);
+  width: $verticalWith;
+  margin: 6px 0;
+}
+
+
+//Bright
+.brightCard {
+  @extend .card;
+  background: #DBDBDB;
+  box-shadow: 0 4px 8px 0 rgba(187, 187, 187, 0.2);
+  color: #000000;
+}
+
+.brightCard:hover {
+  box-shadow: 0 8px 16px 0 rgba(187, 187, 187, 0.2);
+}
+
+.brightDivider {
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
   width: $verticalWith;
   margin: 6px 0;
 }

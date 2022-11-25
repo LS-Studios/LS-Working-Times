@@ -3,6 +3,7 @@ import "./DateTimeContent.scss"
 import "./DateTimePicker.scss"
 import DatePicker from "react-multi-date-picker"
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
+import {getThemeClass} from "../../helper/Theme/Theme";
 
 const DateTimeContent = ({title, value, type}) => {
     const [startDate, setStartDate] = useState(value);
@@ -28,7 +29,7 @@ const DateTimeContent = ({title, value, type}) => {
     return (
         <div className="dateTimeContainer" onClick={onClick}>
             <div><b>{title}</b></div>
-            <div className="verticalDateTimeDivider"/>
+            <div className={getThemeClass("divider")}/>
             {
                 type == "date"
                     ?

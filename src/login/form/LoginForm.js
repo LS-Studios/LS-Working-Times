@@ -30,6 +30,8 @@ function LoginForm()
             }
         }).catch((error) => {
             console.error(error);
+            if (navigateTo != null)
+                navigate(navigateTo)
         });
     }
 

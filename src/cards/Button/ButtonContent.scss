@@ -1,33 +1,55 @@
 @import "../Card";
 
-.buttonCard {
-    @extend .card;
+.darkButtonCard {
+    @extend .darkCard;
     width: 271px;
     height: 33px;
     margin: 10px 0;
     cursor: pointer;
 }
 
-.horizontalButtonCard {
-    @extend .card;
+.brightButtonCard {
+    @extend .brightCard;
+    width: 271px;
+    height: 33px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+.darkHorizontalButtonCard {
+    @extend .darkCard;
     width: 271px;
     height: 40px;
     margin: 10px 10px;
     cursor: pointer;
 }
 
-.horizontalButtonCard:hover {
+.darkHorizontalButtonCard:hover {
     box-shadow: none;
 }
 
-.disabled {
-    @extend .buttonCard;
+.brightHorizontalButtonCard {
+    @extend .brightCard;
+    width: 271px;
+    height: 40px;
+    margin: 10px 10px;
+    cursor: pointer;
+}
+
+.brightHorizontalButtonCard:hover {
+    box-shadow: none;
+}
+
+.darkDisabled {
+    @extend .darkButtonCard;
     opacity: 0.5;
     pointer-events: none;
 }
 
-.buttonCard:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+.brightDisabled {
+    @extend .brightButtonCard;
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .buttonContainer {

@@ -1,9 +1,10 @@
 import React from 'react';
 import "./Card.scss"
+import {getThemeClass} from "../helper/Theme/Theme";
 
-const ValueCard = ({cardContent, isPointer}) => {
+const ValueCard = ({cardContent}) => {
     return (
-        <div className={isPointer ? "pointerCard" : "noPointerCard"}>
+        <div className={getThemeClass("card")}>
             {
                 cardContent
             }

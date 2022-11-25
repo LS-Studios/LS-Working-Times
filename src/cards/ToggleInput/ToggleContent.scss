@@ -9,11 +9,6 @@
     cursor: default;
 }
 
-.toggleDivider {
-    @extend .divider;
-    width: $verticalWith;
-}
-
 .toggleBar {
     display: flex;
     align-items: center;
@@ -28,10 +23,10 @@
 }
 
 :root {
-    --form-control-color: #CCCCCC;
+    --form-control-color: #494949;
 }
 
-input[type="radio"] {
+.darkToggleInput {
     /* Add if not using autoprefixer */
     -webkit-appearance: none;
     /* Remove most all native input styles */
@@ -53,18 +48,56 @@ input[type="radio"] {
     place-content: center;
 }
 
-input[type="radio"]::before {
+.darkToggleInput::before {
     content: "";
     width: 0.65em;
     height: 0.65em;
     border-radius: 50%;
     transform: scale(0);
     transition: 120ms transform ease-in-out;
-    box-shadow: inset 1em 1em var(--form-control-color);
+    box-shadow: inset 1em 1em #CCCCCC;
     /* Windows High Contrast Mode */
-    background-color: var(--form-control-color);
+    background-color: #CCCCCC;
 }
 
-input[type="radio"]:checked::before {
+.darkToggleInput:checked::before {
+    transform: scale(1);
+}
+
+.brightToggleInput {
+    /* Add if not using autoprefixer */
+    -webkit-appearance: none;
+    /* Remove most all native input styles */
+    appearance: none;
+    /* For iOS < 15 */
+    background-color: var(--form-background);
+    /* Not removed via appearance */
+    margin: 0;
+
+    font: inherit;
+    color: currentColor;
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid currentColor;
+    border-radius: 50%;
+    transform: translateY(-0.075em);
+
+    display: grid;
+    place-content: center;
+}
+
+.brightToggleInput::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #000000;
+    /* Windows High Contrast Mode */
+    background-color: #000000;
+}
+
+.brightToggleInput:checked::before {
     transform: scale(1);
 }

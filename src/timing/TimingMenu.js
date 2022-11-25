@@ -22,6 +22,7 @@ import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../helper/LanguageTransaltion/Transalation";
+import {getThemeClass} from "../helper/Theme/Theme";
 
 function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     const { dialogs, openDialog } = useDialog();
@@ -214,6 +215,8 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
 
                 set(ref(db, "/users/"+user.uid+"/email"), user.email)
 
+                console.log(user.uid)
+
                 get(ref(db, "/users/" + user.uid + "/saved")).then((snapshot) => {
                     if (!snapshot.exists())
                         setSavesIsLoading(false)
@@ -329,9 +332,9 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
             </div>
 
             <div className="timingMenuButtons">
-                <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={workTimer.getIsRunning ? t("timer.stopWorking") : t("timer.startWorking")} action={toggleOverallTimer}/>
-                <ButtonCard className={startTimeIsLoading ? "disabled" : null} title={breakTimer.getIsRunning ? t("timer.stopBreak") : t("timer.startBreak")} action={toggleBreakTimer}/>
-                <ButtonCard className={startTimeIsLoading ? "disabled" : (startTime != null ? "buttonCard" : "disabled")} title={t("timer.resetAndSave")} action={startTime != null ? resetTimers : function (){}}/>
+                <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : null} title={workTimer.getIsRunning ? t("timer.stopWorking") : t("timer.startWorking")} action={toggleOverallTimer}/>
+                <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : null} title={breakTimer.getIsRunning ? t("timer.stopBreak") : t("timer.startBreak")} action={toggleBreakTimer}/>
+                <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : (startTime != null ? getThemeClass("buttonCard") : getThemeClass("disabled"))} title={t("timer.resetAndSave")} action={startTime != null ? resetTimers : function (){}}/>
                 <ValueCard className="singleLineValueCard" title={t("timer.workedTimeThisWeek")} value={timersAreLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
             </div>
         </div>
