@@ -19,6 +19,7 @@ import en from "./helper/LanguageTransaltion/languages/en.json"
 import de from "./helper/LanguageTransaltion/languages/de.json"
 import {setDefaultTheme, setThemeUp} from "./helper/Theme/Theme";
 import ChangeCredentialsDialog from "./dialogs/credentials/ChangeCredentialsDialog";
+import Prognosis from "./prognosis/Prognosis";
 
 function App(props) {
     const [currentMenu, setCurrentMenu] = useState(0)
@@ -48,6 +49,10 @@ function App(props) {
                         <Route
                             path="/timing"
                             element={<Timing setCurrentMenu={setCurrentMenu}/>}
+                        />
+                        <Route
+                            path="/prognosis"
+                            element={<Prognosis setCurrentMenu={setCurrentMenu}/>}
                         />
                         <Route
                             path="/settings"

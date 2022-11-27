@@ -3,7 +3,7 @@ import "./InputContent.scss"
 import {getThemeClass} from "../../helper/Theme/Theme";
 import {BsFillEyeFill, BsFillEyeSlashFill} from "react-icons/bs"
 
-const InputContent = ({title, placeholder, type="text", focusOnClick=false, useDivider=true, charType=0, submitFunc, currentState, setCurrentState}) => {
+const InputContent = ({title, placeholder, type="text", focusOnClick=false, useDivider=true, charType=0, submitFunc, blurFunction, currentState, setCurrentState}) => {
     const input = useRef(null);
 
     const [showPassword, setShowPassword] = useState(false)
@@ -29,6 +29,8 @@ const InputContent = ({title, placeholder, type="text", focusOnClick=false, useD
 
     const changeFocus = () => {
         input.current.blur()
+
+        blurFunction()
     }
 
     const submit = (e) => {

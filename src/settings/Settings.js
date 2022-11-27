@@ -21,7 +21,7 @@ const Settings = ({ setCurrentMenu }) => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        setCurrentMenu(2)
+        setCurrentMenu(3)
 
         const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(lsWalletApp)

@@ -6,18 +6,12 @@ export class TimerClass {
 
     constructor(
         currentUser, timerType,
-        hours, setHours,
-        minutes, setMinutes,
-        seconds, setSeconds,
+        time, setTime,
         startTime, stopTime,
         takenStop, isRunning) {
         this.timerType = timerType
-        this.hours = hours
-        this.setHours = setHours
-        this.minutes = minutes
-        this.setMinutes = setMinutes
-        this.seconds = seconds
-        this.setSeconds = setSeconds
+        this.time = time
+        this.setTime = setTime
         this.startTime = startTime
         this.stopTime = stopTime
         this.takenStop = takenStop
@@ -33,9 +27,9 @@ export class TimerClass {
     setByTimeDiff(takeCurrent = true) {
         const dateTimeDiff = (takeCurrent ? new DateTime() : this.stopTime).getDateDiffToDateTime(DateTime.dateTimeFromDate(this.startTime), this.takenStop)
 
-        this.setHours(dateTimeDiff.getHours)
-        this.setMinutes(dateTimeDiff.getMinutes)
-        this.setSeconds(dateTimeDiff.getSeconds)
+        this.setTime({...this.time, hours: dateTimeDiff.getHours,
+            minutes: dateTimeDiff.getMinutes,
+            seconds: dateTimeDiff.getSeconds})
     };
 
     startTimer() {
@@ -53,9 +47,7 @@ export class TimerClass {
 
     resetTimer() {
         this.stopTimer()
-        this.setHours(0)
-        this.setMinutes(0)
-        this.setSeconds(0)
+        this.setTime({...this.time, hours: 0, minutes: 0, seconds: 0})
 
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
 
@@ -65,15 +57,15 @@ export class TimerClass {
     }
 
     get getHours() {
-        return this.hours
+        return this.time.hours
     }
 
     get getMinutes() {
-        return this.minutes
+        return this.time.minutes
     }
 
     get getSeconds() {
-        return this.seconds
+        return this.time.seconds
     }
 
     get getIsRunning() {

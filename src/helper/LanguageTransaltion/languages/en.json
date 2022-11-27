@@ -41,6 +41,22 @@
     "delete": "Delete",
     "edit": "Edit"
   },
+  "prognosis": {
+    "menuName": "Prognosis",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "earliestStartTime": "Earliest start time",
+    "latestEndTime": "Latest end time",
+    "hoursPerWeek": "Hours per week",
+    "alreadyWorked": "Already worked",
+    "current": "Current",
+    "custom": "Custom"
+  },
   "settings": {
     "menuName": "Settings",
     "language": "Language",

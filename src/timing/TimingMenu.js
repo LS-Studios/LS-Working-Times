@@ -36,33 +36,33 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
 
     const [startTime, setStartTime] = useState(null);
 
-    const [workHours, setWorkHours] = useState(0);
-    const [workMinutes, setWorkMinutes] = useState(0);
-    const [workSeconds, setWorkSeconds] = useState(0);
+    const [workTime, setWorkTime] = useState({
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    })
     const [workIsRunning, setWorkIsRunning] = useState(false);
     const [workStopTime, setWorkStopTime] = useState(null);
     const [workTakenStop, setWorkTakenStop] = useState(new DateTime(0, 0, 0));
 
     const workTimer = new TimerClass(
         currentUser, "work",
-        workHours, setWorkHours,
-        workMinutes, setWorkMinutes,
-        workSeconds, setWorkSeconds,
+        workTime, setWorkTime,
         startTime, workStopTime,
         workTakenStop, workIsRunning)
 
-    const [breakHours, setBreakHours] = useState(0);
-    const [breakMinutes, setBreakMinutes] = useState(0);
-    const [breakSeconds, setBreakSeconds] = useState(0);
+    const [breakTime, setBreakTime] = useState({
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    })
     const [breakIsRunning, setBreakIsRunning] = useState(false);
     const [breakStopTime, setBreakStopTime] = useState(new DateTime());
     const [breakTakenStop, setBreakTakenStop] = useState(new DateTime(0, 0, 0));
 
     const breakTimer = new TimerClass(
         currentUser,"break",
-        breakHours, setBreakHours,
-        breakMinutes, setBreakMinutes,
-        breakSeconds, setBreakSeconds,
+        breakTime, setBreakTime,
         startTime, breakStopTime,
         breakTakenStop, breakIsRunning)
 
@@ -80,8 +80,8 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
             id:newSaveRef.key,
             date:formatDate(startTime),
             startTime: startTime.toLocaleTimeString("de"),
-            worked: new DateTime(workHours, workMinutes, workSeconds).toTimeString(),
-            break: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString()
+            worked: new DateTime(workTime.hours, workTime.minutes, workTime.seconds).toTimeString(),
+            break: new DateTime(breakTime.hours, breakTime.minutes, breakTime.seconds).toTimeString()
         });
     }
 
@@ -331,7 +331,7 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
                 <Timer name={t("timer.break")} timer={breakTimer} clickable={startTime != null} isLoading={timersAreLoading} onClick={() => {
                     if (startTime != null) {
                         openDialog("ChangeTimeDialog", {
-                            value: new DateTime(breakHours, breakMinutes, breakSeconds).toTimeString(),
+                            value: new DateTime(breakTime.hours, breakTime.minutes, breakTime.seconds).toTimeString(),
                             type: "break-time"
                         })
                     }

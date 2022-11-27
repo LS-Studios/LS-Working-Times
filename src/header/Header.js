@@ -16,6 +16,8 @@ const Header = ({ currentMenu, setCurrentMenu, menuIsOpened, setMenuIsOpen}) => 
             case 1:
                 return t("timer.menuName")
             case 2:
+                return t("prognosis.menuName")
+            case 3:
                 return t("settings.menuName")
         }
     }
@@ -56,7 +58,8 @@ const Header = ({ currentMenu, setCurrentMenu, menuIsOpened, setMenuIsOpen}) => 
                 <li className={!getUserIsLoggedIn() ? (currentMenu === 0 ? getThemeClass("headerMenuActiveItem") : getThemeClass("headerMenuNotActiveItem")) : "gone"} value={0} onClick={setNewActiveMenu}><Link to="/login">{t("login.menuName")}</Link></li>
                 <li className={getUserIsLoggedIn() ? getThemeClass("headerMenuValueItem") : "gone"}><Link to="/timer">{getUserEmail()}</Link></li>
                 <li className={getUserIsLoggedIn() ? (currentMenu === 1 ? getThemeClass("headerMenuActiveItem") : getThemeClass("headerMenuNotActiveItem")) : getThemeClass("menuNotAvailable")} value={1} onClick={setNewActiveMenu}><Link to="/timer">{t("timer.menuName")}</Link></li>
-                <li className={getUserIsLoggedIn() ? (currentMenu === 2 ? getThemeClass("headerMenuActiveItem") : getThemeClass("headerMenuNotActiveItem")) : getThemeClass("menuNotAvailable")} value={2} onClick={setNewActiveMenu}><Link to="/settings">{t("settings.menuName")}</Link></li>
+                <li className={getUserIsLoggedIn() ? (currentMenu === 2 ? getThemeClass("headerMenuActiveItem") : getThemeClass("headerMenuNotActiveItem")) : getThemeClass("menuNotAvailable")} value={2} onClick={setNewActiveMenu}><Link to="/prognosis">{t("prognosis.menuName")}</Link></li>
+                <li className={getUserIsLoggedIn() ? (currentMenu === 3 ? getThemeClass("headerMenuActiveItem") : getThemeClass("headerMenuNotActiveItem")) : getThemeClass("menuNotAvailable")} value={3} onClick={setNewActiveMenu}><Link to="/settings">{t("settings.menuName")}</Link></li>
             </ul>
         </div>
     );

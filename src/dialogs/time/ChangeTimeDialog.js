@@ -8,17 +8,18 @@ import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import Dialog from "../Dialog";
-import TimeNumberInput from "./TimeInput/TimeNumberInput";
 import {padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
-import DateTimeInput from "./TimeInput/DateTimeInput";
+import DateTimeInput from "../../cards/timeinput/DateTimeInput";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
 import {getThemeClass} from "../../helper/Theme/Theme";
 
 const ChangeTimeDialog = () => {
-    const [currentHourState, setCurrentHourState] = useState("00")
-    const [currentMinuteState, setCurrentMinuteState] = useState("00")
-    const [currentSecondState, setCurrentSecondState] = useState("00")
+    const [currentTime, setCurrentTime] = useState({
+        hours: "00",
+        minutes: "00",
+        seconds: "00"
+    })
 
     const [originalTime, setOriginalTime] = useState(new DateTime())
 
@@ -36,9 +37,9 @@ const ChangeTimeDialog = () => {
         const auth = getAuth(app)
 
         const newDateTime = new DateTime(
-            parseInt(currentHourState),
-            parseInt(currentMinuteState),
-            parseInt(currentSecondState)
+            parseInt(currentTime.hours),
+            parseInt(currentTime.minutes),
+            parseInt(currentTime.seconds)
         )
 
         get(ref(db, "/users/"+auth.currentUser.uid+"/break-taken-stop")).then((snapshot) => {
@@ -76,9 +77,9 @@ const ChangeTimeDialog = () => {
     useEffect(() => {
         const dateTime = DateTime.dateTimeFromString(data.value)
 
-        setCurrentHourState(padTo2Digits(dateTime.getHours))
-        setCurrentMinuteState(padTo2Digits(dateTime.getMinutes))
-        setCurrentSecondState(padTo2Digits(dateTime.getSeconds))
+        setCurrentTime({...currentTime, hours: padTo2Digits(dateTime.getHours),
+            minutes: padTo2Digits(dateTime.getMinutes),
+            seconds: padTo2Digits(dateTime.getSeconds)})
 
         setOriginalTime(dateTime)
     }, [])
@@ -86,9 +87,7 @@ const ChangeTimeDialog = () => {
     return (
         <Dialog title={t("dialog.changeTime")} dialogContent={
             <div>
-                <DateTimeInput currentHourState={currentHourState} setCurrentHourState={setCurrentHourState}
-                               currentMinuteState={currentMinuteState} setCurrentMinuteState={setCurrentMinuteState}
-                               currentSecondState={currentSecondState} setCurrentSecondState={setCurrentSecondState}/>
+                <DateTimeInput currentTimeState={currentTime} setCurrentTimeState={setCurrentTime} />
 
                 <div className="changeTimeActionButtons">
                     <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={close}/>

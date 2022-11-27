@@ -6,7 +6,7 @@ const ToggleContent = forwardRef(({title, toggleList, currentState, setCurrentSt
     useImperativeHandle(ref, () => ({
 
         onClick() {
-
+            console.log("öp")
         }
 
     }));

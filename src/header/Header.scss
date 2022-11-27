@@ -81,7 +81,7 @@
 }
 
 .brightHeaderMenuCategory a:hover {
-    background-color: #b4b4b4;
+    background-color: #b9b9b9;
     color: #353535;
 }
 
@@ -105,7 +105,7 @@
 
 .brightHeaderMenuActiveItem {
     @extend .brightHeaderMenuCategory;
-    background-color: #b4b4b4;
+    background-color: #b9b9b9;
     border-radius: 8px;
 }
 

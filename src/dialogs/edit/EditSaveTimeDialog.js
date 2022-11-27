@@ -10,7 +10,7 @@ import {getAuth} from "firebase/auth";
 import Dialog from "../Dialog";
 import {formatDate, getDateFromString, padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
-import DateTimeInput from "../time/TimeInput/DateTimeInput";
+import DateTimeInput from "../../cards/timeinput/DateTimeInput";
 import DatePicker from "react-multi-date-picker";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
 import {getThemeClass} from "../../helper/Theme/Theme";
@@ -18,17 +18,23 @@ import {getThemeClass} from "../../helper/Theme/Theme";
 const EditSaveTimeDialog = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
 
-    const [startTimeHourState, setStartTimeHourState] = useState("00")
-    const [startTimeMinuteState, setStartTimeMinuteState] = useState("00")
-    const [startTimeSecondState, setStartTimeSecondState] = useState("00")
+    const [startTimeState, setStartTimeState] = useState({
+        hours: "00",
+        minutes: "00",
+        seconds: "00"
+    })
 
-    const [workedTimeHourState, setWorkedTimeHourState] = useState("00")
-    const [workedTimeMinuteState, setWorkedTimeMinuteState] = useState("00")
-    const [workedTimeSecondState, setWorkedTimeSecondState] = useState("00")
+    const [workedTimeState, setWorkedTimeState] = useState({
+        hours: "00",
+        minutes: "00",
+        seconds: "00"
+    })
 
-    const [breakTimeHourState, setBreakTimeHourState] = useState("00")
-    const [breakTimeMinuteState, setBreakTimeMinuteState] = useState("00")
-    const [breakTimeSecondState, setBreakTimeSecondState] = useState("00")
+    const [breakTimeState, setBreakTimeState] = useState({
+        hours: "00",
+        minutes: "00",
+        seconds: "00"
+    })
 
     const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('EditSaveTimeDialog', {save: null});
 
@@ -46,9 +52,9 @@ const EditSaveTimeDialog = () => {
         set(ref(db, "/users/"+auth.currentUser.uid+"/saved/"+data.save.id), {
             id:data.save.id,
             date:formatDate(selectedDate),
-            startTime: new DateTime(startTimeHourState, startTimeMinuteState, startTimeSecondState).toTimeString(),
-            worked: new DateTime(workedTimeHourState, workedTimeMinuteState, workedTimeSecondState).toTimeString(),
-            break: new DateTime(breakTimeHourState, breakTimeMinuteState, breakTimeSecondState).toTimeString(),
+            startTime: new DateTime(startTimeState.hours, startTimeState.minutes, startTimeState.seconds).toTimeString(),
+            worked: new DateTime(workedTimeState.hours, workedTimeState.minutes, workedTimeState.seconds).toTimeString(),
+            break: new DateTime(breakTimeState.hours, breakTimeState.minutes, breakTimeState.seconds).toTimeString(),
         })
 
         close()
@@ -59,19 +65,19 @@ const EditSaveTimeDialog = () => {
         setSelectedDate(saveDate)
 
         const startTimeDateTime = DateTime.dateTimeFromString(data.save.startTime)
-        setStartTimeHourState(padTo2Digits(startTimeDateTime.getHours))
-        setStartTimeMinuteState(padTo2Digits(startTimeDateTime.getMinutes))
-        setStartTimeSecondState(padTo2Digits(startTimeDateTime.getSeconds))
+        setStartTimeState({...startTimeState, hours: padTo2Digits(startTimeDateTime.getHours),
+            minutes: padTo2Digits(startTimeDateTime.getMinutes),
+            seconds: padTo2Digits(startTimeDateTime.getSeconds)})
 
         const workedTimeDateTime = DateTime.dateTimeFromString(data.save.worked)
-        setWorkedTimeHourState(padTo2Digits(workedTimeDateTime.getHours))
-        setWorkedTimeMinuteState(padTo2Digits(workedTimeDateTime.getMinutes))
-        setWorkedTimeSecondState(padTo2Digits(workedTimeDateTime.getSeconds))
+        setWorkedTimeState({...workedTimeState, hours: padTo2Digits(workedTimeDateTime.getHours),
+            minutes: padTo2Digits(workedTimeDateTime.getMinutes),
+            seconds: padTo2Digits(workedTimeDateTime.getSeconds)})
 
         const breakTimeDateTime = DateTime.dateTimeFromString(data.save.break)
-        setBreakTimeHourState(padTo2Digits(breakTimeDateTime.getHours))
-        setBreakTimeMinuteState(padTo2Digits(breakTimeDateTime.getMinutes))
-        setBreakTimeSecondState(padTo2Digits(breakTimeDateTime.getSeconds))
+        setBreakTimeState({...breakTimeState, hours: padTo2Digits(breakTimeDateTime.getHours),
+            minutes: padTo2Digits(breakTimeDateTime.getMinutes),
+            seconds: padTo2Digits(breakTimeDateTime.getSeconds)})
     }, [])
 
     const DatePickerLayout = (props) => {
@@ -109,19 +115,13 @@ const EditSaveTimeDialog = () => {
                 </div>
 
                 <h4>{t("timer.startTime")}</h4>
-                <DateTimeInput currentHourState={startTimeHourState} setCurrentHourState={setStartTimeHourState}
-                               currentMinuteState={startTimeMinuteState} setCurrentMinuteState={setStartTimeMinuteState}
-                               currentSecondState={startTimeSecondState} setCurrentSecondState={setStartTimeSecondState}/>
+                <DateTimeInput currentTimeState={startTimeState} setCurrentTimeState={setStartTimeState}/>
 
                 <h4>{t("timer.workedTime")}</h4>
-                <DateTimeInput currentHourState={workedTimeHourState} setCurrentHourState={setWorkedTimeHourState}
-                               currentMinuteState={workedTimeMinuteState} setCurrentMinuteState={setWorkedTimeMinuteState}
-                               currentSecondState={workedTimeSecondState} setCurrentSecondState={setWorkedTimeSecondState}/>
+                <DateTimeInput currentTimeState={workedTimeState} setCurrentTimeState={setWorkedTimeState}/>
 
                 <h4>{t("timer.breakTime")}</h4>
-                <DateTimeInput currentHourState={breakTimeHourState} setCurrentHourState={setBreakTimeHourState}
-                               currentMinuteState={breakTimeMinuteState} setCurrentMinuteState={setBreakTimeMinuteState}
-                               currentSecondState={breakTimeSecondState} setCurrentSecondState={setBreakTimeSecondState}/>
+                <DateTimeInput currentTimeState={breakTimeState} setCurrentTimeState={setBreakTimeState}/>
 
                 <div className={getThemeClass("editSaveTimeDialogDivider")}></div>
 

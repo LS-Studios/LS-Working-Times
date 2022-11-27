@@ -1,0 +1,11 @@
+.prognosis {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.prognosisAlreadyWorkedToggle {
+    width: 271px;
+    margin-bottom: 10px;
+}

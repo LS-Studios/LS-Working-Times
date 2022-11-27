@@ -2,8 +2,8 @@ import React, {useRef, useState} from 'react';
 import "./TimeNumberInput.scss"
 import {AiFillCaretUp} from "react-icons/ai"
 import {AiFillCaretDown} from "react-icons/ai"
-import {padTo2Digits} from "../../../helper/Helper";
-import {getThemeClass} from "../../../helper/Theme/Theme";
+import {padTo2Digits} from "../../helper/Helper";
+import {getThemeClass} from "../../helper/Theme/Theme";
 
 function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
     const input = useRef(null);
@@ -46,6 +46,8 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
     const changeFocus = () => {
         if (currentState == "") {
             setCurrentState("00")
+        } else if (currentState.length == 1) {
+            setCurrentState("0" + currentState)
         }
     }
 
