@@ -43,8 +43,8 @@ const CheckboxContent = forwardRef(({title, currentState, setCurrentState}, ref)
                 }
             </div>
             {
-                expanded ? <AiFillCaretUp className="checkboxExpandButton" onClick={() => setExpanded(!expanded)}/> :
-                    <AiFillCaretDown className="checkboxExpandButton" onClick={() => setExpanded(!expanded)}/>
+                expanded ? <AiFillCaretUp className={getThemeClass("checkboxExpandButton")} onClick={() => setExpanded(!expanded)}/> :
+                    <AiFillCaretDown className={getThemeClass("checkboxExpandButton")} onClick={() => setExpanded(!expanded)}/>
             }
         </div>
     );

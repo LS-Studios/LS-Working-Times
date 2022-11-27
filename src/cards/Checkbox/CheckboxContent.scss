@@ -6,12 +6,21 @@
 }
 
 .checkboxExpandButton {
-    background-color: #212A33;
     width: 260px;
     border-radius: 6px;
     padding: 2px 0;
     cursor: pointer;
     margin-top: 10px;
+}
+
+.darkCheckboxExpandButton {
+    @extend .checkboxExpandButton;
+    background-color: #212A33;
+}
+
+.brightCheckboxExpandButton {
+    @extend .checkboxExpandButton;
+    background-color: #BCBCBC;
 }
 
 .checkboxContentContainer {
