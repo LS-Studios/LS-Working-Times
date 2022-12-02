@@ -100,6 +100,8 @@ export function t(path, params, lang) {
         }
     });
 
+    console.log(path)
+
     if (!translation) {
         return fallback();
     }

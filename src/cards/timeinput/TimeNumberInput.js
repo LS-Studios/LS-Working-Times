@@ -55,7 +55,7 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
         <div className="timeInputRow">
             <AiFillCaretUp className={getThemeClass("timeInputRowChangeButton")} onClick={increase}/>
             <form onSubmit={submit}>
-                <input className={getThemeClass("changeTimeDialogInput")} value={currentState} onBlur={changeFocus} ref={input} type="text" onChange={onChange} onKeyDown={onKeyDown}/>
+                <input className={getThemeClass("changeTimeDialogInput")} value={padTo2Digits(currentState)} onBlur={changeFocus} ref={input} type="text" onChange={onChange} onKeyDown={onKeyDown}/>
             </form>
             <AiFillCaretDown className={getThemeClass("timeInputRowChangeButton")} onClick={decrease}/>
         </div>

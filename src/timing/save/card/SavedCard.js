@@ -76,7 +76,6 @@ function SavedCard({save, isExpanded}) {
                 </div>
                 <div className={getThemeClass("saveCardDividerBottom")}></div>
                 <div className="saveCardActionBar">
-                    {console.log(getThemeClass("saveCardActionButton"))}
                     <button className={getThemeClass("saveCardActionButton")} onClick={deleteSave}>{t("timer.delete")}</button>
                     <button className={getThemeClass("saveCardActionButton")} onClick={editSave}>{t("timer.edit")}</button>
                 </div>

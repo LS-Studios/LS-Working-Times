@@ -9,6 +9,7 @@
 <color name="dark_divider">#1AFFFFFF</color>
 
 //Bright
+<color name="bright_main_0">#3c4f61</color>
 <color name="bright_main_1">#DBDBDB</color>
 <color name="bright_main_2">#BCBCBC</color>
 <color name="bright_main_3">#A1A1A1</color>

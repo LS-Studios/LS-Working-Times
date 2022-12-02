@@ -4,10 +4,15 @@ import InputCard from "../cards/Input/InputCard";
 import Card from "../cards/Card";
 import ToggleContent from "../cards/ToggleInput/ToggleContent";
 import DateTimeInput from "../cards/timeinput/DateTimeInput";
-import {getThemeClass} from "../helper/Theme/Theme";
+import {getThemeClass, setTheme} from "../helper/Theme/Theme";
 import CheckboxCard from "../cards/Checkbox/CheckboxCard";
-import DateTimeInputCard from "../cards/timeinput/DateTimeInputCard";
-import {t} from "../helper/LanguageTransaltion/Transalation";
+import {getLanguage, setLanguage, t} from "../helper/LanguageTransaltion/Transalation";
+import WorkingDayCard from "./workingday/WorkingDayCard";
+import {get, getDatabase, ref} from "firebase/database";
+import {initializeApp} from "firebase/app";
+import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
+import {LSWalletConfig} from "../firebase/LSWalletConfig";
+import {getAuth} from "firebase/auth";
 
 function Prognosis({setCurrentMenu}) {
     const [hoursPerWeekInput, setHoursPerWeekInput] = useState("40")
@@ -47,6 +52,41 @@ function Prognosis({setCurrentMenu}) {
 
     useEffect(() => {
         setCurrentMenu(2)
+
+        // const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        // const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
+        // const db = getDatabase(lsWorkingTimesApp)
+        // const auth = getAuth(lsWalletApp)
+        //
+        // const unsubscribeArray = []
+        //
+        // unsubscribeArray.push(
+        //     auth.onAuthStateChanged(function(user) {
+        //         get(ref(db, "/users/" + user.uid + "/language")).then((snapshot) => {
+        //             if (snapshot.exists()) {
+        //                 setLanguage(snapshot.val())
+        //             } else {
+        //                 console.log("No data available");
+        //             }
+        //         }).catch((error) => {
+        //             console.error(error);
+        //         });
+        //
+        //         get(ref(db, "/users/" + user.uid + "/theme")).then((snapshot) => {
+        //             if (snapshot.exists()) {
+        //                 setTheme(snapshot.val())
+        //                 document.body.classList.forEach((v, k, p) => {
+        //                     document.body.classList.remove(v)
+        //                 })
+        //                 document.body.classList.add(getThemeClass("body"))
+        //             } else {
+        //                 console.log("No data available");
+        //             }
+        //         }).catch((error) => {
+        //             console.error(error);
+        //         });
+        //     })
+        // )
     }, [])
 
     return (
@@ -63,9 +103,31 @@ function Prognosis({setCurrentMenu}) {
                     </div>
                 </div>
             }/>
-            <CheckboxCard title="Working days" currentState={workingDays} setCurrentState={setWorkingDays}/>
-            <DateTimeInputCard title={t("prognosis.earliestStartTime")} currentTimeState={earliestStartTime} setCurrentTimeState={setEarliestStartTime}/>
-            <DateTimeInputCard title={t("prognosis.latestEndTime")} currentTimeState={latestEndTime} setCurrentTimeState={setLatestEndTime}/>
+            <CheckboxCard title={t("prognosis.workingDays")} currentState={workingDays} setCurrentState={setWorkingDays}/>
+            <div>
+                {
+                    workingDays.map((workingDay, i) => {
+                        if (i) {
+                            switch (i) {
+                                case 0:
+                                    return <WorkingDayCard day={{name: t("prognosis.monday")}}/>
+                                case 1:
+                                    return <WorkingDayCard day={{name: t("prognosis.tuesday")}}/>
+                                case 2:
+                                    return <WorkingDayCard day={{name: t("prognosis.wednesday")}}/>
+                                case 3:
+                                    return <WorkingDayCard day={{name: t("prognosis.thursday")}}/>
+                                case 4:
+                                    return <WorkingDayCard day={{name: t("prognosis.friday")}}/>
+                                case 5:
+                                    return <WorkingDayCard day={{name: t("prognosis.saturday")}}/>
+                                case 6:
+                                    return <WorkingDayCard day={{name: t("prognosis.sunday")}}/>
+                            }
+                        }
+                    })
+                }
+            </div>
         </div>
     );
 }

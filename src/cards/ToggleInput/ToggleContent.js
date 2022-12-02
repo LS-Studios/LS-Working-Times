@@ -2,19 +2,15 @@ import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import "./ToggleContent.scss"
 import {getThemeClass} from "../../helper/Theme/Theme";
 
-const ToggleContent = forwardRef(({title, toggleList, currentState, setCurrentState}, ref) => {
-    useImperativeHandle(ref, () => ({
-
-        onClick() {
-            console.log("öp")
-        }
-
-    }));
-
+function ToggleContent({title, toggleList, currentState, setCurrentState}) {
     return (
         <div className="toggleContainer">
-            <div><b>{title}</b></div>
-            <div className={getThemeClass("divider")}/>
+            {
+                title != null ? <div>
+                    <div><b>{title}</b></div>
+                    <div className={getThemeClass("divider")}/>
+                </div>: null
+            }
             <div className="toggleBar">
                 {
                     toggleList.map((toggle, i) => {
@@ -41,6 +37,6 @@ const ToggleContent = forwardRef(({title, toggleList, currentState, setCurrentSt
             </div>
         </div>
     );
-})
+}
 
 export default ToggleContent;

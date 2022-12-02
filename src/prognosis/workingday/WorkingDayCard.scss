@@ -1,0 +1,45 @@
+.workingDayCardHolder {
+  width: 271px;
+}
+
+.workingDayCardTitle {
+  margin-top: 5px;
+}
+
+.workingDayCardExpandButtonNotExpanded {
+  width: 260px;
+  border-radius: 6px;
+  padding: 2px 0;
+  cursor: pointer;
+  margin-top: 3px;
+  margin-bottom: 5px;
+}
+
+.darkWorkingDayCardExpandButtonNotExpanded {
+  @extend .workingDayCardExpandButtonNotExpanded;
+  background-color: #3c4f61;
+}
+
+.brightWorkingDayCardExpandButtonNotExpanded {
+  @extend .workingDayCardExpandButtonNotExpanded;
+  background-color: #BCBCBC;
+}
+
+.workingDayCardExpandButtonExpandedExpanded {
+  width: 260px;
+  border-radius: 6px;
+  padding: 2px 0;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.darkWorkingDayCardExpandButtonExpanded {
+  @extend .workingDayCardExpandButtonExpandedExpanded;
+  background-color: #3c4f61;
+}
+
+.brightWorkingDayCardExpandButton {
+  @extend .workingDayCardExpandButtonExpandedExpanded;
+  background-color: #BCBCBC;
+}

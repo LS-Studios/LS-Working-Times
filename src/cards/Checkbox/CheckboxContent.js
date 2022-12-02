@@ -5,7 +5,7 @@ import {AiFillCaretUp} from "react-icons/ai"
 import {AiFillCaretDown} from "react-icons/ai"
 
 const CheckboxContent = forwardRef(({title, currentState, setCurrentState}, ref) => {
-    const [expanded, setExpanded] = useState(true)
+    const [expanded, setExpanded] = useState(false)
 
     return (
         <div className="checkboxContentContainer">
@@ -21,7 +21,6 @@ const CheckboxContent = forwardRef(({title, currentState, setCurrentState}, ref)
             <div className={expanded ? "checkboxBar" : "gone"}>
                 {
                     currentState.map((checkboxObj, i) => {
-                        console.log(checkboxObj.day)
                         return (
                             <label className={getThemeClass("checkboxContainer")}>
                                 <div className="checkboxText">{checkboxObj.day}</div>
@@ -43,8 +42,8 @@ const CheckboxContent = forwardRef(({title, currentState, setCurrentState}, ref)
                 }
             </div>
             {
-                expanded ? <AiFillCaretUp className={getThemeClass("checkboxExpandButton")} onClick={() => setExpanded(!expanded)}/> :
-                    <AiFillCaretDown className={getThemeClass("checkboxExpandButton")} onClick={() => setExpanded(!expanded)}/>
+                expanded ? <AiFillCaretUp className={expanded ? getThemeClass("checkboxExpandButtonExpanded") : getThemeClass("checkboxExpandButtonNotExpanded")} onClick={() => setExpanded(!expanded)}/> :
+                    <AiFillCaretDown className={expanded ? getThemeClass("checkboxExpandButtonExpanded") : getThemeClass("checkboxExpandButtonNotExpanded")} onClick={() => setExpanded(!expanded)}/>
             }
         </div>
     );

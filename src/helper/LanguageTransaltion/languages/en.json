@@ -54,6 +54,7 @@
     "latestEndTime": "Latest end time",
     "hoursPerWeek": "Hours per week",
     "alreadyWorked": "Already worked",
+    "workingDays": "Working days",
     "current": "Current",
     "custom": "Custom"
   },

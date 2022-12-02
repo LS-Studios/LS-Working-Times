@@ -5,7 +5,24 @@
     overflow-wrap: break-word;
 }
 
-.checkboxExpandButton {
+.checkboxExpandButtonExpanded {
+    width: 260px;
+    border-radius: 6px;
+    padding: 2px 0;
+    cursor: pointer;
+}
+
+.darkCheckboxExpandButtonExpanded {
+    @extend .checkboxExpandButtonExpanded;
+    background-color: #3c4f61;
+}
+
+.brightCheckboxExpandButtonExpanded {
+    @extend .checkboxExpandButtonExpanded;
+    background-color: #BCBCBC;
+}
+
+.checkboxExpandButtonNotExpanded {
     width: 260px;
     border-radius: 6px;
     padding: 2px 0;
@@ -13,13 +30,13 @@
     margin-top: 10px;
 }
 
-.darkCheckboxExpandButton {
-    @extend .checkboxExpandButton;
-    background-color: #212A33;
+.darkCheckboxExpandButtonNotExpanded {
+    @extend .checkboxExpandButtonNotExpanded;
+    background-color: #3c4f61;
 }
 
-.brightCheckboxExpandButton {
-    @extend .checkboxExpandButton;
+.brightCheckboxExpandButtonNotExpanded {
+    @extend .checkboxExpandButtonNotExpanded;
     background-color: #BCBCBC;
 }
 
@@ -72,7 +89,7 @@
 
 /* On mouse-over, add a grey background color */
 .darkCheckboxContainer:hover input ~ .darkCheckboxCheckmark {
-    background-color: #adadad;
+    background-color: #364657;
 }
 
 /* When the checkbox is checked, add a blue background */
@@ -108,7 +125,7 @@
 
 .darkCheckboxCheckmark {
     @extend .checkboxCheckmark;
-    background-color: #CCCCCC;
+    background-color: #3c4f61;
 }
 
 .brightCheckboxCheckmark {
