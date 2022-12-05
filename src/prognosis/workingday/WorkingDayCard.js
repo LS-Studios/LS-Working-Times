@@ -6,6 +6,7 @@ import {getThemeClass} from "../../helper/Theme/Theme";
 import {AiFillCaretDown, AiFillCaretUp} from "react-icons/ai";
 import Card from "../../cards/Card";
 import ToggleContent from "../../cards/ToggleInput/ToggleContent";
+import {t} from "../../helper/LanguageTransaltion/Transalation";
 
 function WorkingDayCard({day}) {
     const [expanded, setExpanded] = useState(false)
@@ -29,7 +30,7 @@ function WorkingDayCard({day}) {
                 <div className='workingDayCardTitle'>
                     <b>{day.name}</b>
                     <div className={getThemeClass("divider")}/>
-                    <ToggleContent currentState={daytimeType} setCurrentState={setDaytimeType} toggleList={["Undefined", "Custom"]}/>
+                    <ToggleContent currentState={daytimeType} setCurrentState={setDaytimeType} toggleList={[t("prognosis.undefined"), t("prognosis.defined")]}/>
                     {
                         daytimeType == 1 ? <div>
                                 <div className={getThemeClass("divider")}/>

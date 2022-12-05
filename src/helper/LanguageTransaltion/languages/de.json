@@ -54,6 +54,8 @@
     "hoursPerWeek": "Stunden pro woche",
     "alreadyWorked": "Bereits gearbeitet",
     "workingDays": "Arbeitstage",
+    "undefined": "Undefiniert",
+    "defined": "Definiert",
     "current": "Akutell",
     "custom": "Benutzerdeffiniert"
   },

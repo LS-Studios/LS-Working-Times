@@ -35,13 +35,7 @@ function Prognosis({setCurrentMenu}) {
     })
 
     const [workingDays, setWorkingDays] = useState([
-        {day: t("prognosis.monday"), selected: true},
-        {day: t("prognosis.tuesday"), selected: true},
-        {day: t("prognosis.wednesday"), selected: true},
-        {day: t("prognosis.thursday"), selected: true},
-        {day: t("prognosis.friday"), selected: true},
-        {day: t("prognosis.saturday"), selected: false},
-        {day: t("prognosis.sunday"), selected: false},
+        true, true, true, true, true, false, false,
     ])
 
     const fillEmptyTimeField = (currentState, setCurrentState) => {
@@ -53,40 +47,40 @@ function Prognosis({setCurrentMenu}) {
     useEffect(() => {
         setCurrentMenu(2)
 
-        // const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        // const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
-        // const db = getDatabase(lsWorkingTimesApp)
-        // const auth = getAuth(lsWalletApp)
-        //
-        // const unsubscribeArray = []
-        //
-        // unsubscribeArray.push(
-        //     auth.onAuthStateChanged(function(user) {
-        //         get(ref(db, "/users/" + user.uid + "/language")).then((snapshot) => {
-        //             if (snapshot.exists()) {
-        //                 setLanguage(snapshot.val())
-        //             } else {
-        //                 console.log("No data available");
-        //             }
-        //         }).catch((error) => {
-        //             console.error(error);
-        //         });
-        //
-        //         get(ref(db, "/users/" + user.uid + "/theme")).then((snapshot) => {
-        //             if (snapshot.exists()) {
-        //                 setTheme(snapshot.val())
-        //                 document.body.classList.forEach((v, k, p) => {
-        //                     document.body.classList.remove(v)
-        //                 })
-        //                 document.body.classList.add(getThemeClass("body"))
-        //             } else {
-        //                 console.log("No data available");
-        //             }
-        //         }).catch((error) => {
-        //             console.error(error);
-        //         });
-        //     })
-        // )
+        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+        const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
+        const db = getDatabase(lsWorkingTimesApp)
+        const auth = getAuth(lsWalletApp)
+
+        const unsubscribeArray = []
+
+        unsubscribeArray.push(
+            auth.onAuthStateChanged(function(user) {
+                get(ref(db, "/users/" + user.uid + "/language")).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        setLanguage(snapshot.val())
+                    } else {
+                        console.log("No data available");
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
+
+                get(ref(db, "/users/" + user.uid + "/theme")).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        setTheme(snapshot.val())
+                        document.body.classList.forEach((v, k, p) => {
+                            document.body.classList.remove(v)
+                        })
+                        document.body.classList.add(getThemeClass("body"))
+                    } else {
+                        console.log("No data available");
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
+            })
+        )
     }, [])
 
     return (
@@ -103,11 +97,18 @@ function Prognosis({setCurrentMenu}) {
                     </div>
                 </div>
             }/>
-            <CheckboxCard title={t("prognosis.workingDays")} currentState={workingDays} setCurrentState={setWorkingDays}/>
+            <CheckboxCard title={t("prognosis.workingDays")} checkboxList={
+                [t("prognosis.monday"),
+                t("prognosis.tuesday"),
+                t("prognosis.wednesday"),
+                t("prognosis.thursday"),
+                t("prognosis.friday"),
+                t("prognosis.saturday"),
+                t("prognosis.sunday")]} currentState={workingDays} setCurrentState={setWorkingDays}/>
             <div>
                 {
                     workingDays.map((workingDay, i) => {
-                        if (i) {
+                        if (workingDay) {
                             switch (i) {
                                 case 0:
                                     return <WorkingDayCard day={{name: t("prognosis.monday")}}/>

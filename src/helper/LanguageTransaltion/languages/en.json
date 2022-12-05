@@ -55,6 +55,8 @@
     "hoursPerWeek": "Hours per week",
     "alreadyWorked": "Already worked",
     "workingDays": "Working days",
+    "undefined": "Undefined",
+    "defined": "Defined",
     "current": "Current",
     "custom": "Custom"
   },

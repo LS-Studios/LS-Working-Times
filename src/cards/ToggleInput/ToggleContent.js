@@ -19,7 +19,7 @@ function ToggleContent({title, toggleList, currentState, setCurrentState}) {
                                 <input
                                     className={getThemeClass("toggleInput")}
                                     type="radio"
-                                    key={i}
+                                    key={toggle}
                                     id={toggle}
                                     value={toggle}
                                     checked={currentState == i}
@@ -27,7 +27,7 @@ function ToggleContent({title, toggleList, currentState, setCurrentState}) {
                                 />
                                 <label
                                     className="toggleText"
-                                    htmlFor={toggle}>
+                                    onClick={() => setCurrentState(i)}>
                                     {"  " + toggle}
                                 </label>
                             </div>

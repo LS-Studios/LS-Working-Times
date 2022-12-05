@@ -1,36 +1,44 @@
-import React, {forwardRef, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import "./CheckboxContent.scss"
 import {getThemeClass} from "../../helper/Theme/Theme";
 import {AiFillCaretUp} from "react-icons/ai"
 import {AiFillCaretDown} from "react-icons/ai"
 
-const CheckboxContent = forwardRef(({title, currentState, setCurrentState}, ref) => {
+const CheckboxContent = forwardRef(({title, checkboxList, currentState, setCurrentState}, ref) => {
     const [expanded, setExpanded] = useState(false)
+
+    const getSelectedDays = () => {
+        let result = []
+
+        for (let i = 0; i < checkboxList.length; i++) {
+            if (currentState[i]) {
+                result.push(checkboxList[i])
+            }
+        }
+
+        return result.join(", ")
+    }
 
     return (
         <div className="checkboxContentContainer">
             <div><b>{title}</b></div>
             <div className={getThemeClass("divider")}/>
             {
-                !expanded ? <div className="checkboxSelectedNames">{currentState.filter(checkboxObj => {
-                    return checkboxObj.selected
-                }).map(checkboxObj => {
-                    return checkboxObj.day
-                }).join(", ")}</div> : null
+                !expanded ? <div className="checkboxSelectedNames">{getSelectedDays()}</div> : null
             }
             <div className={expanded ? "checkboxBar" : "gone"}>
                 {
-                    currentState.map((checkboxObj, i) => {
+                    checkboxList.map((checkbox, i) => {
                         return (
                             <label className={getThemeClass("checkboxContainer")}>
-                                <div className="checkboxText">{checkboxObj.day}</div>
+                                <div className="checkboxText">{checkbox}</div>
                                 <input
-                                    key={i}
-                                    id={checkboxObj.day}
-                                    checked={currentState[i].selected}
+                                    key={checkbox}
+                                    id={checkbox}
+                                    checked={currentState[i]}
                                     onChange={() => {
                                         const newState = [...currentState]
-                                        newState[i].selected = !newState[i].selected
+                                        newState[i] = !newState[i]
                                         setCurrentState(newState)
                                     }}
                                     type="checkbox"
