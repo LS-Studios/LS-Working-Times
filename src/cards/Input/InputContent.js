@@ -3,7 +3,7 @@ import "./InputContent.scss"
 import {getThemeClass} from "../../helper/Theme/Theme";
 import {BsFillEyeFill, BsFillEyeSlashFill} from "react-icons/bs"
 
-const InputContent = ({title, placeholder, type="text", focusOnClick=false, useDivider=true, charType=0, submitFunc, blurFunction, currentState, setCurrentState}) => {
+const InputContent = ({title, placeholder, type="text", focusOnClick=false, useDivider=true, inputType=0, submitFunc, blurFunction, currentState, setCurrentState}) => {
     const input = useRef(null);
 
     const [showPassword, setShowPassword] = useState(false)
@@ -11,13 +11,15 @@ const InputContent = ({title, placeholder, type="text", focusOnClick=false, useD
     const onChange = (e) => {
         const justNumberResult = e.target.value.replace(/\D/g, '')
 
-        switch (charType) {
+        switch (inputType) {
             case 0:
                 setCurrentState(e.target.value)
                 break
             case 1:
                 setCurrentState(justNumberResult)
                 break
+            default:
+                setCurrentState(e.target.value)
         }
     }
 
@@ -50,10 +52,22 @@ const InputContent = ({title, placeholder, type="text", focusOnClick=false, useD
 
     return (
         <div className="inputContainer" onClick={() => focusOnClick ? input.current.focus() : null}>
-            <div><b>{title}</b></div>
-            <div className={useDivider ? getThemeClass("divider") : ""}/>
+            {
+                title != null ? <div>
+                    <div><b>{title}</b></div>
+                    <div className={useDivider ? getThemeClass("divider") : ""}/>
+                </div> : null
+            }
             <form className="inputHolder" onSubmit={submit}>
-                <input className={getThemeClass("input")} ref={input} value={currentState} type={type === "password" ? (showPassword ? "text" : "password") : type} placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown}/>
+                {
+                    inputType == 3 ? <textarea className={getThemeClass("input")} ref={input} value={currentState}
+                                               type={type === "password" ? (showPassword ? "text" : "password") : type}
+                                               placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown} rows="1"/> :
+                                    <input className={getThemeClass("input")} ref={input} value={currentState}
+                                                type={type === "password" ? (showPassword ? "text" : "password") : type}
+                                                placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown}/>
+
+                }
                 {type === "password" ? showPasswordIcon : null}
             </form>
         </div>

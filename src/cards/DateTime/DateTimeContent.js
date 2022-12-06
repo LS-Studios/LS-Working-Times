@@ -5,9 +5,7 @@ import DatePicker from "react-multi-date-picker"
 import TimePicker from "react-multi-date-picker/plugins/time_picker";
 import {getThemeClass} from "../../helper/Theme/Theme";
 
-const DateTimeContent = ({title, value, type}) => {
-    const [startDate, setStartDate] = useState(value);
-
+const DateTimeContent = ({title, currentState, setCurrentState, type}) => {
     const datePickerRef = useRef()
 
     const onClick = () => {
@@ -20,7 +18,7 @@ const DateTimeContent = ({title, value, type}) => {
             props.openCalendar()
         }
         return (
-            <div onClick={open}>
+            <div style={{width: 250}} onClick={open}>
                 {props.value}
             </div>
         )
@@ -28,18 +26,24 @@ const DateTimeContent = ({title, value, type}) => {
 
     return (
         <div className="dateTimeContainer" onClick={onClick}>
-            <div><b>{title}</b></div>
-            <div className={getThemeClass("divider")}/>
+            {
+                title != null ? <div>
+                    <div><b>{title}</b></div>
+                    <div className={getThemeClass("divider")}/>
+                </div> : null
+            }
             {
                 type == "date"
                     ?
                     <DatePicker
                         portal
-                        ref={datePickerRef}
                         inputMode="none"
                         editable={false}
-                        value={startDate}
-                        onChange={(date) => setStartDate(date)}
+                        value={currentState}
+                        onChange={(dateObj) => {
+                            const date = new Date(dateObj.year, dateObj.month.number-1, dateObj.day)
+                            setCurrentState(date)
+                        }}
                         render={<DatePickerLayout/>}
                         format="DD.MM.YYYY"
                         calendarPosition={"bottom-center"}
@@ -51,7 +55,7 @@ const DateTimeContent = ({title, value, type}) => {
                         portal
                         disableDayPicker
                         editable={false}
-                        value={startDate}
+                        value={currentState}
                         format="HH:mm"
                         plugins={[
                             <TimePicker hideSeconds  />

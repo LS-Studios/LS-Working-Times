@@ -23,6 +23,7 @@ import {getAuth} from "firebase/auth";
 import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../helper/LanguageTransaltion/Transalation";
 import {getCurrentTheme, getThemeClass} from "../helper/Theme/Theme";
+import {loadingSpinner} from "../helper/LoadingSpinner";
 
 function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     const { dialogs, openDialog } = useDialog();
@@ -296,21 +297,6 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
             unsubscribeArray.forEach(unsub => unsub())
         }
     }, [])
-
-    const getThemeSpinnerColor = () => {
-        switch (getCurrentTheme()) {
-            case "dark":
-                return "#CCCCCC";
-            case "bright":
-                return "#353535";
-        }
-    }
-
-    const loadingSpinner = <ClipLoader
-        color={getThemeSpinnerColor()}
-        size={15}
-        speedMultiplier={0.8}
-    />
 
     return (
         <div className="timingMenu">

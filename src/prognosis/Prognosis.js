@@ -45,7 +45,7 @@ function Prognosis({setCurrentMenu}) {
     }
 
     useEffect(() => {
-        setCurrentMenu(2)
+        setCurrentMenu(3)
 
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
         const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
@@ -85,7 +85,7 @@ function Prognosis({setCurrentMenu}) {
 
     return (
         <div className="prognosis">
-            <InputCard title={t("prognosis.hoursPerWeek")} charType={1}  focusOnClick={true} blurFunction={() => fillEmptyTimeField(hoursPerWeekInput, setHoursPerWeekInput)} currentState={hoursPerWeekInput} setCurrentState={setHoursPerWeekInput}/>
+            <InputCard title={t("prognosis.hoursPerWeek")} inputType={1} focusOnClick={true} blurFunction={() => fillEmptyTimeField(hoursPerWeekInput, setHoursPerWeekInput)} currentState={hoursPerWeekInput} setCurrentState={setHoursPerWeekInput}/>
             <Card cardContent={
                 <div>
                     <ToggleContent title={t("prognosis.alreadyWorked")} currentState={alreadyWorkedState} setCurrentState={setAlreadyWorkedState} toggleList={[t("prognosis.current"), t("prognosis.custom")]}/>

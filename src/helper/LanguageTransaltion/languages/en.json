@@ -1,5 +1,5 @@
 {
-  "langKey": "de",
+  "langKey": "en",
   "login": {
     "menuName": "Login",
     "email": "Email",
@@ -34,6 +34,8 @@
     "saved": "Saved times",
     "noSaves": "No saved times",
     "the": "the",
+    "the2": " ",
+    "on": "On",
     "startedAt": "Started at",
     "endedAt": "Ended at",
     "workedTime": "Worked time",
@@ -60,6 +62,13 @@
     "current": "Current",
     "custom": "Custom"
   },
+  "planning": {
+    "menuName": "Planning",
+    "description": "Description",
+    "dateOfPlan": "Date of plan",
+    "add": "Add",
+    "placeholder": "I have worked on ... \n I will do ... today."
+  },
   "settings": {
     "menuName": "Settings",
     "language": "Language",
@@ -75,11 +84,13 @@
   },
   "dialog": {
     "changeTime": "Change time",
+    "changePlan": "Change plan",
     "cancel": "Cancel",
     "confirm": "Confirm",
     "yes": "Yes",
     "no": "No",
     "doYouRelayWantToDeleteThisSave": "Do you relay want to delete this save?",
+    "doYouRelayWantToDeleteThisPlan": "Do you relay want to delete this plan?",
     "doYouReallyWantToDeleteAllData": "Do you really want to delete all data?",
     "doYouReallyWantToDeleteThisAccount": "Do yiu really want to delete this account?",
     "passwordToContinueResetting": "Password to continue resetting."

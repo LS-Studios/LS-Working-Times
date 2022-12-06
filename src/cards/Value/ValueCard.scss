@@ -28,9 +28,13 @@
 .darkSingleLineValueCard {
     @extend .darkCard;
     flex: 1;
-    height: 65px;
     width: $verticalWith;
     margin-top: 10px;
+}
+
+.valueCardText {
+    margin: 5px;
+    overflow-wrap: break-word;
 }
 
 .darkValueDivider {

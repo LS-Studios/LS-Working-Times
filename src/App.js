@@ -20,6 +20,8 @@ import de from "./helper/LanguageTransaltion/languages/de.json"
 import {setDefaultTheme, setThemeUp} from "./helper/Theme/Theme";
 import ChangeCredentialsDialog from "./dialogs/credentials/ChangeCredentialsDialog";
 import Prognosis from "./prognosis/Prognosis";
+import Planning from "./planning/Planning";
+import EditPlanningDialog from "./dialogs/planning/EditPlanningDialog";
 
 function App(props) {
     const [currentMenu, setCurrentMenu] = useState(0)
@@ -29,7 +31,8 @@ function App(props) {
         YesNoDialog,
         ChangeTimeDialog,
         EditSaveTimeDialog,
-        ChangeCredentialsDialog
+        ChangeCredentialsDialog,
+        EditPlanningDialog
     }
 
     useEffect(() => {
@@ -49,6 +52,10 @@ function App(props) {
                         <Route
                             path="/timing"
                             element={<Timing setCurrentMenu={setCurrentMenu}/>}
+                        />
+                        <Route
+                            path="/planning"
+                            element={<Planning setCurrentMenu={setCurrentMenu}/>}
                         />
                         <Route
                             path="/prognosis"

@@ -14,7 +14,8 @@ export function formatDate(date) {
 
 export const getDateFromString = (stringDate) => {
     const splitList = stringDate.split(".")
-    return new Date(splitList[2], splitList[1]-1, splitList[0])
+    const date = new Date(splitList[2]+"/"+splitList[1]+"/"+splitList[0])
+    return date
 }
 
 export const getStartOfWeekDayValue = (date) => {
@@ -22,6 +23,12 @@ export const getStartOfWeekDayValue = (date) => {
     const day = date.getDay()
     const firstDay = date.getDate() - day + (day == 0 ? -6:1) // adjust when day is sunday cause it starts with 0 on sunday
     return firstDay
+}
+
+export const getDateNameByString = (string) => {
+    const splitList = string.split(".")
+    const date = new Date(splitList[2]+"/"+splitList[1]+"/"+splitList[0])
+    return date.toLocaleDateString(t("langKey"), {weekday: 'long'})
 }
 
 export const getDateWithoutTime = (date) => {

@@ -8,6 +8,7 @@ import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfW
 import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
 import {getCurrentTheme, getThemeClass} from "../../helper/Theme/Theme";
+import {loadingSpinner} from "../../helper/LoadingSpinner";
 
 function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
     const datePickerRef = useRef()
@@ -35,22 +36,6 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
         )
     }
 
-    const getThemeSpinnerColor = () => {
-        switch (getCurrentTheme()) {
-            case "dark":
-                return "#CCCCCC";
-            case "bright":
-                return "#353535";
-        }
-    }
-
-    const loadingSpinner = <ClipLoader
-        cssOverride={{marginBottom: 8}}
-        color={getThemeSpinnerColor()}
-        size={15}
-        speedMultiplier={0.8}
-    />
-
     return (
         <div className={getThemeClass("saved")}>
             <div className="saveTitle"><b>{t("timer.saved")}</b></div>
@@ -76,11 +61,12 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
             {
                 saved.filter(save => {
                     const saveDate = getDateFromString(save.date)
+                    console.log(saveDate)
                     return saveDate >= getStartOfWeek(selectedSaveDate) && saveDate <= getEndOfWeek(selectedSaveDate)
                 }).sort((a, b) => {
                     const saveDateA = getDateFromString(a.date)
                     const saveDateB = getDateFromString(b.date)
-                   return saveDateA < saveDateB
+                    return saveDateA < saveDateB
                 }).map(save => {
                     return <SavedCard key={save.id} save={save} isExpanded={false}/>
                 })
