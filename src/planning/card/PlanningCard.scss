@@ -14,6 +14,7 @@
     margin: 5px;
     overflow-wrap: break-word;
     white-space: pre-line;
+    font-size: 14px;
 }
 
 //Bright
@@ -24,11 +25,6 @@
     margin-top: 10px;
     cursor: pointer;
     width: $verticalWith;
-}
-
-.brightPlanningCard:last-child {
-    margin-left: 5px;
-    margin-right: 0;
 }
 
 /* Add some padding inside the card container */
