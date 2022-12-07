@@ -67,7 +67,7 @@
     "description": "Description",
     "dateOfPlan": "Date of plan",
     "add": "Add",
-    "placeholder": "I have worked on ... \n I will do ... today."
+    "placeholder": "I have worked on ... yesterday. / \n I will do ... today."
   },
   "settings": {
     "menuName": "Settings",

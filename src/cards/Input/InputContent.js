@@ -61,8 +61,7 @@ const InputContent = ({title, placeholder, type="text", focusOnClick=false, useD
             <form className="inputHolder" onSubmit={submit}>
                 {
                     inputType == 3 ? <textarea className={getThemeClass("input")} ref={input} value={currentState}
-                                               type={type === "password" ? (showPassword ? "text" : "password") : type}
-                                               placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown} rows="1"/> :
+                                               placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown} rows={3}/> :
                                     <input className={getThemeClass("input")} ref={input} value={currentState}
                                                 type={type === "password" ? (showPassword ? "text" : "password") : type}
                                                 placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown}/>

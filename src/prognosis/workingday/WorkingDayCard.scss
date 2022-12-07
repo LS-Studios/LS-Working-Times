@@ -25,21 +25,20 @@
   background-color: #BCBCBC;
 }
 
-.workingDayCardExpandButtonExpandedExpanded {
+.workingDayCardExpandButtonExpanded {
   width: 260px;
   border-radius: 6px;
   padding: 2px 0;
   cursor: pointer;
-  margin-top: 10px;
   margin-bottom: 5px;
 }
 
 .darkWorkingDayCardExpandButtonExpanded {
-  @extend .workingDayCardExpandButtonExpandedExpanded;
+  @extend .workingDayCardExpandButtonExpanded;
   background-color: #3c4f61;
 }
 
-.brightWorkingDayCardExpandButton {
-  @extend .workingDayCardExpandButtonExpandedExpanded;
+.brightWorkingDayCardExpandButtonExpanded {
+  @extend .workingDayCardExpandButtonExpanded;
   background-color: #BCBCBC;
 }

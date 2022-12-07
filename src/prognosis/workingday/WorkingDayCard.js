@@ -39,7 +39,7 @@ function WorkingDayCard({day}) {
                         </div>: null
                     }
                 </div>
-                <div className={expanded ? "" : "gone"}>
+                <div className={expanded && daytimeType == 1 ? "" : "gone"}>
                     <div>Start time</div>
                     <div className={getThemeClass("divider")}/>
                     <DateTimeInput currentTimeState={currentStartTime} setCurrentTimeState={setCurrentStartTime}/>
@@ -47,6 +47,7 @@ function WorkingDayCard({day}) {
                     <div>End time</div>
                     <div className={getThemeClass("divider")}/>
                     <DateTimeInput currentTimeState={currentEndTime} setCurrentTimeState={setCurrentEdnTime}/>
+                    <div className={getThemeClass("divider")}/>
                 </div>
                 {
                     daytimeType == 1 ? <div> {
