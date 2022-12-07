@@ -63,10 +63,12 @@
   },
   "planning": {
     "menuName": "Planung",
+    "plannings": "Planungen",
+    "noSavedPlannings": "Keine gespeicheten Planungen",
     "description": "Beschreibung",
     "dateOfPlan": "Datum des Plans",
     "add": "Hinzufügen",
-    "placeholder": "Ich habe an ... gearbeietet. / \n Ich werde heute ..."
+    "placeholder": "Ich habe an ... gearbeietet.\n/\nIch werde heute ..."
   },
   "settings": {
     "menuName": "Einstellungen",

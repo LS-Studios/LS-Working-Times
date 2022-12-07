@@ -9,16 +9,19 @@ import {getAuth} from "firebase/auth";
 import InputContent from "../cards/Input/InputContent";
 import ButtonCard from "../cards/Button/ButtonCard";
 import {formatDate, getDateFromString, getDateNameByString} from "../helper/Helper";
-import {loadingSpinner} from "../helper/LoadingSpinner";
+import {loadingSpinner} from "../spinner/LoadingSpinner";
 import Card from "../cards/Card";
 import DateTimeContent from "../cards/DateTime/DateTimeContent";
 import PlanningCard from "./card/PlanningCard";
+import SavedCard from "../timing/save/card/SavedCard";
+import ContentInWeekCard from "../timing/save/ContentInWeekCard";
 
 function Planning({setCurrentMenu}) {
     const [currentNewPlanInput, setCurrentNewPlanInput] = useState("");
     const [currentPlanDate, setCurrentPlanDate] = useState(new Date());
     const [plannings, setPlannings] = useState([]);
     const [planningsIsLoading, setPlanningsIsLoading] = useState(true)
+    const [selectedPlanningDate, setSelectedPlanningDate] = useState(new Date())
 
     useEffect(() => {
         setCurrentMenu(2)
@@ -150,16 +153,7 @@ function Planning({setCurrentMenu}) {
             <div>
                 <ButtonCard title={t("planning.add")} action={addNewPlan}/>
 
-                {
-                    planningsIsLoading ? loadingSpinner : plannings.sort((a, b) => {
-                        const saveDateA = getDateFromString(a.date)
-                        const saveDateB = getDateFromString(b.date)
-                        return saveDateA < saveDateB
-                    }).map(plan => {
-                            return <PlanningCard key={plan.id} plan={plan}/>
-                        }
-                    )
-                }
+                <ContentInWeekCard dataArray={plannings} title={t("planning.plannings")} noItemMessage={t("planning.noSavedPlannings")} ItemCard={PlanningCard} selectedDate={selectedPlanningDate} setSelectedDate={setSelectedPlanningDate} isLoading={planningsIsLoading}/>
             </div>
         </div>
     );

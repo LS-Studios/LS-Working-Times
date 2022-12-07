@@ -1,38 +1,28 @@
-@import "../../cards/Card";
-
-//Dark
-.darkPlanningCard {
-    @extend .darkCard;
-    flex: 1;
-    margin-right: 5px;
-    margin-top: 10px;
-    cursor: pointer;
-    width: $verticalWith;
-}
-
-.planningCardText {
+.planningCardBg {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border: 0;
+    border-radius: 6px;
+    width: 240px;
+    padding: 6px;
     margin: 5px;
-    overflow-wrap: break-word;
-    white-space: pre-line;
-    font-size: 14px;
-}
-
-//Bright
-.brightPlanningCard {
-    @extend .brightCard;
-    flex: 1;
-    margin-right: 5px;
-    margin-top: 10px;
     cursor: pointer;
-    width: $verticalWith;
 }
 
-/* Add some padding inside the card container */
-.planningContainer {
-    overflow: hidden;
-    position: relative;
-    width: 100%;
-    margin: 5px;
+.darkPlanningCardBg {
+    @extend .planningCardBg;
+    background-color: #212A33;
+}
+
+.brightPlanningCardBg {
+    @extend .planningCardBg;
+    background-color: #BCBCBC;
+}
+
+.planningCardTitleExpanded {
+    margin-bottom: 5px;
 }
 
 .planningCardActionBar {
@@ -40,7 +30,6 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin: -5px 5px 5px;
 }
 
 .planningCardActionButton {
@@ -61,7 +50,7 @@
 
 .darkPlanningCardActionButton {
     @extend .planningCardActionButton;
-    background-color: #212A33;
+    background-color: #2C3A47;
     color: #CCCCCC;
 }
 
@@ -71,14 +60,36 @@
     color: #353535;
 }
 
-.darkPlanningActionDivider {
+.darkPlanningCardDivider {
     border-top: 2px solid rgba(255, 255, 255, 0.1);
-    width: $verticalWith;
-    margin-bottom: 6px;
+    width: 245px;
 }
 
-.brightPlanningActionDivider {
+.darkPlanningCardDividerTop {
+    @extend .darkPlanningCardDivider;
+    margin-bottom: 3px;
+}
+
+.darkPlanningCardDividerBottom {
+    @extend .darkPlanningCardDivider;
+    margin-top: 3px;
+}
+
+.brightPlanningCardDivider {
     border-top: 2px solid rgba(0, 0, 0, 0.1);
-    width: $verticalWith;
-    margin-bottom: 6px;
+    width: 245px;
+}
+
+.brightPlanningCardDividerTop {
+    @extend .brightPlanningCardDivider;
+    margin-bottom: 3px;
+}
+
+.brightPlanningCardDividerBottom {
+    @extend .brightPlanningCardDivider;
+    margin-top: 3px;
+}
+
+.gone {
+    display: none;
 }

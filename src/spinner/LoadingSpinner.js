@@ -1,4 +1,4 @@
-import {getCurrentTheme} from "./Theme/Theme";
+import {getCurrentTheme} from "../helper/Theme/Theme";
 import ClipLoader from "react-spinners/ClipLoader";
 import React from "react";
 

@@ -2,27 +2,26 @@ import React, {useRef, useState} from 'react';
 import {IoCaretBack, IoCaretForward} from "react-icons/io5";
 import DatePicker, {Calendar} from "react-multi-date-picker";
 import SavedCard from "./card/SavedCard";
-import "./Save.scss"
+import "./ContentInWeekCard.scss"
 import "../../cards/DateTime/DateTimePicker.scss"
 import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfWeekDayValue} from "../../helper/Helper";
-import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
-import {getCurrentTheme, getThemeClass} from "../../helper/Theme/Theme";
-import {loadingSpinner} from "../../helper/LoadingSpinner";
+import {loadingSpinner} from "../../spinner/LoadingSpinner";
+import {getThemeClass} from "../../helper/Theme/Theme";
 
-function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
+function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedDate, setSelectedDate, isLoading}) {
     const datePickerRef = useRef()
 
     const getSavesOfPreviousWeek = () => {
-        setSelectedSaveDate(new Date(selectedSaveDate.setDate(getStartOfWeekDayValue(selectedSaveDate)-7)))
+        setSelectedDate(new Date(selectedDate.setDate(getStartOfWeekDayValue(selectedDate)-7)))
     }
 
     const getSavesOfNextWeek = () => {
-        setSelectedSaveDate(new Date(selectedSaveDate.setDate(getStartOfWeekDayValue(selectedSaveDate)+7)))
+        setSelectedDate(new Date(selectedDate.setDate(getStartOfWeekDayValue(selectedDate)+7)))
     }
 
     const getWeekRangeString = () => {
-        return formatDate(getStartOfWeek(selectedSaveDate)) + " - " + formatDate(getEndOfWeek(selectedSaveDate))
+        return formatDate(getStartOfWeek(selectedDate)) + " - " + formatDate(getEndOfWeek(selectedDate))
     }
 
     const DatePickerLayout = (props) => {
@@ -38,7 +37,7 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
 
     return (
         <div className={getThemeClass("saved")}>
-            <div className="saveTitle"><b>{t("timer.saved")}</b></div>
+            <div className="saveTitle"><b>{title}</b></div>
             <div className="saveWeekSelect">
                 <IoCaretBack className={getThemeClass("daveWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
                 <DatePicker
@@ -46,10 +45,10 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
                     ref={datePickerRef}
                     inputMode="none"
                     editable={false}
-                    value={getStartOfWeek(selectedSaveDate)}
+                    value={getStartOfWeek(selectedDate)}
                     onChange={(dateObj) => {
                         const date = new Date(dateObj.year, dateObj.month.number-1, dateObj.day)
-                        setSelectedSaveDate(new Date(date.setDate(getStartOfWeekDayValue(date))))
+                        setSelectedDate(new Date(date.setDate(getStartOfWeekDayValue(date))))
                     }}
                     render={<DatePickerLayout/>}
                     format="DD.MM.YYYY"
@@ -59,26 +58,25 @@ function Save({saved, selectedSaveDate, setSelectedSaveDate, isLoading}) {
                 <IoCaretForward className={getThemeClass("daveWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
             </div>
             {
-                saved.filter(save => {
-                    const saveDate = getDateFromString(save.date)
-                    console.log(saveDate)
-                    return saveDate >= getStartOfWeek(selectedSaveDate) && saveDate <= getEndOfWeek(selectedSaveDate)
+                dataArray.filter(data => {
+                    const date = getDateFromString(data.date)
+                    return date >= getStartOfWeek(selectedDate) && date <= getEndOfWeek(selectedDate)
                 }).sort((a, b) => {
-                    const saveDateA = getDateFromString(a.date)
-                    const saveDateB = getDateFromString(b.date)
-                    return saveDateA < saveDateB
-                }).map(save => {
-                    return <SavedCard key={save.id} save={save} isExpanded={false}/>
+                    const dateA = getDateFromString(a.date)
+                    const dateB = getDateFromString(b.date)
+                    return dateA < dateB
+                }).map(data => {
+                    return <ItemCard key={data.id} data={data} isExpanded={false}/>
                 })
             }
             {
-                isLoading ? loadingSpinner : (saved.filter(save => {
-                    const saveDate = getDateFromString(save.date)
-                    return saveDate >= getStartOfWeek(selectedSaveDate) && saveDate <= getEndOfWeek(selectedSaveDate)
-                }).length === 0 ? <div className="saveNoSaves">{t("timer.noSaves")}</div> : null)
+                isLoading ? loadingSpinner : (dataArray.filter(data => {
+                    const date = getDateFromString(data.date)
+                    return date >= getStartOfWeek(selectedDate) && date <= getEndOfWeek(selectedDate)
+                }).length === 0 ? <div className="saveNoSaves">{noItemMessage}</div> : null)
             }
         </div>
     );
 }
 
-export default Save;
+export default ContentInWeekCard;

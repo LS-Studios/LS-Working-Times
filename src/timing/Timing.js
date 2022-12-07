@@ -13,14 +13,15 @@ import {
     get
 } from "firebase/database"
 import {getAuth} from "firebase/auth";
-import Save from "./save/Save";
+import ContentInWeekCard from "./save/ContentInWeekCard";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import TimingMenu from "./TimingMenu";
 import {useNavigate} from "react-router-dom";
-import {setLanguage} from "../helper/LanguageTransaltion/Transalation";
+import {setLanguage, t} from "../helper/LanguageTransaltion/Transalation";
 import {getThemeClass, setTheme} from "../helper/Theme/Theme";
+import SavedCard from "./save/card/SavedCard";
 
 function Timing({setCurrentMenu}) {
     const navigate = useNavigate()
@@ -137,7 +138,7 @@ function Timing({setCurrentMenu}) {
     return (
         <div>
             <TimingMenu saved={saved} selectedSaveDate={selectedSaveDate} setSavesIsLoading={setSavesIsLoading}/>
-            <Save saved={saved} selectedSaveDate={selectedSaveDate} setSelectedSaveDate={setSelectedSaveDate} isLoading={savesIsLoading}/>
+            <ContentInWeekCard dataArray={saved} title={t("timer.saved")} noItemMessage={t("timer.noSaves")} ItemCard={SavedCard} selectedDate={selectedSaveDate} setSelectedDate={setSelectedSaveDate} isLoading={savesIsLoading}/>
         </div>
     );
 }

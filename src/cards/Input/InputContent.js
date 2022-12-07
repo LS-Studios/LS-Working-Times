@@ -60,7 +60,7 @@ const InputContent = ({title, placeholder, type="text", focusOnClick=false, useD
             }
             <form className="inputHolder" onSubmit={submit}>
                 {
-                    inputType == 3 ? <textarea className={getThemeClass("input")} ref={input} value={currentState}
+                    inputType == 3 ? <textarea className={getThemeClass("input")} style={{textAlign: "left"}} ref={input} value={currentState}
                                                placeholder={placeholder} onBlur={changeFocus} onChange={onChange} onKeyDown={onKeyDown} rows={3}/> :
                                     <input className={getThemeClass("input")} ref={input} value={currentState}
                                                 type={type === "password" ? (showPassword ? "text" : "password") : type}

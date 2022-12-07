@@ -4,7 +4,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import {DateTime} from "./DateTime";
 import React from "react";
 import {getCurrentTheme} from "../../helper/Theme/Theme";
-import {loadingSpinner} from "../../helper/LoadingSpinner";
+import {loadingSpinner} from "../../spinner/LoadingSpinner";
 
 function Timer({name, timer, isLoading, clickable, onClick}) {
     return (

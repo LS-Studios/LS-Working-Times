@@ -10,10 +10,10 @@ import {getAuth} from "firebase/auth";
 import {getDatabase, ref, remove} from "firebase/database";
 import {useDialog} from "use-react-dialog";
 
-const PlanningCard = ({plan}) => {
+const PlanningCard = ({data, isExpanded=false}) => {
     const { dialogs, openDialog } = useDialog();
 
-    const [expanded, setExpanded] = useState(false)
+    const [expanded, setExpanded] = useState(isExpanded)
 
     const deletePlan = (e) => {
         e.stopPropagation();
@@ -23,36 +23,37 @@ const PlanningCard = ({plan}) => {
                 const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
 
                 const auth = getAuth(lsWalletApp)
-                remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/plannings/"+plan.id))
+                remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/plannings/"+data.id))
             }})
     }
 
     const editPlan = (e) => {
         e.stopPropagation()
-        openDialog("EditPlanningDialog", {plan: plan})
+        openDialog("EditPlanningDialog", {plan: data})
+    }
+
+    const expand = () => {
+        setExpanded(!expanded)
     }
 
     return (
-        <div className={getThemeClass("planningCard")} onClick={() => setExpanded(!expanded)}>
-            <div className="planningContainer">
-                <div><b>{t("timer.on") + " " + getDateNameByString(plan.date) + " " + t("timer.the2") + " " + plan.date}</b></div>
-                {
-                    expanded ? <div>
-                        <div className={getThemeClass("divider")}/>
-                        <div className="planningCardText">{plan.content}</div>
-                    </div> : null
-                }
+        <div className={getThemeClass("planningCardBg")} onClick={expand}>
+            <div className={expanded ? "planningCardTitleExpanded" : ""}>
+                <div><b>{getDateNameByString(data.date)} {t("timer.the")} {data.date}</b></div>
             </div>
+            <div className={expanded ? "" : "gone"}>
+                <div className={getThemeClass("planningCardDividerTop")}></div>
 
-            {
-                expanded ? <div>
-                    <div className={getThemeClass("planningActionDivider")}/>
-                    <div className="planningCardActionBar">
-                        <button className={getThemeClass("planningCardActionButton")} onClick={deletePlan}>{t("timer.delete")}</button>
-                        <button className={getThemeClass("planningCardActionButton")} onClick={editPlan}>{t("timer.edit")}</button>
-                    </div>
-                </div> : null
-            }
+                <div className="planningCardContent">
+                    <div>{data.content}</div>
+                </div>
+
+                <div className={getThemeClass("planningCardDividerBottom")}></div>
+                <div className="planningCardActionBar">
+                    <button className={getThemeClass("planningCardActionButton")} onClick={deletePlan}>{t("timer.delete")}</button>
+                    <button className={getThemeClass("planningCardActionButton")} onClick={editPlan}>{t("timer.edit")}</button>
+                </div>
+            </div>
         </div>
     );
 };

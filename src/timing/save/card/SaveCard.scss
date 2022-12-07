@@ -34,21 +34,12 @@
     justify-content: space-between;
 }
 
-.saveCardRowValue {
-    display: flex;
-    width: 240px;
-    flex-wrap: wrap;
+.planningCardContent {
+    text-align: left;
     font-size: 14px;
-    align-items: center;
-    justify-content: space-between;
-    font-style: italic;
-}
-
-.saveCardActionBar {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+    overflow-wrap: break-word;
+    white-space: pre-line;
+    width: 240px;
 }
 
 .saveCardActionButton {

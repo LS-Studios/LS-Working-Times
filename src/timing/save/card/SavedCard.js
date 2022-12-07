@@ -10,7 +10,7 @@ import {useDialog} from "use-react-dialog";
 import {t} from "../../../helper/LanguageTransaltion/Transalation";
 import {getThemeClass} from "../../../helper/Theme/Theme";
 
-function SavedCard({save, isExpanded}) {
+function SavedCard({data, isExpanded}) {
     const { dialogs, openDialog } = useDialog();
 
     const [expanded, setExpanded] = useState(isExpanded)
@@ -22,9 +22,9 @@ function SavedCard({save, isExpanded}) {
     }
 
     const getEndTimeString = () => {
-        const startDateTime = DateTime.dateTimeFromString(save.startTime)
-        const workedDateTime = DateTime.dateTimeFromString(save.worked)
-        const breakDateTime = DateTime.dateTimeFromString(save.break)
+        const startDateTime = DateTime.dateTimeFromString(data.startTime)
+        const workedDateTime = DateTime.dateTimeFromString(data.worked)
+        const breakDateTime = DateTime.dateTimeFromString(data.break)
         const endDateTime = startDateTime.addDateTime(workedDateTime).addDateTime(breakDateTime)
 
         return endDateTime.toTimeString()
@@ -42,19 +42,19 @@ function SavedCard({save, isExpanded}) {
             const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
 
             const auth = getAuth(lsWalletApp)
-            remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/saved/"+save.id))
+            remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/saved/"+data.id))
         }})
     }
 
     const editSave = (e) => {
         e.stopPropagation()
-        openDialog("EditSaveTimeDialog", {save: save})
+        openDialog("EditSaveTimeDialog", {save: data})
     }
 
     return (
         <div className={getThemeClass("saveCardBg")} onClick={expand}>
             <div className={expanded ? "saveCardTitleExpanded" : ""}>
-                <div><b>{getDateNameByString(save.date)} {t("timer.the")} {save.date}</b></div>
+                <div><b>{getDateNameByString(data.date)} {t("timer.the")} {data.date}</b></div>
             </div>
             <div className={expanded ? "" : "gone"}>
                 <div className={getThemeClass("saveCardDividerTop")}></div>
@@ -63,7 +63,7 @@ function SavedCard({save, isExpanded}) {
                     <div>{t("timer.endedAt")}</div>
                 </div>
                 <div className="saveCardRowValue">
-                    <div>{save.startTime}</div>
+                    <div>{data.startTime}</div>
                     <div>{getEndTimeString()}</div>
                 </div>
                 <div className="saveCardRowTitle">
@@ -71,8 +71,8 @@ function SavedCard({save, isExpanded}) {
                     <div>{t("timer.breakTime")}</div>
                 </div>
                 <div className="saveCardRowValue">
-                    <div>{save.worked}</div>
-                    <div>{save.break}</div>
+                    <div>{data.worked}</div>
+                    <div>{data.break}</div>
                 </div>
                 <div className={getThemeClass("saveCardDividerBottom")}></div>
                 <div className="saveCardActionBar">

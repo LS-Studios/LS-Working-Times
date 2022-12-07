@@ -23,7 +23,7 @@ import {getAuth} from "firebase/auth";
 import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../helper/LanguageTransaltion/Transalation";
 import {getCurrentTheme, getThemeClass} from "../helper/Theme/Theme";
-import {loadingSpinner} from "../helper/LoadingSpinner";
+import {loadingSpinner} from "../spinner/LoadingSpinner";
 
 function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     const { dialogs, openDialog } = useDialog();

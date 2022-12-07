@@ -64,10 +64,12 @@
   },
   "planning": {
     "menuName": "Planning",
+    "plannings": "Plannings",
+    "noSavedPlannings": "No saved plannings",
     "description": "Description",
     "dateOfPlan": "Date of plan",
     "add": "Add",
-    "placeholder": "I have worked on ... yesterday. / \n I will do ... today."
+    "placeholder": "I have worked on ... yesterday.\n/\nI will do ... today."
   },
   "settings": {
     "menuName": "Settings",
