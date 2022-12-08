@@ -1,4 +1,4 @@
-.saved {
+.contentInWeekCard {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,25 +8,25 @@
     width: 271px;
 }
 
-.darkSaved {
-    @extend .saved;
+.darkContentInWeekCard {
+    @extend .contentInWeekCard;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     background-color: #2C3A47;
     color: #CCCCCC;
 }
 
-.darkSaved:hover {
+.darkContentInWeekCard:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
 }
 
-.brightSaved {
-    @extend .saved;
+.brightContentInWeekCard {
+    @extend .contentInWeekCard;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     background-color: #DBDBDB;
     color: #353535;
 }
 
-.brightSaved:hover {
+.brightContentInWeekCard:hover {
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
 }
 
@@ -63,11 +63,7 @@
     cursor: pointer;
 }
 
-.saveNoSaves {
+.noContent {
     margin-bottom: 5px;
     font-size: 14px;
-}
-
-.gone {
-    display: none;
 }

@@ -32,6 +32,10 @@ const InputContent = ({title, placeholder, type="text", focusOnClick=false, useD
     const changeFocus = () => {
         input.current.blur()
 
+        if (inputType == 1 && currentState == "") {
+            setCurrentState("0")
+        }
+
         blurFunction()
     }
 

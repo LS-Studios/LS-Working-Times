@@ -14,7 +14,7 @@ import Card from "../cards/Card";
 import DateTimeContent from "../cards/DateTime/DateTimeContent";
 import PlanningCard from "./card/PlanningCard";
 import SavedCard from "../timing/save/card/SavedCard";
-import ContentInWeekCard from "../timing/save/ContentInWeekCard";
+import ContentInWeekCard from "../cards/ContentInWeek/ContentInWeekCard";
 
 function Planning({setCurrentMenu}) {
     const [currentNewPlanInput, setCurrentNewPlanInput] = useState("");

@@ -24,6 +24,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import {t} from "../helper/LanguageTransaltion/Transalation";
 import {getCurrentTheme, getThemeClass} from "../helper/Theme/Theme";
 import {loadingSpinner} from "../spinner/LoadingSpinner";
+import {useInterval} from "../helper/UseInterval";
 
 function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     const { dialogs, openDialog } = useDialog();
@@ -42,6 +43,7 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
         minutes: 0,
         seconds: 0
     })
+
     const [workIsRunning, setWorkIsRunning] = useState(false);
     const [workStopTime, setWorkStopTime] = useState(null);
     const [workTakenStop, setWorkTakenStop] = useState(new DateTime(0, 0, 0));
@@ -148,36 +150,17 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
             return saveDate >= getStartOfWeek(selectedSaveDate) && saveDate <= getEndOfWeek(selectedSaveDate)
         })
 
-        const workedThisWeek = new DateTime(0, 0, 0)
+        let workedThisWeek = new DateTime(0, 0, 0)
 
         savesThisWeek.forEach(save => {
-            workedThisWeek.addDateTime(DateTime.dateTimeFromString(save.worked))
+            workedThisWeek = workedThisWeek.addDateTime(DateTime.dateTimeFromString(save.worked))
         })
 
         if (getDateWithoutTime(selectedSaveDate) >= getStartOfWeek(new Date()) && getDateWithoutTime(selectedSaveDate) <= getEndOfWeek(new Date())) {
-            workedThisWeek.addDateTime(new DateTime(workTimer.getHours, workTimer.getMinutes, workTimer.getSeconds))
+            workedThisWeek = workedThisWeek.addDateTime(new DateTime(workTimer.getHours, workTimer.getMinutes, workTimer.getSeconds))
         }
 
         return workedThisWeek.toTimeString()
-    }
-
-    function useInterval(callback, delay) {
-        const intervalRef = React.useRef();
-        const callbackRef = React.useRef(callback);
-
-        React.useEffect(() => {
-            callbackRef.current = callback;
-        }, [callback]);
-
-        React.useEffect(() => {
-            if (typeof delay === 'number') {
-                intervalRef.current = setInterval(() => callbackRef.current(), delay);
-
-                return () => clearInterval(intervalRef.current);
-            }
-        }, [delay]);
-
-        return intervalRef;
     }
 
     useInterval(() => {
@@ -256,6 +239,15 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
                             setWorkTakenStop(DateTime.dateTimeFromString(data))
                     }))
                 unsubscribeArray.push(
+                    onValue(ref(db, "/users/" + user.uid + "/work-is-running"), snapshot => {
+                        const data = snapshot.val()
+
+                        if (data == null || data === "")
+                            setWorkIsRunning(false)
+                        else
+                            setWorkIsRunning(data)
+                    }))
+                unsubscribeArray.push(
                     onValue(ref(db, "/users/" + user.uid + "/break-stop-time"), snapshot => {
                         const data = snapshot.val()
 
@@ -272,15 +264,6 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
                             setBreakTakenStop(new DateTime(0,0,0))
                         else
                             setBreakTakenStop(DateTime.dateTimeFromString(data))
-                    }))
-                unsubscribeArray.push(
-                    onValue(ref(db, "/users/" + user.uid + "/work-is-running"), snapshot => {
-                        const data = snapshot.val()
-
-                        if (data == null || data === "")
-                            setWorkIsRunning(false)
-                        else
-                            setWorkIsRunning(data)
                     }))
                 unsubscribeArray.push(
                     onValue(ref(db, "/users/" + user.uid + "/break-is-running"), snapshot => {

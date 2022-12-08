@@ -1,8 +1,8 @@
 export class DateTime {
     constructor(hours, minutes, seconds) {
-        this.hours = hours != null ? hours : DateTime.dateTimeFromDate(new Date()).getHours
-        this.minutes = minutes != null ? minutes : DateTime.dateTimeFromDate(new Date()).getMinutes
-        this.seconds = seconds != null ? seconds : DateTime.dateTimeFromDate(new Date()).getSeconds
+        this.hours = hours != null ? parseInt(hours) : DateTime.dateTimeFromDate(new Date()).getHours
+        this.minutes = minutes != null ? parseInt(minutes) : DateTime.dateTimeFromDate(new Date()).getMinutes
+        this.seconds = seconds != null ? parseInt(seconds) : DateTime.dateTimeFromDate(new Date()).getSeconds
 
         this.getDateDiffToDateTime = this.getDateDiffToDateTime.bind(this)
     }
@@ -45,12 +45,85 @@ export class DateTime {
 
     addDateTime(dateTime) {
         if (dateTime != null) {
+            let newHours =  this.hours
+            let newMinutes =  this.minutes
+            let newSeconds =  this.seconds
+
+            const addMinutes = (value) => {
+                if (value%60===0) {
+                    newHours += value/60
+                } else {
+                    while(value-60>0) {
+                        value -= 60
+                        newHours++
+                    }
+                    if (newMinutes + value - 60 >= 0) {
+                        newMinutes += value - 60
+                        newHours++
+                    } else {
+                        newMinutes += value
+                    }
+                }
+            }
+
+            const addSeconds = (value) => {
+                if (value%60===0) {
+                    addMinutes(value/60)
+                } else {
+                    while(value-60>0) {
+                        value -= 60
+                        addMinutes(1)
+                    }
+                    if (newSeconds + value - 60 >= 0) {
+                        newSeconds += value - 60
+                        addMinutes(1)
+                    } else {
+                        newSeconds += value
+                    }
+                }
+            }
+
+            //Use date to auto increase hours
+            newHours = newHours + dateTime.getHours
+
+            addMinutes(dateTime.getMinutes)
+            addSeconds(dateTime.getSeconds)
+
+            return new DateTime(
+                newHours,
+                newMinutes,
+                newSeconds
+            )
+        } else {
+            return this
+        }
+    }
+
+    subtractDateTime(dateTime) {
+        if (dateTime != null) {
+            const subtractMinutes = (value) => {
+                if (value%60===0) {
+                    this.hours -= value/60
+                } else {
+                    while(value-60>0) {
+                        value -= 60
+                        this.hours++
+                    }
+                    if (this.minutes - value < 0) {
+                        this.minutes = 60 - (value - this.minutes)
+                        this.hours--
+                    } else {
+                        this.minutes -= value
+                    }
+                }
+            }
+
             const addMinutes = (value) => {
                 if (value%60===0) {
                     this.hours += value/60
                 } else {
                     while(value-60>0) {
-                        this.minutes -= 60
+                        value -= 60
                         this.hours++
                     }
                     if (this.minutes + value - 60 >= 0) {
@@ -62,28 +135,28 @@ export class DateTime {
                 }
             }
 
-            const addSeconds = (value) => {
+            const subtractSeconds = (value) => {
                 if (value%60===0) {
-                    addMinutes(value/60)
+                    this.minutes -= value/60
                 } else {
                     while(value-60>0) {
-                        this.seconds -= 60
+                        value -= 60
                         addMinutes(1)
                     }
-                    if (this.seconds + value - 60 >= 0) {
-                        this.seconds += value - 60
-                        addMinutes(1)
+                    if (this.seconds - value < 0) {
+                        this.seconds = 60 - (value - this.seconds)
+                        subtractMinutes(1)
                     } else {
-                        this.seconds += value
+                        this.seconds -= value
                     }
                 }
             }
 
             //Use date to auto increase hours
-            this.hours = this.hours + dateTime.getHours
+            this.hours = this.hours - dateTime.getHours
 
-            addMinutes(dateTime.getMinutes)
-            addSeconds(dateTime.getSeconds)
+            subtractMinutes(dateTime.getMinutes)
+            subtractSeconds(dateTime.getSeconds)
 
             return new DateTime(
                 this.hours,
@@ -95,21 +168,12 @@ export class DateTime {
         }
     }
 
-    subtractDateTime(dateTime) {
+    divideDateTime(dateTime) {
         if (dateTime != null) {
-            let dateTimeDate = this.getDate()
-            dateTimeDate.setHours(dateTimeDate.getHours() - dateTime.getHours)
-            dateTimeDate.setMinutes(dateTimeDate.getMinutes() - dateTime.getMinutes)
-            dateTimeDate.setSeconds(dateTimeDate.getSeconds() - dateTime.getSeconds)
-
-            this.hours = dateTimeDate.getHours()
-            this.minutes = dateTimeDate.getMinutes()
-            this.seconds = dateTimeDate.getSeconds()
-
             return new DateTime(
-                this.hours,
-                this.minutes,
-                this.seconds
+                parseInt(parseInt( this.hours / dateTime.getHours).toFixed(0)),
+                parseInt(parseInt(this.minutes / dateTime.getMinutes).toFixed(0)),
+                parseInt(parseInt(this.seconds / dateTime.getSeconds).toFixed(0)),
             )
         } else {
             return this
@@ -129,6 +193,31 @@ export class DateTime {
         const minuteStr = this.minutes.toString().length == 1 ? "0" + this.minutes : this.minutes.toString()
         const secondStr = this.seconds.toString().length == 1 ? "0" + this.seconds : this.seconds.toString()
         return hourStr + ":" + minuteStr + ":" + secondStr
+    }
+
+    isLarger(dateTime) {
+        const thisHours = parseInt(this.hours)
+        const thisMinutes = parseInt(this.minutes)
+        const thisSeconds = parseInt(this.seconds)
+
+        const dateHours = parseInt(dateTime.getHours)
+        const dateMinutes = parseInt(dateTime.getMinutes)
+        const dateSeconds = parseInt(dateTime.getSeconds)
+
+        if (thisHours > dateHours)
+            return true
+
+        if (thisHours === dateHours) {
+            if (thisMinutes > dateMinutes)
+                return true
+
+            if (thisMinutes === dateMinutes) {
+                if (thisSeconds > dateSeconds)
+                    return true
+            }
+        }
+
+        return false
     }
 
     static dateTimeFromDate(date) {

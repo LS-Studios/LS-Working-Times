@@ -4,7 +4,7 @@ import {getThemeClass} from "../../helper/Theme/Theme";
 import {AiFillCaretUp} from "react-icons/ai"
 import {AiFillCaretDown} from "react-icons/ai"
 
-const CheckboxContent = forwardRef(({title, checkboxList, currentState, setCurrentState}, ref) => {
+function CheckboxContent ({title, checkboxList, currentState, setCurrentState}) {
     const [expanded, setExpanded] = useState(false)
 
     const getSelectedDays = () => {
@@ -30,7 +30,7 @@ const CheckboxContent = forwardRef(({title, checkboxList, currentState, setCurre
                 {
                     checkboxList.map((checkbox, i) => {
                         return (
-                            <label className={getThemeClass("checkboxContainer")}>
+                            <label key={i} className={getThemeClass("checkboxContainer")}>
                                 <div className="checkboxText">{checkbox}</div>
                                 <input
                                     key={checkbox}
@@ -55,6 +55,6 @@ const CheckboxContent = forwardRef(({title, checkboxList, currentState, setCurre
             }
         </div>
     );
-})
+}
 
 export default CheckboxContent;

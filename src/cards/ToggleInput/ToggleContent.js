@@ -15,7 +15,7 @@ function ToggleContent({title, toggleList, currentState, setCurrentState}) {
                 {
                     toggleList.map((toggle, i) => {
                         return (
-                            <div className="toggleBar">
+                            <div key={i} className="toggleBar">
                                 <input
                                     className={getThemeClass("toggleInput")}
                                     type="radio"

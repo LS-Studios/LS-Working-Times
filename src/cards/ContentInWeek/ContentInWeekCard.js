@@ -1,9 +1,9 @@
 import React, {useRef, useState} from 'react';
 import {IoCaretBack, IoCaretForward} from "react-icons/io5";
 import DatePicker, {Calendar} from "react-multi-date-picker";
-import SavedCard from "./card/SavedCard";
+import SavedCard from "../../timing/save/card/SavedCard";
 import "./ContentInWeekCard.scss"
-import "../../cards/DateTime/DateTimePicker.scss"
+import "../DateTime/DateTimePicker.scss"
 import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfWeekDayValue} from "../../helper/Helper";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
 import {loadingSpinner} from "../../spinner/LoadingSpinner";
@@ -36,9 +36,9 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
     }
 
     return (
-        <div className={getThemeClass("saved")}>
-            <div className="saveTitle"><b>{title}</b></div>
-            <div className="saveWeekSelect">
+        <div className={getThemeClass("contentInWeekCard")}>
+            <div className="contentInWeekCardTitle"><b>{title}</b></div>
+            <div className="contentInWeekCardWeekSelect">
                 <IoCaretBack className={getThemeClass("daveWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
                 <DatePicker
                     portal
@@ -73,7 +73,7 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
                 isLoading ? loadingSpinner : (dataArray.filter(data => {
                     const date = getDateFromString(data.date)
                     return date >= getStartOfWeek(selectedDate) && date <= getEndOfWeek(selectedDate)
-                }).length === 0 ? <div className="saveNoSaves">{noItemMessage}</div> : null)
+                }).length === 0 ? <div className="noContent">{noItemMessage}</div> : null)
             }
         </div>
     );

@@ -13,7 +13,7 @@ import {
     get
 } from "firebase/database"
 import {getAuth} from "firebase/auth";
-import ContentInWeekCard from "./save/ContentInWeekCard";
+import ContentInWeekCard from "../cards/ContentInWeek/ContentInWeekCard";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";

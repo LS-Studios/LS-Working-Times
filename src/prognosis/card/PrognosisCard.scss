@@ -1,0 +1,18 @@
+.prognosisCardRowTitle {
+  display: flex;
+  width: 240px;
+  flex-wrap: wrap;
+  font-size: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.prognosisCardRowValue {
+  display: flex;
+  width: 240px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  align-items: center;
+  justify-content: space-between;
+  font-style: italic;
+}

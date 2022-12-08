@@ -9,6 +9,7 @@ import {LSWalletConfig} from "../../../firebase/LSWalletConfig";
 import {useDialog} from "use-react-dialog";
 import {t} from "../../../helper/LanguageTransaltion/Transalation";
 import {getThemeClass} from "../../../helper/Theme/Theme";
+import ContentCard from "../../../cards/ContentInWeek/content/ContentCard";
 
 function SavedCard({data, isExpanded}) {
     const { dialogs, openDialog } = useDialog();
@@ -35,8 +36,6 @@ function SavedCard({data, isExpanded}) {
     }
 
     const deleteSave = (e) => {
-        e.stopPropagation();
-
         openDialog("YesNoDialog", {message:t("dialog.doYouRelayWantToDeleteThisSave"), yesAction:() => {
             const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
             const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
@@ -47,40 +46,33 @@ function SavedCard({data, isExpanded}) {
     }
 
     const editSave = (e) => {
-        e.stopPropagation()
         openDialog("EditSaveTimeDialog", {save: data})
     }
 
     return (
-        <div className={getThemeClass("saveCardBg")} onClick={expand}>
-            <div className={expanded ? "saveCardTitleExpanded" : ""}>
-                <div><b>{getDateNameByString(data.date)} {t("timer.the")} {data.date}</b></div>
-            </div>
-            <div className={expanded ? "" : "gone"}>
-                <div className={getThemeClass("saveCardDividerTop")}></div>
+        <ContentCard title={getDateNameByString(data.date) + " " + t("timer.the") + " " + data.date} content={
+            <div>
                 <div className="saveCardRowTitle">
                     <div>{t("timer.startedAt")}</div>
                     <div>{t("timer.endedAt")}</div>
                 </div>
+
                 <div className="saveCardRowValue">
                     <div>{data.startTime}</div>
                     <div>{getEndTimeString()}</div>
                 </div>
+
                 <div className="saveCardRowTitle">
                     <div>{t("timer.workedTime")}</div>
                     <div>{t("timer.breakTime")}</div>
                 </div>
+
                 <div className="saveCardRowValue">
                     <div>{data.worked}</div>
                     <div>{data.break}</div>
                 </div>
-                <div className={getThemeClass("saveCardDividerBottom")}></div>
-                <div className="saveCardActionBar">
-                    <button className={getThemeClass("saveCardActionButton")} onClick={deleteSave}>{t("timer.delete")}</button>
-                    <button className={getThemeClass("saveCardActionButton")} onClick={editSave}>{t("timer.edit")}</button>
-                </div>
             </div>
-        </div>
+        } isExpanded={isExpanded} deleteAction={deleteSave} editAction={editSave} />
     );
 }
 
