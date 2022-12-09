@@ -30,11 +30,11 @@
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
 }
 
-.saveTitle {
+.contentInWeekCardTitle {
     margin: 5px;
 }
 
-.saveWeekSelect {
+.contentInWeekCardSelect {
     margin-bottom: 5px;
     display: flex;
     flex-wrap: wrap;
@@ -43,11 +43,11 @@
     width: 250px;
 }
 
-.saveWeekSelect > div {
+.contentInWeekCardSelect > div {
     cursor: pointer;
 }
 
-.darkSaveWeekSelectIcon {
+.darkContentInWeekSelectIcon {
     background-color: #212A33;
     border: 0;
     border-radius: 6px;
@@ -55,7 +55,7 @@
     cursor: pointer;
 }
 
-.brightSaveWeekSelectIcon {
+.brightContentInWeekSelectIcon {
     background-color: #BCBCBC;
     border: 0;
     border-radius: 6px;

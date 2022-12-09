@@ -274,6 +274,17 @@ function Prognosis({setCurrentMenu}) {
 
     return (
         <div className="prognosis">
+            <Card cardContent={
+                <div>
+                    <div className="contentInWeekCardTitle"><b>{t("prognosis.menuName")}</b></div>
+                    {
+                        calculatedState.length > 0 ? calculatedState.map((calculated, i) => {
+                            return <PrognosisCard key={i} data={calculated} isExpanded={false} />
+                        }) :  <div className="noContent">{t("prognosis.noMoreWorkThisWeek")}</div>
+                    }
+                </div>
+            } />
+
             <InputCard title={t("prognosis.hoursPerWeek")} inputType={1} focusOnClick={true} currentState={hoursPerWeekInput} setCurrentState={setHoursPerWeekInput}/>
             <Card cardContent={
                 <div>
@@ -310,19 +321,6 @@ function Prognosis({setCurrentMenu}) {
                     })
                 }
             </div>
-
-            <Card cardContent={
-                <div>
-                    <div className="contentInWeekCardTitle"><b>Prognosis</b></div>
-                    {
-                        calculatedState.map((calculated, i) => {
-                            return <PrognosisCard key={i} data={calculated} isExpanded={false} />
-                        })
-                    }
-                </div>
-            } />
-
-            {/*<ButtonCard title="Calculate" action={calculatePrognosis}/>*/}
         </div>
     );
 }

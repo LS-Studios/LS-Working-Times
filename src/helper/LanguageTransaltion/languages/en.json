@@ -67,7 +67,8 @@
     "breakTime": "Break time",
     "averageStartTime": "Average start time",
     "averageEndTime": "Average end time",
-    "averageBreakTime": "Average break time"
+    "averageBreakTime": "Average break time",
+    "noMoreWorkThisWeek": "This week, according to the given values, it is no longer necessary to work."
   },
   "planning": {
     "menuName": "Planning",

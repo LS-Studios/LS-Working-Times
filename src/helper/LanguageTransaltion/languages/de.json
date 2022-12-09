@@ -66,7 +66,8 @@
     "breakTime": "Pausenzeit",
     "averageStartTime": "Durchschnittliche Startzeit",
     "averageEndTime": "Durchschnittliche Endzeit",
-    "averageBreakTime": "Durchschnittliche Pausenzeit"
+    "averageBreakTime": "Durchschnittliche Pausenzeit",
+    "noMoreWorkThisWeek": "Diese woche muss nach den gegeben den werten nicht mehr gearbeitet werden."
   },
   "planning": {
     "menuName": "Planung",

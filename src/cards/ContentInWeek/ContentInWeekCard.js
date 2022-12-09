@@ -38,8 +38,8 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
     return (
         <div className={getThemeClass("contentInWeekCard")}>
             <div className="contentInWeekCardTitle"><b>{title}</b></div>
-            <div className="contentInWeekCardWeekSelect">
-                <IoCaretBack className={getThemeClass("daveWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
+            <div className="contentInWeekCardSelect">
+                <IoCaretBack className={getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
                 <DatePicker
                     portal
                     ref={datePickerRef}
@@ -55,7 +55,7 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
                     calendarPosition={"bottom-center"}
                     className={getThemeClass("customPicker")}
                 />
-                <IoCaretForward className={getThemeClass("daveWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
+                <IoCaretForward className={getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
             </div>
             {
                 dataArray.filter(data => {
