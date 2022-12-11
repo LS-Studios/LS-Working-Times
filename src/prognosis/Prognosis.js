@@ -278,9 +278,14 @@ function Prognosis({setCurrentMenu}) {
                 <div>
                     <div className="contentInWeekCardTitle"><b>{t("prognosis.menuName")}</b></div>
                     {
-                        calculatedState.length > 0 ? calculatedState.map((calculated, i) => {
-                            return <PrognosisCard key={i} data={calculated} isExpanded={false} />
-                        }) :  <div className="noContent">{t("prognosis.noMoreWorkThisWeek")}</div>
+                        alreadyWorkedTimeIsLoading[0] ? loadingSpinner :
+                            <div>
+                                {
+                                    calculatedState.length > 0 ? calculatedState.map((calculated, i) => {
+                                        return <PrognosisCard key={i} data={calculated} isExpanded={false} />
+                                    }) :  <div className="noContent">{t("prognosis.noMoreWorkThisWeek")}</div>
+                                }
+                            </div>
                     }
                 </div>
             } />
