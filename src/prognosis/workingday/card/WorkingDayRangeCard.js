@@ -10,10 +10,8 @@ const WorkingDayRangeCard = ({workingDayIndex, rangeIndex, workingDays,  setWork
     const deleteRange = (e) => {
         openDialog("YesNoDialog", {message:t("dialog.doYouRelayWantToDeleteThisTimeRange"), yesAction:() => {
                 setWorkingDays(current => {
-                    let newWorkingDays = current
-                    console.log(newWorkingDays[0][2])
-                    newWorkingDays[workingDayIndex][2] = newWorkingDays[workingDayIndex][2].splice(rangeIndex, 1)
-                    console.log(newWorkingDays[0][2])
+                    let newWorkingDays = JSON.parse(JSON.stringify(current));
+                    newWorkingDays[workingDayIndex][2].splice(rangeIndex, 1)
                     return newWorkingDays
                 });
             }})
@@ -28,15 +26,17 @@ const WorkingDayRangeCard = ({workingDayIndex, rangeIndex, workingDays,  setWork
         })
     }
 
+    const getTitle = () => {
+        return padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][0].hours) + ":" +
+        padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][0].minutes) + ":" +
+        padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][0].seconds) + " - " +
+        padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][1].hours) + ":" +
+        padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][1].minutes) + ":" +
+        padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][1].seconds)
+    }
+
     return (
-        <ContentCard title={
-            padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][0].getHours) + ":" +
-            padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][0].getMinutes) + ":" +
-            padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][0].getSeconds) + " - " +
-            padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][1].getHours) + ":" +
-            padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][1].getMinutes) + ":" +
-            padTo2Digits(workingDays[workingDayIndex][2][rangeIndex][1].getSeconds)}
-            editAction={editRange} deleteAction={deleteRange} isExpanded={isExpanded} />
+        <ContentCard title={getTitle()} editAction={editRange} deleteAction={deleteRange} isExpanded={isExpanded} />
     );
 };
 

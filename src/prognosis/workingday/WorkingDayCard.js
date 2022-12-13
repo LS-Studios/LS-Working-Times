@@ -6,15 +6,19 @@ import Card from "../../cards/Card";
 import ToggleContent from "../../cards/ToggleInput/ToggleContent";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
 import WorkingDayRangeCard from "./card/WorkingDayRangeCard";
+import {DateTime} from "../../timing/timer/DateTime";
 
 function WorkingDayCard({day, workingDays, setWorkingDays}) {
-    const [expanded, setExpanded] = useState(false)
+    const addRange = () => {
+        setWorkingDays(current => {
+            let newWorkingDays = JSON.parse(JSON.stringify(current))
+            newWorkingDays[day[1]][2].push([new DateTime(8, 0, 0), new DateTime(18, 0, 0)])
+            console.log(newWorkingDays)
+            return newWorkingDays
+        })
+    }
 
     const [currentTimeType, setCurrentTimeType] = useState(0);
-
-    const setDaytimeType = (newType) => {
-        setCurrentTimeType(newType)
-    }
 
     return (
         <Card cardContent={
@@ -24,7 +28,7 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
 
                     <div className={getThemeClass("divider")}/>
 
-                    <ToggleContent currentState={currentTimeType} setCurrentState={setDaytimeType} toggleList={[t("prognosis.undefined"), t("prognosis.defined")]}/>
+                    <ToggleContent currentState={currentTimeType} setCurrentState={setCurrentTimeType} toggleList={[t("prognosis.undefined"), t("prognosis.defined")]}/>
 
                     {
                         currentTimeType == 1 ? <div>
@@ -40,7 +44,7 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
 
                             <div className={getThemeClass("divider")}/>
 
-                            <BsPlusLg className={getThemeClass("workingDayCardAddButton")} onClick={() => setExpanded(!expanded)}/>
+                            <BsPlusLg className={getThemeClass("workingDayCardAddButton")} onClick={addRange}/>
                         </div> : null
                     }
                 </div>

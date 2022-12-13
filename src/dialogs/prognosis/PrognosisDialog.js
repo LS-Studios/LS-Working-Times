@@ -28,14 +28,14 @@ const PrognosisDialog = () => {
         const endTime = data.workingDays[data.workingDayIndex][2][data.rangeIndex][1]
 
         setCurrentStartTime({
-            hours: padTo2Digits(startTime.getHours),
-            minutes: padTo2Digits(startTime.getMinutes),
-            seconds: padTo2Digits(startTime.getSeconds)
+            hours: padTo2Digits(startTime.hours),
+            minutes: padTo2Digits(startTime.minutes),
+            seconds: padTo2Digits(startTime.seconds)
         })
         setCurrentEndTime({
-            hours: padTo2Digits(endTime.getHours),
-            minutes: padTo2Digits(endTime.getMinutes),
-            seconds: padTo2Digits(endTime.getSeconds)
+            hours: padTo2Digits(endTime.hours),
+            minutes: padTo2Digits(endTime.minutes),
+            seconds: padTo2Digits(endTime.seconds)
         })
     },[])
 
