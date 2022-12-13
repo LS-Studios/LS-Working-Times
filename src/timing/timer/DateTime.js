@@ -174,10 +174,45 @@ export class DateTime {
 
     divideDateTime(dateTime) {
         if (dateTime != null) {
+            let newHours = this.hours
+            let newMinutes = this.minutes
+            let newSeconds = (this.seconds === 0 || dateTime.getSeconds === 0) ? 0 : this.seconds / dateTime.getSeconds
+
+            if (newMinutes !== 0 && dateTime.getMinutes !== 0 && newMinutes % dateTime.getMinutes !== 0) {
+                const minuteDiv = (newMinutes / dateTime.getSeconds).toFixed(2)
+                const minuteDivSplit = minuteDiv.split(".")
+                newMinutes = parseInt( minuteDivSplit[0])
+                let calcDateTime = new DateTime(newHours, newMinutes, newSeconds)
+                calcDateTime = calcDateTime.addDateTime(new DateTime(0,0, 60 * (minuteDivSplit[1]/100)))
+                newHours = calcDateTime.hours
+                newMinutes = calcDateTime.minutes
+                newSeconds = calcDateTime.seconds
+            } else {
+                newMinutes = (newMinutes === 0 || dateTime.getMinutes === 0) ? 0 : newMinutes / dateTime.getMinutes
+            }
+
+            if (newHours !== 0 && dateTime.getHours !== 0 && newHours % dateTime.getHours !== 0) {
+                const hourDiv = (newHours / dateTime.getHours).toFixed(2)
+                const hourDivSplit = hourDiv.split(".")
+                newHours = parseInt(hourDivSplit[0])
+                let calcDateTime = new DateTime(newHours, newMinutes, newSeconds)
+
+                const hourMinuteDiv = (60 * (hourDivSplit[1]/100)).toFixed(2)
+                const hourMinuteDivSplit = hourMinuteDiv.split(".")
+
+                calcDateTime = calcDateTime.addDateTime(new DateTime(0,hourMinuteDivSplit[0],60 * (hourMinuteDivSplit[1]/100)))
+
+                newHours = calcDateTime.hours
+                newMinutes = calcDateTime.minutes
+                newSeconds = calcDateTime.seconds
+            } else {
+                newHours = (newHours === 0 || dateTime.getHours === 0) ? 0 : newHours / dateTime.getHours
+            }
+
             return new DateTime(
-                parseInt(parseInt( this.hours / dateTime.getHours).toFixed(0)),
-                parseInt(parseInt(this.minutes / dateTime.getMinutes).toFixed(0)),
-                parseInt(parseInt(this.seconds / dateTime.getSeconds).toFixed(0)),
+                newHours,
+                newMinutes,
+                newSeconds,
             )
         } else {
             return this

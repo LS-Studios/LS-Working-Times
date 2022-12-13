@@ -64,6 +64,8 @@
     "custom": "Custom",
     "startAt": "Start at",
     "endAt": "End at",
+    "continueAt": "Continue at",
+    "stopAt": "Stop at",
     "timeToWork": "Time to work",
     "breakTime": "Break time",
     "averageStartTime": "Average start time",

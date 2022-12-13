@@ -36,7 +36,7 @@ const InputContent = ({title, placeholder, type="text", focusOnClick=false, useD
             setCurrentState("0")
         }
 
-        blurFunction()
+        if (blurFunction != null) blurFunction()
     }
 
     const submit = (e) => {

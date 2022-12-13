@@ -13,7 +13,6 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
         setWorkingDays(current => {
             let newWorkingDays = JSON.parse(JSON.stringify(current))
             newWorkingDays[day[1]][2].push([new DateTime(8, 0, 0), new DateTime(18, 0, 0)])
-            console.log(newWorkingDays)
             return newWorkingDays
         })
     }
@@ -28,7 +27,10 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
 
                     <div className={getThemeClass("divider")}/>
 
-                    <ToggleContent currentState={currentTimeType} setCurrentState={setCurrentTimeType} toggleList={[t("prognosis.undefined"), t("prognosis.defined")]}/>
+                    <ToggleContent currentState={currentTimeType} setCurrentState={(newState) => {
+                        setCurrentTimeType(newState)
+                        workingDays[day[1]][3] = newState
+                    }} toggleList={[t("prognosis.undefined"), t("prognosis.defined")]}/>
 
                     {
                         currentTimeType == 1 ? <div>

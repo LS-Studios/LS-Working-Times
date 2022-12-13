@@ -59,16 +59,18 @@
     "workingDays": "Arbeitstage",
     "undefined": "Undefiniert",
     "defined": "Definiert",
-    "current": "Akutell",
+    "current": "Aktuell",
     "custom": "Benutzerdeffiniert",
     "startAt": "Starten um",
     "endAt": "Beenden um",
+    "continueAt": "Weitermachen um",
+    "stopAt": "Aufhören um",
     "timeToWork": "Zeit zu arbeiten",
     "breakTime": "Pausenzeit",
     "averageStartTime": "Durchschnittliche Startzeit",
     "averageEndTime": "Durchschnittliche Endzeit",
     "averageBreakTime": "Durchschnittliche Pausenzeit",
-    "noMoreWorkThisWeek": "Diese woche muss nach den gegeben den werten nicht mehr gearbeitet werden."
+    "noMoreWorkThisWeek": "Diese woche muss nach den gegebenen werten nicht mehr gearbeitet werden."
   },
   "planning": {
     "menuName": "Planung",

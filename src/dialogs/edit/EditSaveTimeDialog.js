@@ -24,7 +24,7 @@ const EditSaveTimeDialog = () => {
         seconds: "00"
     })
 
-    const [workedTimeState, setWorkedTimeState] = useState({
+    const [endTimeState, setEndTimeState] = useState({
         hours: "00",
         minutes: "00",
         seconds: "00"
@@ -49,12 +49,17 @@ const EditSaveTimeDialog = () => {
         const app = initializeApp(LSWalletConfig, "LS-Wallet")
         const auth = getAuth(app)
 
+        const startTime = new DateTime(startTimeState.hours, startTimeState.minutes, startTimeState.seconds)
+        const endTime = new DateTime(endTimeState.hours, endTimeState.minutes, endTimeState.seconds)
+        const breakTime = new DateTime(breakTimeState.hours, breakTimeState.minutes, breakTimeState.seconds)
+        const workedTime = endTime.subtractDateTime(startTime).subtractDateTime(breakTime)
+
         set(ref(db, "/users/"+auth.currentUser.uid+"/saved/"+data.save.id), {
             id:data.save.id,
             date:formatDate(selectedDate),
-            startTime: new DateTime(startTimeState.hours, startTimeState.minutes, startTimeState.seconds).toTimeString(),
-            worked: new DateTime(workedTimeState.hours, workedTimeState.minutes, workedTimeState.seconds).toTimeString(),
-            break: new DateTime(breakTimeState.hours, breakTimeState.minutes, breakTimeState.seconds).toTimeString(),
+            startTime: startTime.toTimeString(),
+            worked: workedTime.toTimeString(),
+            break: breakTime.toTimeString(),
         })
 
         close()
@@ -65,16 +70,20 @@ const EditSaveTimeDialog = () => {
         setSelectedDate(saveDate)
 
         const startTimeDateTime = DateTime.dateTimeFromString(data.save.startTime)
+        const workedTimeDateTime = DateTime.dateTimeFromString(data.save.worked)
+        const breakTimeDateTime = DateTime.dateTimeFromString(data.save.break)
+
         setStartTimeState({...startTimeState, hours: padTo2Digits(startTimeDateTime.getHours),
             minutes: padTo2Digits(startTimeDateTime.getMinutes),
             seconds: padTo2Digits(startTimeDateTime.getSeconds)})
 
-        const workedTimeDateTime = DateTime.dateTimeFromString(data.save.worked)
-        setWorkedTimeState({...workedTimeState, hours: padTo2Digits(workedTimeDateTime.getHours),
-            minutes: padTo2Digits(workedTimeDateTime.getMinutes),
-            seconds: padTo2Digits(workedTimeDateTime.getSeconds)})
+        const endTimeDatTime = startTimeDateTime.addDateTime(workedTimeDateTime).addDateTime(breakTimeDateTime)
 
-        const breakTimeDateTime = DateTime.dateTimeFromString(data.save.break)
+        setEndTimeState({...endTimeState, hours: padTo2Digits(endTimeDatTime.getHours),
+            minutes: padTo2Digits(endTimeDatTime.getMinutes),
+            seconds: padTo2Digits(endTimeDatTime.getSeconds)})
+
+
         setBreakTimeState({...breakTimeState, hours: padTo2Digits(breakTimeDateTime.getHours),
             minutes: padTo2Digits(breakTimeDateTime.getMinutes),
             seconds: padTo2Digits(breakTimeDateTime.getSeconds)})
@@ -117,8 +126,8 @@ const EditSaveTimeDialog = () => {
                 <h4>{t("timer.startTime")}</h4>
                 <DateTimeInput currentTimeState={startTimeState} setCurrentTimeState={setStartTimeState}/>
 
-                <h4>{t("timer.workedTime")}</h4>
-                <DateTimeInput currentTimeState={workedTimeState} setCurrentTimeState={setWorkedTimeState}/>
+                <h4>{t("timer.endTime")}</h4>
+                <DateTimeInput currentTimeState={endTimeState} setCurrentTimeState={setEndTimeState}/>
 
                 <h4>{t("timer.breakTime")}</h4>
                 <DateTimeInput currentTimeState={breakTimeState} setCurrentTimeState={setBreakTimeState}/>

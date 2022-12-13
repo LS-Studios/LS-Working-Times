@@ -58,19 +58,19 @@ function Prognosis({setCurrentMenu}) {
 
     const [workingDays, setWorkingDays] = useState([
         //Monday
-        [true, 0, [[new DateTime(7,0,0), new DateTime(18,0,0)]]],
+        [true, 0, [[new DateTime(7,0,0), new DateTime(18,0,0)]], 0],
         //Tuesday
-        [true, 1, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        [true, 1, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
         //Wednesday
-        [true, 2, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        [true, 2, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
         //Thursday
-        [true, 3, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        [true, 3, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
         //Friday
-        [true, 4, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        [true, 4, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
         //Saturday
-        [false, 5, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        [false, 5, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
         //Sunday
-        [false, 6, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        [false, 6, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
     ])
 
     useEffect(() => {
@@ -241,49 +241,80 @@ function Prognosis({setCurrentMenu}) {
         setAlreadyWorkedTimerTime(workedThisWeek)
     }
 
+    const checkIfIsStillInWeek = (dayIndex) => {
+        const currentDay = new Date().getDay()
+
+        const startTimeDateTime = new DateTime(averageStartTime.hours, averageStartTime.minutes, averageStartTime.seconds)
+        const startTimeDiff = startTimeDateTime.subtractDateTime(new DateTime())
+        const alreadyAfterStartTime = (startTimeDiff.hours < 0 || startTimeDiff.minutes < 0 || startTimeDiff.seconds < 0)
+
+        const isCurrentDay = !alreadyAfterStartTime || (alreadyAfterStartTime && startTime != null)
+
+        return (dayIndex > currentDay-1 || (dayIndex === currentDay-1 && isCurrentDay))
+    }
+
     const calculatePrognosis = () => {
         const calculation = []
 
-        let hoursLeftInWeek = new DateTime(parseInt(hoursPerWeekInput), 0, 0)
-
-        // workingDays.forEach(workingDay => {
-        //     if (workingDay[0] && workingDay[2] != null) {
-        //         const customDayDiff = workingDay[3].subtractDateTime(workingDay[2])
-        //         hoursLeftInWeek = hoursLeftInWeek.subtractDateTime(customDayDiff)
-        //     }
-        // })
-
-        const hoursPerWeekDateTime = new DateTime(parseInt(hoursPerWeekInput), 0, 0)
-        const alreadyWorkedDateTime = alreadyWorkedState == 1 ? new DateTime(
+        const alreadyWorked = alreadyWorkedState === 1 ? new DateTime(
             parseInt(alreadyWorkedTimeInput.hours),
             parseInt(alreadyWorkedTimeInput.minutes),
             parseInt(alreadyWorkedTimeInput.seconds)
         ) : alreadyWorkedTimerTime
 
-        const timeLeftToWork = hoursPerWeekDateTime.subtractDateTime(alreadyWorkedDateTime)
+        let timeLeftToWork = new DateTime(parseInt(hoursPerWeekInput),0,0).subtractDateTime(alreadyWorked)
 
-        let daysLeft = 0;
-
-        const currentDay = new Date().getDay()
-
-        workingDays.forEach(workingDay => {
-            const showCurrentDay = workingDay[1] === currentDay-1 && new DateTime(averageStartTime.hours, averageStartTime.minutes, averageStartTime.seconds).isLarger(DateTime.dateTimeFromDate(new Date()))
-            if (((workingDay[1] > currentDay-1) || showCurrentDay) && workingDay[0]) daysLeft++
-        })
-
-        const timeToWorkOnLeftDays = timeLeftToWork.divideDateTime(new DateTime(daysLeft, daysLeft, daysLeft))
+        if (timeLeftToWork.hours < 0 || timeLeftToWork.minutes < 0 || timeLeftToWork.seconds < 0) {
+            setCalculatedState([])
+            return
+        }
 
         workingDays.forEach((workingDay, i) => {
-            const showCurrentDay = workingDay[1] === currentDay-1 && new DateTime(averageStartTime.hours, averageStartTime.minutes, averageStartTime.seconds).isLarger(DateTime.dateTimeFromDate(new Date()))
+            if (workingDay[0] && checkIfIsStillInWeek(i) && workingDay[3] === 1) {
+                const rangeWorkingCalculation = []
 
-            if ((workingDay[1] > currentDay-1 || showCurrentDay) && workingDay[0]) {
+                let workingTimeInRanges = new DateTime(0,0,0)
+
+                workingDay[2].forEach(workingDayRange => {
+                    const rangeStartTime = new DateTime(workingDayRange[0].hours, workingDayRange[0].minutes, workingDayRange[0].seconds)
+                    const rangeEndTime = new DateTime(workingDayRange[1].hours, workingDayRange[1].minutes, workingDayRange[1].seconds)
+                    const rangeWorkingTime = rangeEndTime.subtractDateTime(rangeStartTime)
+                    timeLeftToWork = timeLeftToWork.subtractDateTime(rangeWorkingTime)
+                    workingTimeInRanges = workingTimeInRanges.addDateTime(rangeWorkingTime)
+
+                    rangeWorkingCalculation.push([rangeStartTime.toTimeString(), rangeEndTime.toTimeString()])
+                })
+
+                const breakTime = new DateTime(averageBreakTime.hours, averageBreakTime.minutes, averageBreakTime.seconds)
+
+                if (workingTimeInRanges.hours >= 0 && workingTimeInRanges.minutes >= 0 && workingTimeInRanges.seconds >= 0) {
+                    calculation.push([i, true, rangeWorkingCalculation, workingTimeInRanges.toTimeString(), breakTime.toTimeString()])
+                }
+            }
+        })
+
+        let undefinedDays = 0;
+
+        workingDays.forEach((workingDay, i) => {
+            if (workingDay[0] && checkIfIsStillInWeek(i) && workingDay[3] === 0) undefinedDays++
+        })
+
+        const timeToWorkOnUndefinedDays = timeLeftToWork.divideDateTime(new DateTime(undefinedDays, undefinedDays, undefinedDays))
+
+        workingDays.forEach((workingDay, i) => {
+            if (workingDay[0] && checkIfIsStillInWeek(i) && workingDay[3] === 0) {
                 const startTime = new DateTime(averageStartTime.hours, averageStartTime.minutes, averageStartTime.seconds)
                 const breakTime = new DateTime(averageBreakTime.hours, averageBreakTime.minutes, averageBreakTime.seconds)
-                const workTime = timeToWorkOnLeftDays
+                const workTime = timeToWorkOnUndefinedDays
                 const endTime = startTime.addDateTime(workTime).addDateTime(breakTime)
 
-                calculation.push([t("prognosis.weekDay"+i), workTime.toTimeString(),
-                    breakTime.toTimeString(), startTime.toTimeString(), endTime.toTimeString()])
+                if (workTime.hours < 0 || workTime.minutes < 0 || workTime.seconds < 0) {
+                    calculation.push([i, false, "00:00:00",
+                        "00:00:00", "No more work", "No more work"])
+                } else {
+                    calculation.push([i, false, workTime.toTimeString(),
+                        breakTime.toTimeString(), startTime.toTimeString(), endTime.toTimeString()])
+                }
             }
         })
 
@@ -295,11 +326,12 @@ function Prognosis({setCurrentMenu}) {
             <Card cardContent={
                 <div>
                     <div className="contentInWeekCardTitle"><b>{t("prognosis.menuName")}</b></div>
+                    <div className={getThemeClass("divider")}/>
                     {
                         alreadyWorkedTimeIsLoading[0] ? loadingSpinner :
-                            <div>
+                            <div className="prognosisCard">
                                 {
-                                    calculatedState.length > 0 ? calculatedState.map((calculated, i) => {
+                                    calculatedState.length > 0 ? calculatedState.sort((a,b) => { return a[0]-b[0] }).map((calculated, i) => {
                                         return <PrognosisCard key={i} data={calculated} isExpanded={false} />
                                     }) :  <div className="noContent">{t("prognosis.noMoreWorkThisWeek")}</div>
                                 }
@@ -315,7 +347,7 @@ function Prognosis({setCurrentMenu}) {
                     <div className={getThemeClass("divider")}/>
                     <div className="prognosisAlreadyWorkedToggle">
                         {
-                            alreadyWorkedState == 0 ? <div>{alreadyWorkedTimeIsLoading[0] ? loadingSpinner : alreadyWorkedTimerTime.toTimeString()}</div> : <DateTimeInput currentTimeState={alreadyWorkedTimeInput} setCurrentTimeState={setAlreadyWorkedTimeInput}/>
+                            alreadyWorkedState == 0 ? <div>{alreadyWorkedTimeIsLoading[0] ? loadingSpinner : alreadyWorkedTimerTime.toTimeString()}</div> : <DateTimeInput currentTimeState={alreadyWorkedTimeInput} setCurrentTimeState={setAlreadyWorkedTimeInput} maxHourValue={null}/>
                         }
                     </div>
                 </div>
@@ -327,17 +359,25 @@ function Prognosis({setCurrentMenu}) {
             <CheckboxCard title={t("prognosis.workingDays")} checkboxList={workingDays.map((_, i) => t("prognosis.weekDay"+i))}
                 currentState={workingDays.map(workingDay => workingDay[0])}
                           setCurrentState={
-                                (newWorkingDays) => {
-                                    const formattedNewWorkingDays = []
-                                    newWorkingDays.forEach((newWorkingDay, i) => {
-                                        formattedNewWorkingDays.push([newWorkingDay, i])
+                                (newStateArray) => {
+                                    console.log(newStateArray)
+                                    setWorkingDays(current => {
+                                        const newWorkingDays = JSON.parse(JSON.stringify(current))
+                                        newWorkingDays.map((newWorkingDay, i) => {
+                                            newStateArray.forEach((newState, s) => {
+                                                if (i === s) {
+                                                    newWorkingDays[i][0] = newState
+                                                }
+                                            })
+                                        })
+
+                                        return newWorkingDays
                                     })
-                                    setWorkingDays(formattedNewWorkingDays)
                                 }}/>
             <div>
                 {
                     workingDays.map((workingDay, i) => {
-                        if (workingDay[0]) {
+                        if (workingDay[0] && checkIfIsStillInWeek(i)) {
                             return <WorkingDayCard key={i} day={workingDay} workingDays={workingDays} setWorkingDays={setWorkingDays}/>
                         }
                     })

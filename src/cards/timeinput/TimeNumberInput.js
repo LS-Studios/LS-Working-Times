@@ -11,21 +11,21 @@ function TimeNumberInput({currentState, setCurrentState, maxTimeVal}) {
     const onChange = (e) => {
         const justNumberResult = e.target.value.replace(/\D/g, '')
 
-        if (parseInt(justNumberResult) >= maxTimeVal)
+        if (maxTimeVal != null && parseInt(justNumberResult) >= maxTimeVal)
             setCurrentState(maxTimeVal-1)
         else
             setCurrentState(justNumberResult)
     }
 
     const increase = () => {
-        if (parseInt(currentState)+1 < maxTimeVal)
+        if (maxTimeVal == null || parseInt(currentState)+1 < maxTimeVal)
             setCurrentState(padTo2Digits(parseInt(currentState)+1))
         else
             setCurrentState("00")
     }
 
     const decrease = () => {
-        if (parseInt(currentState)-1 >= 0)
+        if (maxTimeVal == null || parseInt(currentState)-1 >= 0)
             setCurrentState(padTo2Digits(parseInt(currentState)-1))
         else
             setCurrentState((maxTimeVal-1).toString())
