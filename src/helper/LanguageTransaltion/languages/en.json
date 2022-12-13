@@ -23,6 +23,7 @@
     "date": "Date",
     "notStarted": "Not started",
     "startTime": "Start time",
+    "startTime": "End time",
     "worked": "Worked",
     "break": "Break",
     "stopWorking": "Stop working",
@@ -101,6 +102,7 @@
     "no": "No",
     "doYouRelayWantToDeleteThisSave": "Do you relay want to delete this save?",
     "doYouRelayWantToDeleteThisPlan": "Do you relay want to delete this plan?",
+    "doYouRelayWantToDeleteThisTimeRange": "Do you relay want to delete this time range?",
     "doYouReallyWantToDeleteAllData": "Do you really want to delete all data?",
     "doYouReallyWantToDeleteThisAccount": "Do yiu really want to delete this account?",
     "passwordToContinueResetting": "Password to continue resetting."

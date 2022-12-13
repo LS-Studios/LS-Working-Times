@@ -22,6 +22,7 @@ import ChangeCredentialsDialog from "./dialogs/credentials/ChangeCredentialsDial
 import Prognosis from "./prognosis/Prognosis";
 import Planning from "./planning/Planning";
 import EditPlanningDialog from "./dialogs/planning/EditPlanningDialog";
+import PrognosisDialog from "./dialogs/prognosis/PrognosisDialog";
 
 function App(props) {
     const [currentMenu, setCurrentMenu] = useState(0)
@@ -32,7 +33,8 @@ function App(props) {
         ChangeTimeDialog,
         EditSaveTimeDialog,
         ChangeCredentialsDialog,
-        EditPlanningDialog
+        EditPlanningDialog,
+        PrognosisDialog
     }
 
     useEffect(() => {

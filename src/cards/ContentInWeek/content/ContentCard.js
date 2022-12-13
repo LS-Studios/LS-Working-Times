@@ -34,7 +34,7 @@ const ContentCard = ({content, title, isExpanded, deleteAction, editAction}) => 
 
                 {
                     editAction != null ? <div>
-                        <div className={getThemeClass("contentCardDividerBottom")}></div>
+                        { content != null ? <div className={getThemeClass("contentCardDividerBottom")}></div> : null }
                         <div className="contentCardActionBar">
                             <button className={getThemeClass("contentCardActionButton")} onClick={deleteData}>{t("timer.delete")}</button>
                             <button className={getThemeClass("contentCardActionButton")} onClick={editData}>{t("timer.edit")}</button>

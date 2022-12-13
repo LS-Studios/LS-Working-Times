@@ -49,11 +49,7 @@ function Prognosis({setCurrentMenu}) {
         minutes: "00",
         seconds: "00"
     })
-    const [averageEndTime, setAverageEndTime] = useState({
-        hours: "18",
-        minutes: "00",
-        seconds: "00"
-    })
+
     const [averageBreakTime, setAverageBreakTime] = useState({
         hours: "00",
         minutes: "30",
@@ -61,7 +57,20 @@ function Prognosis({setCurrentMenu}) {
     })
 
     const [workingDays, setWorkingDays] = useState([
-        [true, 0], [true, 1], [true, 2], [true, 3], [true, 4], [false, 5], [false, 6]
+        //Monday
+        [true, 0, [[new DateTime(7,0,0), new DateTime(18,0,0)]]],
+        //Tuesday
+        [true, 1, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        //Wednesday
+        [true, 2, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        //Thursday
+        [true, 3, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        //Friday
+        [true, 4, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        //Saturday
+        [false, 5, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
+        //Sunday
+        [false, 6, [[new DateTime(8,0,0), new DateTime(18,0,0)]]],
     ])
 
     useEffect(() => {
@@ -235,6 +244,15 @@ function Prognosis({setCurrentMenu}) {
     const calculatePrognosis = () => {
         const calculation = []
 
+        let hoursLeftInWeek = new DateTime(parseInt(hoursPerWeekInput), 0, 0)
+
+        // workingDays.forEach(workingDay => {
+        //     if (workingDay[0] && workingDay[2] != null) {
+        //         const customDayDiff = workingDay[3].subtractDateTime(workingDay[2])
+        //         hoursLeftInWeek = hoursLeftInWeek.subtractDateTime(customDayDiff)
+        //     }
+        // })
+
         const hoursPerWeekDateTime = new DateTime(parseInt(hoursPerWeekInput), 0, 0)
         const alreadyWorkedDateTime = alreadyWorkedState == 1 ? new DateTime(
             parseInt(alreadyWorkedTimeInput.hours),
@@ -304,7 +322,6 @@ function Prognosis({setCurrentMenu}) {
             }/>
 
             <DateTimeInputCard title={t("prognosis.averageStartTime")} currentTimeState={averageStartTime} setCurrentTimeState={setAverageStartTime} />
-            <DateTimeInputCard title={t("prognosis.averageEndTime")} currentTimeState={averageEndTime} setCurrentTimeState={setAverageEndTime} />
             <DateTimeInputCard title={t("prognosis.averageBreakTime")} currentTimeState={averageBreakTime} setCurrentTimeState={setAverageBreakTime} />
 
             <CheckboxCard title={t("prognosis.workingDays")} checkboxList={workingDays.map((_, i) => t("prognosis.weekDay"+i))}
@@ -321,7 +338,7 @@ function Prognosis({setCurrentMenu}) {
                 {
                     workingDays.map((workingDay, i) => {
                         if (workingDay[0]) {
-                            return <WorkingDayCard key={i} day={{name: t("prognosis.weekDay"+i)}}/>
+                            return <WorkingDayCard key={i} day={workingDay} workingDays={workingDays} setWorkingDays={setWorkingDays}/>
                         }
                     })
                 }

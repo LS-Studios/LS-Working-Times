@@ -101,67 +101,71 @@ export class DateTime {
 
     subtractDateTime(dateTime) {
         if (dateTime != null) {
+            let newHours =  this.hours
+            let newMinutes =  this.minutes
+            let newSeconds =  this.seconds
+
             const subtractMinutes = (value) => {
                 if (value%60===0) {
-                    this.hours -= value/60
+                    newHours -= value/60
                 } else {
                     while(value-60>0) {
                         value -= 60
-                        this.hours++
+                        newHours++
                     }
-                    if (this.minutes - value < 0) {
-                        this.minutes = 60 - (value - this.minutes)
-                        this.hours--
+                    if (newMinutes - value < 0) {
+                        newMinutes = 60 - (value - newMinutes)
+                        newHours--
                     } else {
-                        this.minutes -= value
+                        newMinutes -= value
                     }
                 }
             }
 
             const addMinutes = (value) => {
                 if (value%60===0) {
-                    this.hours += value/60
+                    newHours += value/60
                 } else {
                     while(value-60>0) {
                         value -= 60
-                        this.hours++
+                        newHours++
                     }
-                    if (this.minutes + value - 60 >= 0) {
-                        this.minutes += value - 60
-                        this.hours++
+                    if (newMinutes + value - 60 >= 0) {
+                        newMinutes += value - 60
+                        newHours++
                     } else {
-                        this.minutes += value
+                        newMinutes += value
                     }
                 }
             }
 
             const subtractSeconds = (value) => {
                 if (value%60===0) {
-                    this.minutes -= value/60
+                    newMinutes -= value/60
                 } else {
                     while(value-60>0) {
                         value -= 60
                         addMinutes(1)
                     }
-                    if (this.seconds - value < 0) {
-                        this.seconds = 60 - (value - this.seconds)
+                    if (newSeconds - value < 0) {
+                        newSeconds = 60 - (value - newSeconds)
                         subtractMinutes(1)
                     } else {
-                        this.seconds -= value
+                        newSeconds -= value
                     }
                 }
             }
 
             //Use date to auto increase hours
-            this.hours = this.hours - dateTime.getHours
+            newHours = newHours - dateTime.getHours
 
             subtractMinutes(dateTime.getMinutes)
             subtractSeconds(dateTime.getSeconds)
 
             return new DateTime(
-                this.hours,
-                this.minutes,
-                this.seconds
+                newHours,
+                newMinutes,
+                newSeconds
             )
         } else {
             return this

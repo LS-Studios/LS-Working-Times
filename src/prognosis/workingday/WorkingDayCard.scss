@@ -5,6 +5,10 @@
 .workingDayCardTitle {
   margin-top: 5px;
 }
+.workingDayCardRangeList {
+  margin-left: 5px;
+}
+
 
 .workingDayCardExpandButtonNotExpanded {
   width: 260px;
@@ -25,20 +29,20 @@
   background-color: #BCBCBC;
 }
 
-.workingDayCardExpandButtonExpanded {
+.workingDayCardAddButton {
   width: 260px;
   border-radius: 6px;
-  padding: 2px 0;
+  padding: 5px 0;
   cursor: pointer;
   margin-bottom: 5px;
 }
 
-.darkWorkingDayCardExpandButtonExpanded {
-  @extend .workingDayCardExpandButtonExpanded;
+.darkWorkingDayCardAddButton {
+  @extend .workingDayCardAddButton;
   background-color: #3c4f61;
 }
 
-.brightWorkingDayCardExpandButtonExpanded {
-  @extend .workingDayCardExpandButtonExpanded;
+.brightWorkingDayCardAddButton {
+  @extend .workingDayCardAddButton;
   background-color: #BCBCBC;
 }

@@ -22,6 +22,7 @@
     "date": "Datum",
     "notStarted": "Nicht gestarted",
     "startTime": "Startzeit",
+    "endTime": "Endzeit",
     "worked": "Gearbeitet",
     "break": "Pause",
     "stopWorking": "Arbeit stoppen",
@@ -100,6 +101,7 @@
     "no": "Nein",
     "doYouRelayWantToDeleteThisSave": "Möchtest du diese gespeichte Zeit wirklich löschen?",
     "doYouRelayWantToDeleteThisPlan": "Möchtest du diesen Plan wirklich löschen?",
+    "doYouRelayWantToDeleteThisTimeRange": "Möchtest du diese Zeitspanne wirklich löschen?",
     "doYouReallyWantToDeleteAllData": "Möchtest du wirklich alle gepeicheten Zeit löschen?",
     "doYouReallyWantToDeleteThisAccount": "Möchtest du dieses Konto wirklich löschen?"
   }
