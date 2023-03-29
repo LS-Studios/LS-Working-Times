@@ -1,15 +1,14 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {IoCaretBack, IoCaretForward} from "react-icons/io5";
-import DatePicker, {Calendar} from "react-multi-date-picker";
-import SavedCard from "../../timing/save/card/SavedCard";
 import "./ContentInWeekCard.scss"
 import "../DateTime/DateTimePicker.scss"
-import {formatDate, getDateFromString, getEndOfWeek, getStartOfWeek, getStartOfWeekDayValue} from "../../helper/Helper";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
-import {loadingSpinner} from "../../spinner/LoadingSpinner";
-import {getThemeClass} from "../../helper/Theme/Theme";
+import {getStartOfWeekDayValue, formatDate, getStartOfWeek, getEndOfWeek, getDateFromString} from "@LS-Studios/date-helper"
+import {useComponentTheme} from "@LS-Studios/components/contextproviders/ComponentThemeProvider";
+import {DateContent, Spinner} from "@LS-Studios/components";
 
 function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedDate, setSelectedDate, isLoading}) {
+    const theme = useComponentTheme()
+
     const datePickerRef = useRef()
 
     const getSavesOfPreviousWeek = () => {
@@ -36,26 +35,12 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
     }
 
     return (
-        <div className={getThemeClass("contentInWeekCard")}>
+        <div className={theme.getThemeClass("contentInWeekCard")}>
             <div className="contentInWeekCardTitle"><b>{title}</b></div>
             <div className="contentInWeekCardSelect">
-                <IoCaretBack className={getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
-                <DatePicker
-                    portal
-                    ref={datePickerRef}
-                    inputMode="none"
-                    editable={false}
-                    value={getStartOfWeek(selectedDate)}
-                    onChange={(dateObj) => {
-                        const date = new Date(dateObj.year, dateObj.month.number-1, dateObj.day)
-                        setSelectedDate(new Date(date.setDate(getStartOfWeekDayValue(date))))
-                    }}
-                    render={<DatePickerLayout/>}
-                    format="DD.MM.YYYY"
-                    calendarPosition={"bottom-center"}
-                    className={getThemeClass("customPicker")}
-                />
-                <IoCaretForward className={getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
+                <IoCaretBack className={theme.getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
+                <DateContent currentState={selectedDate} setCurrentState={setSelectedDate} />
+                <IoCaretForward className={theme.getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
             </div>
             {
                 dataArray.filter(data => {
@@ -70,7 +55,7 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
                 })
             }
             {
-                isLoading ? loadingSpinner : (dataArray.filter(data => {
+                isLoading ? <Spinner type="cycle"/> : (dataArray.filter(data => {
                     const date = getDateFromString(data.date)
                     return date >= getStartOfWeek(selectedDate) && date <= getEndOfWeek(selectedDate)
                 }).length === 0 ? <div className="noContent">{noItemMessage}</div> : null)

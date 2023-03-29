@@ -1,28 +1,21 @@
-import {useDialog} from "use-react-dialog";
 import "./EditPlanningDialog.scss"
-import ButtonCard from "../../cards/Button/ButtonCard";
 import React, {useEffect, useRef, useState} from "react";
 import {getDatabase, ref, set, get} from "firebase/database";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
-import Dialog from "../Dialog";
-import {formatDate, getDateFromString, padTo2Digits} from "../../helper/Helper";
-import {DateTime} from "../../timing/timer/DateTime";
-import DateTimeInput from "../../cards/timeinput/DateTimeInput";
-import DatePicker from "react-multi-date-picker";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
-import {getThemeClass} from "../../helper/Theme/Theme";
-import Card from "../../cards/Card";
-import InputContent from "../../cards/Input/InputContent";
-import DateTimeContent from "../../cards/DateTime/DateTimeContent";
+import {formatDate, getDateFromString} from "@LS-Studios/date-helper";
+import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
+import {useTranslation} from "@LS-Studios/use-translation"
+import {ButtonCard, Divider, TimeInputContent, InputContent, Dialog} from "@LS-Studios/components";
 
-const EditSaveTimeDialog = () => {
+const EditSaveTimeDialog = ({data}) => {
+    const translation = useTranslation()
+    const dialog = useComponentDialog();
+
     const [currentNewPlanInput, setCurrentNewPlanInput] = useState("");
     const [currentPlanDate, setCurrentPlanDate] = useState(new Date());
-
-    const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('EditPlanningDialog', {plan: null});
 
     useEffect(() => {
         setCurrentNewPlanInput(data.plan.content)
@@ -31,7 +24,7 @@ const EditSaveTimeDialog = () => {
 
     const close = () => {
         document.body.style.overflow = "visible"
-        closeCurrentDialog()
+        dialog.closeDialog("EditSaveTimeDialog")
     }
 
     const updatePlan = () => {
@@ -50,23 +43,23 @@ const EditSaveTimeDialog = () => {
     }
 
     return (
-        <Dialog title={t("dialog.changePlan")} dialogContent={
+        <Dialog title={translation.translate("dialog.changePlan")} dialogContent={
             <div className="editPlanningHolder">
-                <div className={getThemeClass("divider")}/>
+                <Divider/>
 
-                <h4>{t("planning.description")}</h4>
+                <h4>{translation.translate("planning.description")}</h4>
                 <InputContent currentState={currentNewPlanInput}
                               setCurrentState={setCurrentNewPlanInput} inputType={3}
-                              placeholder={t("planning.placeholder")}/>
+                              placeholder={translation.translate("planning.placeholder")}/>
 
-                <h4>{t("planning.dateOfPlan")}</h4>
-                <DateTimeContent currentState={currentPlanDate} setCurrentState={setCurrentPlanDate} type="date"/>
+                <h4>{translation.translate("planning.dateOfPlan")}</h4>
+                <TimeInputContent currentState={currentPlanDate} setCurrentState={setCurrentPlanDate} type="date"/>
 
-                <div className={getThemeClass("editPlanDialogDivider")}></div>
+                <Divider/>
 
                 <div className="editPlanDialogActionButtons">
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={close}/>
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={updatePlan}/>
+                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
+                    <ButtonCard title={translation.translate("dialog.confirm")} action={updatePlan}/>
                 </div>
             </div>
         } />

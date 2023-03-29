@@ -1,33 +1,35 @@
-import {useDialog} from "use-react-dialog";
 import "./ChangeTimeDialog.css"
-import ButtonCard from "../../cards/Button/ButtonCard";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getDatabase, ref, set, get} from "firebase/database";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
-import Dialog from "../Dialog";
 import {padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
-import DateTimeInput from "../../cards/timeinput/DateTimeInput";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
-import {getThemeClass} from "../../helper/Theme/Theme";
+import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider";
+import {useTranslation} from "@LS-Studios/use-translation/TranslationProvider";
+import Dialog from "@LS-Studios/components/";
+import DateTimeInput from "@LS-Studios/components/";
+import DropdownContent from "@LS-Studios/components/";
+import ButtonCard from "@LS-Studios/components/";
 
-const ChangeTimeDialog = () => {
+const ChangeTimeDialog = ({ data }) => {
+    const translation = useTranslation()
+    const dialog = useComponentDialog();
+
     const [currentTime, setCurrentTime] = useState({
         hours: "00",
         minutes: "00",
         seconds: "00"
     })
+    const [state, setState] = useState(null)
 
     const [originalTime, setOriginalTime] = useState(new DateTime())
 
-    const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('ChangeTimeDialog', {value: "00:00:00", type: "break-time"});
-
     const close = () => {
         document.body.style.overflow = "visible"
-        closeCurrentDialog()
+        dialog.closeDialog("ChangeTimeDialog")
     }
 
     const changeTime = () => {
@@ -85,13 +87,15 @@ const ChangeTimeDialog = () => {
     }, [])
 
     return (
-        <Dialog title={t("dialog.changeTime")} dialogContent={
+        <Dialog title={translation.translate("dialog.changeTime")} dialogContent={
             <div>
                 <DateTimeInput currentTimeState={currentTime} setCurrentTimeState={setCurrentTime} />
 
+                <DropdownContent items={["A", "B", "C"]} currentState={state} setCurrentState={setState}/>
+
                 <div className="changeTimeActionButtons">
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={close}/>
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={changeTime}/>
+                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
+                    <ButtonCard title={translation.translate("dialog.confirm")} action={changeTime}/>
                 </div>
             </div>
         } />

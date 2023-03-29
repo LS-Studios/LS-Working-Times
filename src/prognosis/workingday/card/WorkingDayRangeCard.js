@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDialog} from "use-react-dialog";
 import {t} from "../../../helper/LanguageTransaltion/Transalation";
-import ContentCard from "../../../cards/ContentInWeek/content/ContentCard";
+import ContentCard from "../../../cards/contentinweek/content/ContentCard";
 import {padTo2Digits} from "../../../helper/Helper";
 
 const WorkingDayRangeCard = ({workingDayIndex, rangeIndex, workingDays,  setWorkingDays, isExpanded=false}) => {

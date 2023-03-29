@@ -1,17 +1,16 @@
-import {useDialog} from "use-react-dialog";
 import "./YesNoDialog.css"
-import ButtonCard from "../../cards/Button/ButtonCard";
-import React, {useEffect} from "react";
-import Dialog from "../Dialog";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
-import {getThemeClass} from "../../helper/Theme/Theme";
+import React from "react";
+import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
+import {useTranslation} from "@LS-Studios/use-translation";
+import {ButtonCard, Dialog} from "@LS-Studios/components";
 
-const YesNoDialog = () => {
-    const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('YesNoDialog', {title: "None", message:"None", yesAction:()=>{}});
+const YesNoDialog = ({data}) => {
+    const translation = useTranslation()
+    const dialog = useComponentDialog();
 
     const close = () => {
         document.body.style.overflow = "visible"
-        closeCurrentDialog()
+        dialog.closeDialog("YesNoDialog")
     }
 
     const action = () => {
@@ -25,8 +24,8 @@ const YesNoDialog = () => {
             <div>
                 <div>{data.message}</div>
                 <div className="yesNoDialogButtons">
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.no")} action={close}/>
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.yes")} action={action}/>
+                    <ButtonCard title={translation.translate("dialog.no")} action={close}/>
+                    <ButtonCard title={translation.translate("dialog.yes")} action={action}/>
                 </div>
             </div>
         } />

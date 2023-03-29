@@ -1,21 +1,21 @@
 import React, {useState} from 'react';
-import "./PlanningCard.scss"
-import {getThemeClass} from "../../helper/Theme/Theme";
-import {getDateNameByString} from "../../helper/Helper";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
+import "./PlanningCard.scss";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import {getDatabase, ref, remove} from "firebase/database";
-import {useDialog} from "use-react-dialog";
-import ContentCard from "../../cards/ContentInWeek/content/ContentCard";
+import ContentCard from "../../cards/contentinweek/content/ContentCard";
+import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
+import {useTranslation} from "@LS-Studios/use-translation";
+import {getDateNameByString} from "@LS-Studios/date-helper";
 
 const PlanningCard = ({data, isExpanded=false}) => {
-    const { dialogs, openDialog } = useDialog();
+    const translation = useTranslation()
+    const dialog = useComponentDialog();
 
     const deletePlan = (e) => {
-        openDialog("YesNoDialog", {message:t("dialog.doYouRelayWantToDeleteThisPlan"), yesAction:() => {
+        dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouRelayWantToDeleteThisPlan"), yesAction:() => {
                 const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
                 const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
 
@@ -25,11 +25,11 @@ const PlanningCard = ({data, isExpanded=false}) => {
     }
 
     const editPlan = (e) => {
-        openDialog("EditPlanningDialog", {plan: data})
+        dialog.openDialog("EditPlanningDialog", {plan: data})
     }
 
     return (
-        <ContentCard title={getDateNameByString(data.date) + " " + t("timer.the") + " " + data.date} content={
+        <ContentCard title={getDateNameByString(data.date) + " " + translation.translate("timer.the") + " " + data.date} content={
             <div className="planningCardContent">
                 <div>{data.content}</div>
             </div>

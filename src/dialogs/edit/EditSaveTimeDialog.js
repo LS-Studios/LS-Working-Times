@@ -1,21 +1,20 @@
-import {useDialog} from "use-react-dialog";
 import "./EditSaveDialog.scss"
-import ButtonCard from "../../cards/Button/ButtonCard";
 import React, {useEffect, useRef, useState} from "react";
 import {getDatabase, ref, set, get} from "firebase/database";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
-import Dialog from "../Dialog";
-import {formatDate, getDateFromString, padTo2Digits} from "../../helper/Helper";
+import {formatDate, getDateFromString, padTo2Digits} from "@LS-Studios/date-helper";
 import {DateTime} from "../../timing/timer/DateTime";
-import DateTimeInput from "../../cards/timeinput/DateTimeInput";
-import DatePicker from "react-multi-date-picker";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
-import {getThemeClass} from "../../helper/Theme/Theme";
+import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
+import {useTranslation} from "@LS-Studios/use-translation";
+import {ButtonCard, Divider, TimeInputContent, DateContent, Dialog} from "@LS-Studios/components";
 
-const EditSaveTimeDialog = () => {
+const EditSaveTimeDialog = ({data}) => {
+    const translation = useTranslation()
+    const dialog = useComponentDialog();
+
     const [selectedDate, setSelectedDate] = useState(new Date());
 
     const [startTimeState, setStartTimeState] = useState({
@@ -36,11 +35,9 @@ const EditSaveTimeDialog = () => {
         seconds: "00"
     })
 
-    const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('EditSaveTimeDialog', {save: null});
-
     const close = () => {
         document.body.style.overflow = "visible"
-        closeCurrentDialog()
+        dialog.closeDialog("EditSaveTimeDialog")
     }
 
     const updateSave = () => {
@@ -101,42 +98,27 @@ const EditSaveTimeDialog = () => {
     }
 
     return (
-        <Dialog title={t("dialog.changeTime")} dialogContent={
+        <Dialog title={translation.translate("dialog.changeTime")} dialogContent={
             <div className="editSaveTimeDialog">
-                <div className={getThemeClass("editSaveTimeDialogDivider")}></div>
+                <Divider/>
 
-                <h4>{t("timer.date")}</h4>
-                <div className={getThemeClass("editSaveTimeDialogDatePicker")}>
-                    <DatePicker
-                        portal
-                        inputMode="none"
-                        editable={false}
-                        value={selectedDate}
-                        onChange={(dateObj) => {
-                            const date = new Date(dateObj.year, dateObj.month.number-1, dateObj.day)
-                            setSelectedDate(date)
-                        }}
-                        render={<DatePickerLayout/>}
-                        format="DD.MM.YYYY"
-                        calendarPosition={"bottom-center"}
-                        className={getThemeClass("customPicker")}
-                    />
-                </div>
+                <h4>{translation.translate("timer.date")}</h4>
+                <DateContent currentState={selectedDate} setCurrentState={setSelectedDate}/>
 
-                <h4>{t("timer.startTime")}</h4>
-                <DateTimeInput currentTimeState={startTimeState} setCurrentTimeState={setStartTimeState}/>
+                <h4>{translation.translate("timer.startTime")}</h4>
+                <TimeInputContent currentTimeState={startTimeState} setCurrentTimeState={setStartTimeState}/>
 
-                <h4>{t("timer.endTime")}</h4>
-                <DateTimeInput currentTimeState={endTimeState} setCurrentTimeState={setEndTimeState}/>
+                <h4>{translation.translate("timer.endTime")}</h4>
+                <TimeInputContent currentTimeState={endTimeState} setCurrentTimeState={setEndTimeState}/>
 
-                <h4>{t("timer.breakTime")}</h4>
-                <DateTimeInput currentTimeState={breakTimeState} setCurrentTimeState={setBreakTimeState}/>
+                <h4>{translation.translate("timer.breakTime")}</h4>
+                <TimeInputContent currentTimeState={breakTimeState} setCurrentTimeState={setBreakTimeState}/>
 
-                <div className={getThemeClass("editSaveTimeDialogDivider")}></div>
+                <Divider/>
 
                 <div className="editSaveTimeDialogActionButtons">
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={close}/>
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={updateSave}/>
+                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
+                    <ButtonCard title={translation.translate("dialog.confirm")} action={updateSave}/>
                 </div>
             </div>
         } />

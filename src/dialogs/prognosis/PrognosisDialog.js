@@ -1,15 +1,16 @@
-import {useDialog} from "use-react-dialog";
 import "./PrognosisDialog.scss"
-import ButtonCard from "../../cards/Button/ButtonCard";
 import React, {useEffect, useRef, useState} from "react";
-import Dialog from "../Dialog";
-import DateTimeInput from "../../cards/timeinput/DateTimeInput";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
-import {getThemeClass} from "../../helper/Theme/Theme";
 import {DateTime} from "../../timing/timer/DateTime";
 import {padTo2Digits} from "../../helper/Helper";
+import Dialog from "@LS-Studios/components/dialog/Dialog"
+import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
+import {useTranslation} from "@LS-Studios/use-translation";
+import {Divider, TimeInputContent, ButtonCard} from "@LS-Studios/components";
 
-const PrognosisDialog = () => {
+const PrognosisDialog = ({data}) => {
+    const translation = useTranslation()
+    const dialog = useComponentDialog();
+
     const [currentStartTime, setCurrentStartTime] = useState({
         hours: "08",
         minutes: "00",
@@ -20,8 +21,6 @@ const PrognosisDialog = () => {
         minutes: "00",
         seconds: "00"
     })
-
-    const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('PrognosisDialog', {workingDayIndex: null, rangeIndex: null, workingDays: null, setWorkingDays: null});
 
     useEffect(() => {
         const startTime = data.workingDays[data.workingDayIndex][2][data.rangeIndex][0]
@@ -41,7 +40,7 @@ const PrognosisDialog = () => {
 
     const close = () => {
         document.body.style.overflow = "visible"
-        closeCurrentDialog()
+        dialog.closeDialog("PrognosisDialog")
     }
 
     const updatePrognosis = () => {
@@ -56,21 +55,21 @@ const PrognosisDialog = () => {
     }
 
     return (
-        <Dialog title={t("dialog.changeTime")} dialogContent={
+        <Dialog title={("dialog.changeTime")} dialogContent={
             <div className="editSaveTimeDialog">
-                <div className={getThemeClass("editSaveTimeDialogDivider")}></div>
+                <Divider/>
 
-                <h4>{t("timer.startTime")}</h4>
-                <DateTimeInput currentTimeState={currentStartTime} setCurrentTimeState={setCurrentStartTime}/>
+                <h4>{translation.translate("timer.startTime")}</h4>
+                <TimeInputContent currentTimeState={currentStartTime} setCurrentTimeState={setCurrentStartTime}/>
 
-                <h4>{t("timer.endTime")}</h4>
-                <DateTimeInput currentTimeState={currentEndTime} setCurrentTimeState={setCurrentEndTime}/>
+                <h4>{translation.translate("timer.endTime")}</h4>
+                <TimeInputContent currentTimeState={currentEndTime} setCurrentTimeState={setCurrentEndTime}/>
 
-                <div className={getThemeClass("editSaveTimeDialogDivider")}></div>
+                <Divider/>
 
                 <div className="editSaveTimeDialogActionButtons">
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={close}/>
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={updatePrognosis}/>
+                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
+                    <ButtonCard title={translation.translate("dialog.confirm")} action={updatePrognosis}/>
                 </div>
             </div>
         } />

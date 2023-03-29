@@ -1,20 +1,18 @@
-import {useDialog} from "use-react-dialog";
 import "./ChangeCredentialsDialog.css"
-import ButtonCard from "../../cards/Button/ButtonCard";
 import React, {useEffect, useState} from "react";
-import Dialog from "../Dialog";
-import {setLanguage, t} from "../../helper/LanguageTransaltion/Transalation";
-import {getThemeClass} from "../../helper/Theme/Theme";
-import InputContent from "../../cards/Input/InputContent";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
-import {getAuth, signInWithEmailAndPassword, reauthenticateWithCredential, updateEmail, updatePassword, EmailAuthProvider} from "firebase/auth";
+import {getAuth, signInWithEmailAndPassword, updateEmail, updatePassword, EmailAuthProvider} from "firebase/auth";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {getDatabase, get, ref, set} from "firebase/database";
-import {validateEmail, validatePassword} from "../../helper/Helper";
+import {validateEmail, validatePassword} from "@LS-Studios/use-user-auth/UserAuthHelper";
+import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
+import {useTranslation} from "@LS-Studios/use-translation";
+import {ButtonCard, InputContent, Dialog} from "@LS-Studios/components";
 
-const ChangeCredentialsDialog = () => {
-    const { closeCurrentDialog, isOpen, openCurrentDialog, data } = useDialog('ChangeCredentialsDialog');
+const ChangeCredentialsDialog = ({data}) => {
+    const translation = useTranslation()
+    const dialog = useComponentDialog();
 
     const [currentEmail, setCurrentEmail] = useState("")
     const [currentPassword, setCurrentPassword] = useState("")
@@ -50,7 +48,7 @@ const ChangeCredentialsDialog = () => {
 
     const close = () => {
         document.body.style.overflow = "visible"
-        closeCurrentDialog()
+        dialog.closeDialog("ChangeCredentialsDialog")
     }
 
     const action = () => {
@@ -60,17 +58,17 @@ const ChangeCredentialsDialog = () => {
         const db = getDatabase(lsWorkingTimesApp)
 
         if (currentEmail == "") {
-            setError(t("noEmailEntered"))
+            setError(translation.translate("noEmailEntered"))
             return
         }
 
         if (currentPassword == "") {
-            setError(t("noPasswordEntered"))
+            setError(translation.translate("noPasswordEntered"))
             return
         }
 
         if (!validateEmail(currentEmail)) {
-            setError(t("invalidEmail"))
+            setError(translation.translate("invalidEmail"))
             return
         }
 
@@ -81,7 +79,7 @@ const ChangeCredentialsDialog = () => {
             return;
         }
 
-        let password = prompt(t("passwordToContinueResetting"))
+        let password = prompt(translation.translate("passwordToContinueResetting"))
 
         signInWithEmailAndPassword(auth, auth.currentUser.email, password).then(res => {
             //Set db data
@@ -94,19 +92,19 @@ const ChangeCredentialsDialog = () => {
 
             close()
         }).catch(error => {
-            setError(t("login.wrongPassword"))
+            setError(translation.translate("login.wrongPassword"))
         })
     }
 
     return (
         <Dialog title="" dialogContent={
             <div>
-                <InputContent title={t("login.email")} type="email" useDivider={false} currentState={currentEmail} setCurrentState={setCurrentEmail}/>
-                <InputContent title={t("login.password")} type="password" useDivider={false} currentState={currentPassword} setCurrentState={setCurrentPassword}/>
+                <InputContent title={translation.translate("login.email")} type="email" useDivider={false} currentState={currentEmail} setCurrentState={setCurrentEmail}/>
+                <InputContent title={translation.translate("login.password")} type="password" useDivider={false} currentState={currentPassword} setCurrentState={setCurrentPassword}/>
                 { error != "" ? <div className="loginErrorText">{error}</div> : null }
                 <div className="yesNoDialogButtons">
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.cancel")} action={close}/>
-                    <ButtonCard className={getThemeClass("horizontalButtonCard")} title={t("dialog.confirm")} action={action}/>
+                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
+                    <ButtonCard title={translation.translate("dialog.confirm")} action={action}/>
                 </div>
             </div>
         } />

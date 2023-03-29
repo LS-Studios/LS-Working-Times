@@ -9,7 +9,7 @@ import {LSWalletConfig} from "../../../firebase/LSWalletConfig";
 import {useDialog} from "use-react-dialog";
 import {t} from "../../../helper/LanguageTransaltion/Transalation";
 import {getThemeClass} from "../../../helper/Theme/Theme";
-import ContentCard from "../../../cards/ContentInWeek/content/ContentCard";
+import ContentCard from "../../../cards/contentinweek/content/ContentCard";
 
 function SavedCard({data, isExpanded}) {
     const { dialogs, openDialog } = useDialog();

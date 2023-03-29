@@ -4,19 +4,20 @@ import {useNavigate} from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
-import InputCard from "../../cards/Input/InputCard";
-import ButtonCard from "../../cards/Button/ButtonCard";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
+import InputCard from "@LS-Studios/components/";
+import ButtonCard from "@LS-Studios/components/";
 import {get, getDatabase, ref, set} from "firebase/database";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
-import {validateEmail, validatePassword} from "../../helper/Helper";
+import {useTranslation} from "@LS-Studios/use-translation";
+import {validateEmail, validatePassword} from "@LS-Studios/use-user-auth/UserAuthHelper"
 
-function LoginForm()
-{
+function LoginForm() {
+    const navigate = useNavigate()
+    const translation = useTranslation()
+
     const [error, setError] = useState("")
     const [emailInput, setEmailInput] = useState("")
     const [passwordInput, setPasswordInput] = useState("")
-    const navigate = useNavigate()
 
     const createFieldIfNotExist = (fieldName, defaultValue, navigateTo, uid, db) => {
         get(ref(db, "/users/"+uid+"/"+fieldName)).then((snapshot) => {
@@ -45,12 +46,12 @@ function LoginForm()
         setError("")
 
         if (emailInput == "") {
-            setError(t("noEmailEntered"))
+            setError(translation.translate("noEmailEntered"))
             return
         }
 
         if (passwordInput == "") {
-            setError(t("noPasswordEntered"))
+            setError(translation.translate("noPasswordEntered"))
             return
         }
 
@@ -67,15 +68,15 @@ function LoginForm()
                 setError(errorMessage)
 
                 if (errorMessage == "Firebase: Error (auth/wrong-passwordInput)." || errorMessage == "Firebase: Error (auth/wrong-password).") {
-                    setError(t("login.wrongPassword"))
+                    setError(translation.translate("login.wrongPassword"))
                 }
 
                 if (errorMessage == "Firebase: Error (auth/invalid-email).") {
-                    setError(t("login.wrongEmail"))
+                    setError(translation.translate("login.wrongEmail"))
                 }
 
                 if (errorMessage == "Firebase: Error (auth/user-not-found).") {
-                    setError(t("login.noAccountWithThisEmail"))
+                    setError(translation.translate("login.noAccountWithThisEmail"))
                 }
             })
     }
@@ -89,17 +90,17 @@ function LoginForm()
         setError("")
 
         if (emailInput == "") {
-            setError(t("noEmailEntered"))
+            setError(translation.translate("noEmailEntered"))
             return
         }
 
         if (passwordInput == "") {
-            setError(t("noPasswordEntered"))
+            setError(translation.translate("noPasswordEntered"))
             return
         }
 
         if (!validateEmail(emailInput)) {
-            setError(t("invalidEmail"))
+            setError(translation.translate("invalidEmail"))
             return
         }
 
@@ -123,19 +124,19 @@ function LoginForm()
                 setError(errorMessage)
 
                 if (errorMessage == "Firebase: Error (auth/email-already-in-use).") {
-                    setError(t("accountWithThisEmailAlreadyExist"))
+                    setError(translation.translate("accountWithThisEmailAlreadyExist"))
                 }
             });
     }
 
     return (
         <div className="login-form">
-            <InputCard type="text" title={t("login.email")} submitFunc={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
-            <InputCard type="password" title={t("login.password")} submitFunc={submitLogin} currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
+            <InputCard type="text" title={translation.translate("login.email")} submitFunc={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
+            <InputCard type="password" title={translation.translate("login.password")} submitFunc={submitLogin} currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
             <div>{ error != "" ? <div className="loginErrorText">{error}</div> : null }</div>
             <div>
-                <ButtonCard title={t("login.login")} action={submitLogin}/>
-                <ButtonCard title={t("login.createAccount")} action={submitCreateUser}/>
+                <ButtonCard title={translation.translate("login.login")} action={submitLogin}/>
+                <ButtonCard title={translation.translate("login.createAccount")} action={submitCreateUser}/>
             </div>
         </div>
     )

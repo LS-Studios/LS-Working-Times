@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import "./PrognosisCard.scss"
-import ContentCard from "../../cards/ContentInWeek/content/ContentCard";
+import ContentCard from "../../cards/contentinweek/content/ContentCard";
 import {t} from "../../helper/LanguageTransaltion/Transalation";
 
 function PrognosisCard({data, isExpanded}) {

@@ -1,29 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import "./Prognosis.css"
-import InputCard from "../cards/Input/InputCard";
-import Card from "../cards/Card";
-import ToggleContent from "../cards/ToggleInput/ToggleContent";
-import DateTimeInput from "../cards/timeinput/DateTimeInput";
-import {getThemeClass, setTheme} from "../helper/Theme/Theme";
-import CheckboxCard from "../cards/Checkbox/CheckboxCard";
-import {getLanguage, setLanguage, t} from "../helper/LanguageTransaltion/Transalation";
 import WorkingDayCard from "./workingday/WorkingDayCard";
 import {get, getDatabase, onChildAdded, onChildChanged, onChildRemoved, onValue, ref} from "firebase/database";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
-import ButtonCard from "../cards/Button/ButtonCard";
 import {DateTime} from "../timing/timer/DateTime";
-import {getDateFromString, getDateWithoutTime, getEndOfWeek, getStartOfWeek} from "../helper/Helper";
-import {TimerClass} from "../timing/timer/TimerClass";
 import {useNavigate} from "react-router-dom";
 import {useInterval} from "../helper/UseInterval";
-import {loadingSpinner} from "../spinner/LoadingSpinner";
 import PrognosisCard from "./card/PrognosisCard";
-import DateTimeInputCard from "../cards/timeinput/DateTimeInputCard";
+import {useTranslation} from "@LS-Studios/use-translation"
+import {useComponentTheme, Spinner, Card, ToggleContent, InputCard, TimeInputContent, TimeInputCard, CheckboxListCard} from "@LS-Studios/components"
+import {getDateFromString, getEndOfWeek, getStartOfWeek} from "@LS-Studios/date-helper"
 
 function Prognosis({setCurrentMenu}) {
+    const translation = useTranslation()
+    const theme = useComponentTheme()
     const navigate = useNavigate()
 
     const [saved, setSaved] = useState([]);
@@ -131,7 +124,7 @@ function Prognosis({setCurrentMenu}) {
 
                 get(ref(db, "/users/" + user.uid + "/language")).then((snapshot) => {
                     if (snapshot.exists()) {
-                        setLanguage(snapshot.val())
+                        translation.changeLanguage(snapshot.val())
                     } else {
                         console.log("No data available");
                     }
@@ -141,11 +134,11 @@ function Prognosis({setCurrentMenu}) {
 
                 get(ref(db, "/users/" + user.uid + "/theme")).then((snapshot) => {
                     if (snapshot.exists()) {
-                        setTheme(snapshot.val())
+                        theme.changeTheme(snapshot.val())
                         document.body.classList.forEach((v, k, p) => {
                             document.body.classList.remove(v)
                         })
-                        document.body.classList.add(getThemeClass("body"))
+                        document.body.classList.add(theme.getThemeClass("body"))
                     } else {
                         console.log("No data available");
                     }
@@ -325,38 +318,38 @@ function Prognosis({setCurrentMenu}) {
         <div className="prognosis">
             <Card cardContent={
                 <div>
-                    <div className="contentInWeekCardTitle"><b>{t("prognosis.menuName")}</b></div>
-                    <div className={getThemeClass("divider")}/>
+                    <div className="contentInWeekCardTitle"><b>{translation.translate("prognosis.menuName")}</b></div>
+                    <div className={theme.getThemeClass("divider")}/>
                     {
-                        alreadyWorkedTimeIsLoading[0] ? loadingSpinner :
+                        alreadyWorkedTimeIsLoading[0] ? <Spinner type='cycle'/> :
                             <div className="prognosisCard">
                                 {
                                     calculatedState.length > 0 ? calculatedState.sort((a,b) => { return a[0]-b[0] }).map((calculated, i) => {
                                         return <PrognosisCard key={i} data={calculated} isExpanded={false} />
-                                    }) :  <div className="noContent">{t("prognosis.noMoreWorkThisWeek")}</div>
+                                    }) :  <div className="noContent">{translation.translate("prognosis.noMoreWorkThisWeek")}</div>
                                 }
                             </div>
                     }
                 </div>
             } />
 
-            <InputCard title={t("prognosis.hoursPerWeek")} inputType={1} focusOnClick={true} currentState={hoursPerWeekInput} setCurrentState={setHoursPerWeekInput}/>
+            <InputCard title={translation.translate("prognosis.hoursPerWeek")} inputType={1} focusOnClick={true} currentState={hoursPerWeekInput} setCurrentState={setHoursPerWeekInput}/>
             <Card cardContent={
                 <div>
-                    <ToggleContent title={t("prognosis.alreadyWorked")} currentState={alreadyWorkedState} setCurrentState={setAlreadyWorkedState} toggleList={[t("prognosis.current"), t("prognosis.custom")]}/>
-                    <div className={getThemeClass("divider")}/>
+                    <ToggleContent title={translation.translate("prognosis.alreadyWorked")} currentState={alreadyWorkedState} setCurrentState={setAlreadyWorkedState} toggleList={[translation.translate("prognosis.current"), translation.translate("prognosis.custom")]}/>
+                    <div className={theme.getThemeClass("divider")}/>
                     <div className="prognosisAlreadyWorkedToggle">
                         {
-                            alreadyWorkedState == 0 ? <div>{alreadyWorkedTimeIsLoading[0] ? loadingSpinner : alreadyWorkedTimerTime.toTimeString()}</div> : <DateTimeInput currentTimeState={alreadyWorkedTimeInput} setCurrentTimeState={setAlreadyWorkedTimeInput} maxHourValue={null}/>
+                            alreadyWorkedState == 0 ? <div>{alreadyWorkedTimeIsLoading[0] ? <Spinner type="cycle" /> : alreadyWorkedTimerTime.toTimeString()}</div> : <TimeInputContent currentTimeState={alreadyWorkedTimeInput} setCurrentTimeState={setAlreadyWorkedTimeInput} maxHourValue={null}/>
                         }
                     </div>
                 </div>
             }/>
 
-            <DateTimeInputCard title={t("prognosis.averageStartTime")} currentTimeState={averageStartTime} setCurrentTimeState={setAverageStartTime} />
-            <DateTimeInputCard title={t("prognosis.averageBreakTime")} currentTimeState={averageBreakTime} setCurrentTimeState={setAverageBreakTime} />
+            <TimeInputCard title={translation.translate("prognosis.averageStartTime")} currentTimeState={averageStartTime} setCurrentTimeState={setAverageStartTime} />
+            <TimeInputCard title={translation.translate("prognosis.averageBreakTime")} currentTimeState={averageBreakTime} setCurrentTimeState={setAverageBreakTime} />
 
-            <CheckboxCard title={t("prognosis.workingDays")} checkboxList={workingDays.map((_, i) => t("prognosis.weekDay"+i))}
+            <CheckboxListCard title={translation.translate("prognosis.workingDays")} checkboxList={workingDays.map((_, i) => translation.translate("prognosis.weekDay"+i))}
                 currentState={workingDays.map(workingDay => workingDay[0])}
                           setCurrentState={
                                 (newStateArray) => {
