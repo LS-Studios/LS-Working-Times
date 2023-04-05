@@ -5,10 +5,9 @@ import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import PlanningCard from "./card/PlanningCard";
-import {Card, DateContent, ButtonCard, InputContent, Divider} from "@LS-Studios/components";
+import {Card, DateContent, ButtonCard, InputContent, Divider, useComponentTheme} from "@LS-Studios/components";
 import ContentInWeekCard from "../cards/contentinweek/ContentInWeekCard";
 import {useTranslation} from "@LS-Studios/use-translation";
-import {useComponentTheme} from "@LS-Studios/components/contextproviders/ComponentThemeProvider";
 import {formatDate} from "@LS-Studios/date-helper";
 
 function Planning({setCurrentMenu}) {
@@ -46,10 +45,6 @@ function Planning({setCurrentMenu}) {
                 get(ref(db, "/users/" + user.uid + "/theme")).then((snapshot) => {
                     if (snapshot.exists()) {
                         theme.changeTheme(snapshot.val())
-                        document.body.classList.forEach((v, k, p) => {
-                            document.body.classList.remove(v)
-                        })
-                        document.body.classList.add(theme.getThemeClass("body"))
                     } else {
                         console.log("No data available");
                     }
@@ -136,7 +131,7 @@ function Planning({setCurrentMenu}) {
 
     return (
         <div>
-            <Card cardContent={
+            <Card>
                 <div>
                     <InputContent title={translation.translate("planning.description")} currentState={currentNewPlanInput}
                                setCurrentState={setCurrentNewPlanInput} inputType={3}
@@ -146,10 +141,10 @@ function Planning({setCurrentMenu}) {
 
                     <DateContent title={translation.translate("planning.dateOfPlan")} currentState={currentPlanDate} setCurrentState={setCurrentPlanDate} />
                 </div>
-            } />
+            </Card>
 
-            <div>
-                <ButtonCard title={translation.translate("planning.add")} action={addNewPlan}/>
+            <div style={{marginTop:20}}>
+                <ButtonCard title={translation.translate("planning.add")} clickAction={addNewPlan}/>
 
                 <ContentInWeekCard dataArray={plannings} title={translation.translate("planning.plannings")} noItemMessage={translation.translate("planning.noSavedPlannings")} ItemCard={PlanningCard} selectedDate={selectedPlanningDate} setSelectedDate={setSelectedPlanningDate} isLoading={planningsIsLoading}/>
             </div>

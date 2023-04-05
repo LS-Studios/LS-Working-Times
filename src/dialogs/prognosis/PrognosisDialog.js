@@ -1,11 +1,9 @@
 import "./PrognosisDialog.scss"
 import React, {useEffect, useRef, useState} from "react";
 import {DateTime} from "../../timing/timer/DateTime";
-import {padTo2Digits} from "../../helper/Helper";
-import Dialog from "@LS-Studios/components/dialog/Dialog"
-import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
 import {useTranslation} from "@LS-Studios/use-translation";
-import {Divider, TimeInputContent, ButtonCard} from "@LS-Studios/components";
+import {Divider, TimeInputContent, ButtonCard, useComponentDialog, Dialog} from "@LS-Studios/components";
+import {padTo2Digits} from "@LS-Studios/date-helper";
 
 const PrognosisDialog = ({data}) => {
     const translation = useTranslation()
@@ -39,7 +37,6 @@ const PrognosisDialog = ({data}) => {
     },[])
 
     const close = () => {
-        document.body.style.overflow = "visible"
         dialog.closeDialog("PrognosisDialog")
     }
 
@@ -55,24 +52,22 @@ const PrognosisDialog = ({data}) => {
     }
 
     return (
-        <Dialog title={("dialog.changeTime")} dialogContent={
-            <div className="editSaveTimeDialog">
-                <Divider/>
+        <Dialog title={("dialog.changeTime")} name="PrognosisDialog">
+            <Divider/>
 
-                <h4>{translation.translate("timer.startTime")}</h4>
-                <TimeInputContent currentTimeState={currentStartTime} setCurrentTimeState={setCurrentStartTime}/>
+            <h4>{translation.translate("timer.startTime")}</h4>
+            <TimeInputContent currentTimeState={currentStartTime} setCurrentTimeState={setCurrentStartTime}/>
 
-                <h4>{translation.translate("timer.endTime")}</h4>
-                <TimeInputContent currentTimeState={currentEndTime} setCurrentTimeState={setCurrentEndTime}/>
+            <h4>{translation.translate("timer.endTime")}</h4>
+            <TimeInputContent currentTimeState={currentEndTime} setCurrentTimeState={setCurrentEndTime}/>
 
-                <Divider/>
+            <Divider/>
 
-                <div className="editSaveTimeDialogActionButtons">
-                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
-                    <ButtonCard title={translation.translate("dialog.confirm")} action={updatePrognosis}/>
-                </div>
+            <div className="prognosisDialogActionButtons">
+                <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
+                <ButtonCard title={translation.translate("dialog.confirm")} clickAction={updatePrognosis}/>
             </div>
-        } />
+        </Dialog>
     );
 }
 

@@ -1,15 +1,17 @@
-import React, {useState} from 'react';
+import React from 'react';
 import "./PrognosisCard.scss"
 import ContentCard from "../../cards/contentinweek/content/ContentCard";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
+import {useTranslation} from "@LS-Studios/use-translation";
 
 function PrognosisCard({data, isExpanded}) {
+    const translation = useTranslation()
+
     return (
-        <ContentCard title={t("prognosis.weekDay"+data[0])} content={
+        <ContentCard title={translation.translate("prognosis.weekDay"+data[0])} content={
             data[1] ? <div>
                 <div className="prognosisCardRowTitle">
-                    <div>{t("prognosis.timeToWork")}</div>
-                    <div>{t("prognosis.breakTime")}</div>
+                    <div>{translation.translate("prognosis.timeToWork")}</div>
+                    <div>{translation.translate("prognosis.breakTime")}</div>
                 </div>
 
                 <div className="prognosisCardRowValue">
@@ -21,8 +23,8 @@ function PrognosisCard({data, isExpanded}) {
                     data[2].map((workingDayRange, i) => {
                         return <div key={i}>
                             <div className="prognosisCardRowTitle">
-                                <div>{i === 0 ? t("prognosis.startAt") : t("prognosis.continueAt")}</div>
-                                <div>{i === data[2].length-1 ? t("prognosis.endAt") : t("prognosis.stopAt")}</div>
+                                <div>{i === 0 ? translation.translate("prognosis.startAt") : translation.translate("prognosis.continueAt")}</div>
+                                <div>{i === data[2].length-1 ? translation.translate("prognosis.endAt") : translation.translate("prognosis.stopAt")}</div>
                             </div>
 
                             <div className="prognosisCardRowValue">
@@ -34,8 +36,8 @@ function PrognosisCard({data, isExpanded}) {
                 }
             </div> : <div>
                 <div className="prognosisCardRowTitle">
-                    <div>{t("prognosis.timeToWork")}</div>
-                    <div>{t("prognosis.breakTime")}</div>
+                    <div>{translation.translate("prognosis.timeToWork")}</div>
+                    <div>{translation.translate("prognosis.breakTime")}</div>
                 </div>
 
                 <div className="prognosisCardRowValue">
@@ -44,8 +46,8 @@ function PrognosisCard({data, isExpanded}) {
                 </div>
 
                 <div className="prognosisCardRowTitle">
-                    <div>{t("prognosis.startAt")}</div>
-                    <div>{t("prognosis.endAt")}</div>
+                    <div>{translation.translate("prognosis.startAt")}</div>
+                    <div>{translation.translate("prognosis.endAt")}</div>
                 </div>
 
                 <div className="prognosisCardRowValue">

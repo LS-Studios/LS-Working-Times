@@ -1,9 +1,12 @@
 import React, {useState} from 'react';
 import "./ContentCard.scss"
-import {getThemeClass} from "../../../helper/Theme/Theme";
-import {t} from "../../../helper/LanguageTransaltion/Transalation";
+import {useTranslation} from "@LS-Studios/use-translation";
+import {Divider, Title, useComponentTheme} from "@LS-Studios/components";
 
 const ContentCard = ({content, title, isExpanded, deleteAction, editAction}) => {
+    const translation = useTranslation()
+    const theme = useComponentTheme()
+
     const [expanded, setExpanded] = useState(isExpanded)
 
     const deleteData = (e) => {
@@ -23,21 +26,21 @@ const ContentCard = ({content, title, isExpanded, deleteAction, editAction}) => 
     }
 
     return (
-        <div className={getThemeClass("contentCardBg")} onClick={expand}>
+        <div className={theme.getThemeClass("contentCardBg")} onClick={expand}>
             <div className={expanded ? "contentCardTitleExpanded" : ""}>
-                <div><b>{title}</b></div>
+                <Title value={title} />
             </div>
             <div className={expanded ? "" : "gone"}>
-                <div className={getThemeClass("contentCardDividerTop")}></div>
+                <Divider marginBottom={2}/>
 
                 { content }
 
                 {
                     editAction != null ? <div>
-                        { content != null ? <div className={getThemeClass("contentCardDividerBottom")}></div> : null }
+                        { content != null ? <Divider marginTop={2}/> : null }
                         <div className="contentCardActionBar">
-                            <button className={getThemeClass("contentCardActionButton")} onClick={deleteData}>{t("timer.delete")}</button>
-                            <button className={getThemeClass("contentCardActionButton")} onClick={editData}>{t("timer.edit")}</button>
+                            <button className={theme.getThemeClass("contentCardActionButton")} onClick={deleteData}>{translation.translate("timer.delete")}</button>
+                            <button className={theme.getThemeClass("contentCardActionButton")} onClick={editData}>{translation.translate("timer.edit")}</button>
                         </div>
                     </div> : null
                 }

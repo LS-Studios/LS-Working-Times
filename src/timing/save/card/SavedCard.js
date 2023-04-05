@@ -2,25 +2,17 @@ import React, {useState} from 'react';
 import "./SaveCard.scss"
 import {DateTime} from "../../timer/DateTime";
 import {getDatabase, ref, remove} from "firebase/database"
-import {getAuth} from "firebase/auth";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../../firebase/LSWorkingTimesConfig";
-import {LSWalletConfig} from "../../../firebase/LSWalletConfig";
-import {useDialog} from "use-react-dialog";
-import {t} from "../../../helper/LanguageTransaltion/Transalation";
-import {getThemeClass} from "../../../helper/Theme/Theme";
 import ContentCard from "../../../cards/contentinweek/content/ContentCard";
+import {useComponentDialog, useComponentUserAuth} from "@LS-Studios/components";
+import {useTranslation} from "@LS-Studios/use-translation";
+import {getDateFromString, getDateNameByString} from "@LS-Studios/date-helper";
 
 function SavedCard({data, isExpanded}) {
-    const { dialogs, openDialog } = useDialog();
-
-    const [expanded, setExpanded] = useState(isExpanded)
-
-    const getDateNameByString = (string) => {
-        const splitList = string.split(".")
-        const date = new Date(splitList[2]+"/"+splitList[1]+"/"+splitList[0])
-        return date.toLocaleDateString(t("langKey"), {weekday: 'long'})
-    }
+    const translation = useTranslation()
+    const auth = useComponentUserAuth()
+    const dialog = useComponentDialog();
 
     const getEndTimeString = () => {
         const startDateTime = DateTime.dateTimeFromString(data.startTime)
@@ -31,30 +23,24 @@ function SavedCard({data, isExpanded}) {
         return endDateTime.toTimeString()
     }
 
-    const expand = () => {
-        setExpanded(!expanded)
-    }
-
     const deleteSave = (e) => {
-        openDialog("YesNoDialog", {message:t("dialog.doYouRelayWantToDeleteThisSave"), yesAction:() => {
+        dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouRelayWantToDeleteThisSave"), yesAction:() => {
             const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-            const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
 
-            const auth = getAuth(lsWalletApp)
-            remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.currentUser.uid + "/saved/"+data.id))
+            remove(ref(getDatabase(lsWorkingTimesApp), "/users/" + auth.user.uid + "/saved/"+data.id))
         }})
     }
 
     const editSave = (e) => {
-        openDialog("EditSaveTimeDialog", {save: data})
+        dialog.openDialog("EditSaveTimeDialog", {save: data})
     }
 
     return (
-        <ContentCard title={getDateNameByString(data.date) + " " + t("timer.the") + " " + data.date} content={
+        <ContentCard title={getDateNameByString(data.date, translation.translate("langKey")) + " " + translation.translate("timer.the") + " " + data.date} content={
             <div>
                 <div className="saveCardRowTitle">
-                    <div>{t("timer.startedAt")}</div>
-                    <div>{t("timer.endedAt")}</div>
+                    <div>{translation.translate("timer.startedAt")}</div>
+                    <div>{translation.translate("timer.endedAt")}</div>
                 </div>
 
                 <div className="saveCardRowValue">
@@ -63,8 +49,8 @@ function SavedCard({data, isExpanded}) {
                 </div>
 
                 <div className="saveCardRowTitle">
-                    <div>{t("timer.workedTime")}</div>
-                    <div>{t("timer.breakTime")}</div>
+                    <div>{translation.translate("timer.workedTime")}</div>
+                    <div>{translation.translate("timer.breakTime")}</div>
                 </div>
 
                 <div className="saveCardRowValue">

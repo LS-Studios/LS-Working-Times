@@ -4,9 +4,6 @@ import "./Timing.css"
 import {
     getDatabase,
     ref,
-    onValue,
-    set,
-    push,
     onChildAdded,
     onChildChanged,
     onChildRemoved,
@@ -19,12 +16,15 @@ import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import TimingMenu from "./TimingMenu";
 import {useNavigate} from "react-router-dom";
-import {setLanguage, t} from "../helper/LanguageTransaltion/Transalation";
-import {getThemeClass, setTheme} from "../helper/Theme/Theme";
 import SavedCard from "./save/card/SavedCard";
+import {useTranslation} from "@LS-Studios/use-translation";
+import {useComponentTheme, useComponentUserAuth} from "@LS-Studios/components";
 
 function Timing({setCurrentMenu}) {
+    const translation = useTranslation()
+    const theme = useComponentTheme()
     const navigate = useNavigate()
+    const auth = useComponentUserAuth()
 
     const [savesIsLoading, setSavesIsLoading] = useState(true)
 
@@ -38,15 +38,17 @@ function Timing({setCurrentMenu}) {
         const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
         const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
         const db = getDatabase(lsWorkingTimesApp)
-        const auth = getAuth(lsWalletApp)
+        const dbAuth = getAuth(lsWalletApp)
 
         const unsubscribeArray = []
 
         unsubscribeArray.push(
-            auth.onAuthStateChanged(function(user) {
+            dbAuth.onAuthStateChanged(function(user) {
+                auth.login(user)
+
                 get(ref(db, "/users/"+user.uid+"/language")).then((snapshot) => {
                     if (snapshot.exists()) {
-                        setLanguage(snapshot.val())
+                        theme.changeTheme(snapshot.val())
                     } else {
                         console.log("No data available");
                     }
@@ -56,11 +58,7 @@ function Timing({setCurrentMenu}) {
 
                 get(ref(db, "/users/"+user.uid+"/theme")).then((snapshot) => {
                     if (snapshot.exists()) {
-                        setTheme(snapshot.val())
-                        document.body.classList.forEach((v, k, p) => {
-                            document.body.classList.remove(v)
-                        })
-                        document.body.classList.add(getThemeClass("body"))
+                        theme.changeTheme(snapshot.val())
                     } else {
                         console.log("No data available");
                     }
@@ -138,7 +136,7 @@ function Timing({setCurrentMenu}) {
     return (
         <div>
             <TimingMenu saved={saved} selectedSaveDate={selectedSaveDate} setSavesIsLoading={setSavesIsLoading}/>
-            <ContentInWeekCard dataArray={saved} title={t("timer.saved")} noItemMessage={t("timer.noSaves")} ItemCard={SavedCard} selectedDate={selectedSaveDate} setSelectedDate={setSelectedSaveDate} isLoading={savesIsLoading}/>
+            <ContentInWeekCard dataArray={saved} title={translation.translate("timer.saved")} noItemMessage={translation.translate("timer.noSaves")} ItemCard={SavedCard} selectedDate={selectedSaveDate} setSelectedDate={setSelectedSaveDate} isLoading={savesIsLoading}/>
         </div>
     );
 }

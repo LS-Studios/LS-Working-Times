@@ -7,9 +7,8 @@ import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import {formatDate, getDateFromString, padTo2Digits} from "@LS-Studios/date-helper";
 import {DateTime} from "../../timing/timer/DateTime";
-import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
 import {useTranslation} from "@LS-Studios/use-translation";
-import {ButtonCard, Divider, TimeInputContent, DateContent, Dialog} from "@LS-Studios/components";
+import {ButtonCard, Divider, TimeInputContent, DateContent, Dialog, useComponentDialog} from "@LS-Studios/components";
 
 const EditSaveTimeDialog = ({data}) => {
     const translation = useTranslation()
@@ -36,7 +35,6 @@ const EditSaveTimeDialog = ({data}) => {
     })
 
     const close = () => {
-        document.body.style.overflow = "visible"
         dialog.closeDialog("EditSaveTimeDialog")
     }
 
@@ -86,42 +84,27 @@ const EditSaveTimeDialog = ({data}) => {
             seconds: padTo2Digits(breakTimeDateTime.getSeconds)})
     }, [])
 
-    const DatePickerLayout = (props) => {
-        const open = () => {
-            props.openCalendar()
-        }
-        return (
-            <div style={{width: 250}} onClick={open}>
-                {props.value}
-            </div>
-        )
-    }
-
     return (
-        <Dialog title={translation.translate("dialog.changeTime")} dialogContent={
-            <div className="editSaveTimeDialog">
-                <Divider/>
+        <Dialog title={translation.translate("dialog.changeTime")} name="EditSaveTimeDialog">
+            <div>{translation.translate("timer.date")}</div>
+            <DateContent currentState={selectedDate} setCurrentState={setSelectedDate}/>
 
-                <h4>{translation.translate("timer.date")}</h4>
-                <DateContent currentState={selectedDate} setCurrentState={setSelectedDate}/>
+            <div>{translation.translate("timer.startTime")}</div>
+            <TimeInputContent currentTimeState={startTimeState} setCurrentTimeState={setStartTimeState}/>
 
-                <h4>{translation.translate("timer.startTime")}</h4>
-                <TimeInputContent currentTimeState={startTimeState} setCurrentTimeState={setStartTimeState}/>
+            <div>{translation.translate("timer.endTime")}</div>
+            <TimeInputContent currentTimeState={endTimeState} setCurrentTimeState={setEndTimeState}/>
 
-                <h4>{translation.translate("timer.endTime")}</h4>
-                <TimeInputContent currentTimeState={endTimeState} setCurrentTimeState={setEndTimeState}/>
+            <div>{translation.translate("timer.breakTime")}</div>
+            <TimeInputContent currentTimeState={breakTimeState} setCurrentTimeState={setBreakTimeState}/>
 
-                <h4>{translation.translate("timer.breakTime")}</h4>
-                <TimeInputContent currentTimeState={breakTimeState} setCurrentTimeState={setBreakTimeState}/>
+            <Divider/>
 
-                <Divider/>
-
-                <div className="editSaveTimeDialogActionButtons">
-                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
-                    <ButtonCard title={translation.translate("dialog.confirm")} action={updateSave}/>
-                </div>
+            <div className="editSaveTimeDialogActionButtons">
+                <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
+                <ButtonCard title={translation.translate("dialog.confirm")} clickAction={updateSave}/>
             </div>
-        } />
+        </Dialog>
     );
 }
 

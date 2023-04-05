@@ -13,22 +13,24 @@ import PrognosisDialog from "../dialogs/prognosis/PrognosisDialog";
 function Providers({children}) {
     return (
         <div>
-            <TranslationProvider translationFiles={{de, en}}>
-                <ComponentDialogProvider dialogs={{
-                    "YesNoDialog":YesNoDialog,
-                    "ChangeTimeDialog":ChangeTimeDialog,
-                    "EditSaveTimeDialog":EditSaveTimeDialog,
-                    "ChangeCredentialsDialog":ChangeCredentialsDialog,
-                    "EditPlanningDialog":EditPlanningDialog,
-                    "PrognosisDialog":PrognosisDialog
-                }}>
-                    <ComponentThemeProvider>
-                        <ComponentUserAuthProvider>
-                            { children }
-                        </ComponentUserAuthProvider>
-                    </ComponentThemeProvider>
-                </ComponentDialogProvider>
-            </TranslationProvider>
+            <ComponentThemeProvider>
+                <ComponentUserAuthProvider>
+                    <TranslationProvider translationFiles={{de, en}}>
+                        <ComponentDialogProvider dialogs={{
+                            "YesNoDialog":YesNoDialog,
+                            "ChangeTimeDialog":ChangeTimeDialog,
+                            "EditSaveTimeDialog":EditSaveTimeDialog,
+                            "ChangeCredentialsDialog":ChangeCredentialsDialog,
+                            "EditPlanningDialog":EditPlanningDialog,
+                            "PrognosisDialog":PrognosisDialog
+                        }}>
+                                <ComponentUserAuthProvider>
+                                    { children }
+                                </ComponentUserAuthProvider>
+                            </ComponentDialogProvider>
+                        </TranslationProvider>
+                </ComponentUserAuthProvider>
+            </ComponentThemeProvider>
         </div>
     );
 }

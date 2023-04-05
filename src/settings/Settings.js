@@ -1,22 +1,27 @@
-import React, {Component, useEffect, useState} from 'react';
-import ToggleCard from "../cards/ToggleInput/ToggleCard";
-import ButtonCard from "../cards/Button/ButtonCard";
+import React, {useEffect, useState} from 'react';
 import {initializeApp} from "firebase/app";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {deleteUser, getAuth, signOut} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
-import {useDialog} from "use-react-dialog";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import {get, getDatabase, ref, remove, set} from "firebase/database";
-import {t} from "../helper/LanguageTransaltion/Transalation";
-import {setLanguage} from "../helper/LanguageTransaltion/Transalation";
-import {getThemeClass, setTheme} from "../helper/Theme/Theme";
+import {
+    ButtonCard,
+    ToggleCard,
+    useComponentDialog,
+    useComponentTheme,
+    useComponentUserAuth
+} from "@LS-Studios/components";
+import {useTranslation} from "@LS-Studios/use-translation";
 
 const Settings = ({ setCurrentMenu }) => {
     const [currentLanguage, setCurrentLanguage] = useState(-1)
     const [currentTheme, setCurrentTheme] = useState(-1)
 
-    const { dialogs, openDialog } = useDialog();
+    const dialog = useComponentDialog();
+    const translation = useTranslation();
+    const theme = useComponentTheme();
+    const auth = useComponentUserAuth()
 
     const navigate = useNavigate()
 
@@ -84,11 +89,11 @@ const Settings = ({ setCurrentMenu }) => {
         if (auth.currentUser != null) {
             switch (currentLanguage) {
                 case 0:
-                    setLanguage("de")
+                    translation.changeLanguage("de")
                     set(ref(db, "/users/" + auth.currentUser.uid + "/language"), "de")
                     break
                 case 1:
-                    setLanguage("en")
+                    translation.changeLanguage("en")
                     set(ref(db, "/users/" + auth.currentUser.uid + "/language"), "en")
                     break
             }
@@ -104,19 +109,11 @@ const Settings = ({ setCurrentMenu }) => {
         if (auth.currentUser != null) {
             switch (currentTheme) {
                 case 0:
-                    setTheme("bright")
-                    document.body.classList.forEach((v, k, p) => {
-                        document.body.classList.remove(v)
-                    })
-                    document.body.classList.add(getThemeClass("body"))
+                    theme.changeTheme("bright")
                     set(ref(db, "/users/" + auth.currentUser.uid + "/theme"), "bright")
                     break
                 case 1:
-                    setTheme("dark")
-                    document.body.classList.forEach((v, k, p) => {
-                        document.body.classList.remove(v)
-                    })
-                    document.body.classList.add(getThemeClass("body"))
+                    theme.changeTheme("dark")
                     set(ref(db, "/users/" + auth.currentUser.uid + "/theme"), "dark")
                     break
             }
@@ -125,28 +122,27 @@ const Settings = ({ setCurrentMenu }) => {
 
     const logout = () => {
         const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
-        const auth = getAuth(lsWalletApp)
+        const dbAuth = getAuth(lsWalletApp)
 
-        signOut(auth)
+        auth.logout()
+        signOut(dbAuth)
     }
 
     const editAccount = () => {
-        openDialog("ChangeCredentialsDialog")
+        dialog.openDialog("ChangeCredentialsDialog")
     }
 
     const resetData = () => {
-        openDialog("YesNoDialog", {message:t("dialog.doYouReallyWantToDeleteAllData"), yesAction:() => {
+        dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouReallyWantToDeleteAllData"), yesAction:() => {
             const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
             const db = getDatabase(lsWorkingTimesApp)
-            const app = initializeApp(LSWalletConfig, "LS-Wallet")
-            const auth = getAuth(app)
 
             remove(ref(db, "/users/"+auth.currentUser.uid+"/saved"))
         }})
     }
 
     const deleteAccount = () => {
-        openDialog("YesNoDialog", {message:t("dialog.doYouReallyWantToDeleteThisAccount"), yesAction:() => {
+        dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouReallyWantToDeleteThisAccount"), yesAction:() => {
             const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
             const db = getDatabase(lsWorkingTimesApp)
             const app = initializeApp(LSWalletConfig, "LS-Wallet")
@@ -158,12 +154,12 @@ const Settings = ({ setCurrentMenu }) => {
 
     return (
         <div>
-            <ToggleCard title={t("settings.language")} toggleList={[t("settings.german"), t("settings.english")]} currentState={currentLanguage} setCurrentState={setCurrentLanguage}/>
-            <ToggleCard title={t("settings.colorTheme")} toggleList={[t("settings.bright"), t("settings.dark")]} currentState={currentTheme} setCurrentState={setCurrentTheme}/>
-            <ButtonCard title={t("settings.logout")} action={logout}/>
-            <ButtonCard title={t("settings.editAccount")} action={editAccount}/>
-            <ButtonCard title={t("settings.resetSaves")} action={resetData}/>
-            <ButtonCard title={t("settings.deleteAccount")} action={deleteAccount}/>
+            <ToggleCard title={translation.translate("settings.language")} toggleList={[translation.translate("settings.german"), translation.translate("settings.english")]} currentState={currentLanguage} setCurrentState={setCurrentLanguage}/>
+            <ToggleCard title={translation.translate("settings.colorTheme")} toggleList={[translation.translate("settings.bright"), translation.translate("settings.dark")]} currentState={currentTheme} setCurrentState={setCurrentTheme}/>
+            <ButtonCard title={translation.translate("settings.logout")} clickAction={logout}/>
+            <ButtonCard title={translation.translate("settings.editAccount")} clickAction={editAccount}/>
+            <ButtonCard title={translation.translate("settings.resetSaves")} clickAction={resetData}/>
+            <ButtonCard title={translation.translate("settings.deleteAccount")} clickAction={deleteAccount}/>
         </div>
     );
 }

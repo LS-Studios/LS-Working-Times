@@ -1,14 +1,15 @@
 import React from 'react';
-import {useDialog} from "use-react-dialog";
-import {t} from "../../../helper/LanguageTransaltion/Transalation";
 import ContentCard from "../../../cards/contentinweek/content/ContentCard";
-import {padTo2Digits} from "../../../helper/Helper";
+import {useComponentDialog} from "@LS-Studios/components";
+import {padTo2Digits} from "@LS-Studios/date-helper";
+import {useTranslation} from "@LS-Studios/use-translation";
 
 const WorkingDayRangeCard = ({workingDayIndex, rangeIndex, workingDays,  setWorkingDays, isExpanded=false}) => {
-    const { dialogs, openDialog } = useDialog();
+    const translation = useTranslation()
+    const dialog = useComponentDialog()
 
     const deleteRange = (e) => {
-        openDialog("YesNoDialog", {message:t("dialog.doYouRelayWantToDeleteThisTimeRange"), yesAction:() => {
+        dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouRelayWantToDeleteThisTimeRange"), yesAction:() => {
                 setWorkingDays(current => {
                     let newWorkingDays = JSON.parse(JSON.stringify(current));
                     newWorkingDays[workingDayIndex][2].splice(rangeIndex, 1)
@@ -18,7 +19,7 @@ const WorkingDayRangeCard = ({workingDayIndex, rangeIndex, workingDays,  setWork
     }
 
     const editRange = (e) => {
-        openDialog("PrognosisDialog", {
+        dialog.openDialog("PrognosisDialog", {
             workingDayIndex: workingDayIndex,
             rangeIndex: rangeIndex,
             workingDays: workingDays,

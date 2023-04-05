@@ -1960,21 +1960,30 @@
   resolved "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@LS-Studios/components@file:../ls-react-components/src/components":
-  version "0.0.521"
-  resolved "file:../ls-react-components/src/components"
+"@LS-Studios/components@file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz":
+  version "0.0.522"
+  resolved "file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz"
+  integrity sha512-NY/Q1pbGkX2sWV6Q2FwtqUPz0IiFmWRlWgfV1HzYduOM6odkmF6XMfikpMaW5lwCVUavcvD9BwVzM5Dw3u2bAA==
 
-"@LS-Studios/date-helper@file:../ls-react-components/src/datehelper":
+"@LS-Studios/date-helper@file:../ls-react-components/LS-Library/datehelper/LS-Studios-date-helper-0.0.3.tgz":
   version "0.0.3"
-  resolved "file:../ls-react-components/src/datehelper"
+  resolved "file:../ls-react-components/LS-Library/datehelper/LS-Studios-date-helper-0.0.3.tgz"
+  integrity sha512-k1v3Zw3dImcDnAXK4yFG6HP7dpNpWz/6ZuKs4zcAQv+SbRacDluOQvANmVbmhW3a2r+rDHR9ucJRgE54X4st6g==
 
-"@LS-Studios/use-translation@file:../ls-react-components/src/usetranslation":
+"@LS-Studios/use-local-storage@file:../ls-react-components/LS-Library/uselocalstorage/LS-Studios-use-local-storage-0.0.3.tgz":
+  version "0.0.3"
+  resolved "file:../ls-react-components/LS-Library/uselocalstorage/LS-Studios-use-local-storage-0.0.3.tgz"
+  integrity sha512-cHHPHyDl1PxxHGBhsYE4fOwJn5hLTU7lz1yLu0p2i4eWBcNRaNN8jyWoWExUVh2Q9SvQdZVdiXgodJb3STWiXA==
+
+"@LS-Studios/use-translation@file:../ls-react-components/LS-Library/usetranslation/LS-Studios-use-translation-0.0.31.tgz":
   version "0.0.31"
-  resolved "file:../ls-react-components/src/usetranslation"
+  resolved "file:../ls-react-components/LS-Library/usetranslation/LS-Studios-use-translation-0.0.31.tgz"
+  integrity sha512-UF9I5rKkoqV4JZlEyrZ/c2SfKcyJ/TAV/ZvPiQj749eZwTUct2+tvoFP2ELrVDhPvPsCgxYUVyKWJDG14Zm5QQ==
 
-"@LS-Studios/use-user-auth@file:../ls-react-components/src/useuserauth":
+"@LS-Studios/use-user-auth@file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz":
   version "0.0.7"
-  resolved "file:../ls-react-components/src/useuserauth"
+  resolved "file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz"
+  integrity sha512-0aMEIS9TBjvVyoj+a4SOWHeyZaebEac7+iGlxwwePUigmoW3jDjMeGWqqvUB27Ocu09504Gjz0vH0rEUpPU/qg==
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"

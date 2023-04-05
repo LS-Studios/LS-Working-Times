@@ -10,6 +10,8 @@
     align-items: center;
     justify-content: center;
     flex-direction: row;
+    width: 271px;
+    gap: 10px;
 }
 
 .timingMenuButtons {

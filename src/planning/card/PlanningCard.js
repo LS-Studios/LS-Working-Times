@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import "./PlanningCard.scss";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
@@ -6,9 +6,9 @@ import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import {getDatabase, ref, remove} from "firebase/database";
 import ContentCard from "../../cards/contentinweek/content/ContentCard";
-import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
 import {useTranslation} from "@LS-Studios/use-translation";
 import {getDateNameByString} from "@LS-Studios/date-helper";
+import {useComponentDialog} from "@LS-Studios/components";
 
 const PlanningCard = ({data, isExpanded=false}) => {
     const translation = useTranslation()

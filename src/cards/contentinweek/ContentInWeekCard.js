@@ -1,15 +1,21 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {IoCaretBack, IoCaretForward} from "react-icons/io5";
 import "./ContentInWeekCard.scss"
-import "../DateTime/DateTimePicker.scss"
 import {getStartOfWeekDayValue, formatDate, getStartOfWeek, getEndOfWeek, getDateFromString} from "@LS-Studios/date-helper"
-import {useComponentTheme} from "@LS-Studios/components/contextproviders/ComponentThemeProvider";
-import {DateContent, Spinner} from "@LS-Studios/components";
+import {DateContent, Spinner, Title, useComponentTheme} from "@LS-Studios/components";
 
 function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedDate, setSelectedDate, isLoading}) {
     const theme = useComponentTheme()
 
-    const datePickerRef = useRef()
+    const [selectedDateText, setSelectedDateText] = useState("")
+
+    useEffect(() => {
+        setSelectedDateText(
+            formatDate(
+                getStartOfWeek(selectedDate)) + " - " + formatDate(getEndOfWeek(selectedDate)
+            )
+        )
+    }, [selectedDate])
 
     const getSavesOfPreviousWeek = () => {
         setSelectedDate(new Date(selectedDate.setDate(getStartOfWeekDayValue(selectedDate)-7)))
@@ -19,27 +25,14 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
         setSelectedDate(new Date(selectedDate.setDate(getStartOfWeekDayValue(selectedDate)+7)))
     }
 
-    const getWeekRangeString = () => {
-        return formatDate(getStartOfWeek(selectedDate)) + " - " + formatDate(getEndOfWeek(selectedDate))
-    }
-
-    const DatePickerLayout = (props) => {
-        const open = () => {
-            props.openCalendar()
-        }
-        return (
-            <div onClick={open}>
-                {getWeekRangeString()}
-            </div>
-        )
-    }
-
     return (
         <div className={theme.getThemeClass("contentInWeekCard")}>
-            <div className="contentInWeekCardTitle"><b>{title}</b></div>
+            <Title value={title} />
             <div className="contentInWeekCardSelect">
                 <IoCaretBack className={theme.getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
-                <DateContent currentState={selectedDate} setCurrentState={setSelectedDate} />
+                <div style={{width:"206px"}}>
+                    <DateContent useBackgroundColor={false} customSelectedText={selectedDateText} currentState={selectedDate} setCurrentState={setSelectedDate} />
+                </div>
                 <IoCaretForward className={theme.getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
             </div>
             {

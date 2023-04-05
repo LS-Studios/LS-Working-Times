@@ -1,19 +1,24 @@
-import "./ChangeTimeDialog.css"
+import "./ChangeTimeDialog.scss"
 import React, {useEffect, useState} from "react";
 import {getDatabase, ref, set, get} from "firebase/database";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
-import {padTo2Digits} from "../../helper/Helper";
 import {DateTime} from "../../timing/timer/DateTime";
-import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider";
-import {useTranslation} from "@LS-Studios/use-translation/TranslationProvider";
-import Dialog from "@LS-Studios/components/";
-import DateTimeInput from "@LS-Studios/components/";
-import DropdownContent from "@LS-Studios/components/";
-import ButtonCard from "@LS-Studios/components/";
+import {ButtonCard, Dialog, DropdownContent, TimeInputContent, useComponentDialog} from "@LS-Studios/components";
+import {useTranslation} from "@LS-Studios/use-translation";
+import {padTo2Digits} from "@LS-Studios/date-helper";
+import * as PropTypes from "prop-types";
 
+function DateTimeInput(props) {
+    return null;
+}
+
+DateTimeInput.propTypes = {
+    setCurrentTimeState: PropTypes.func,
+    currentTimeState: PropTypes.shape({hours: PropTypes.string, seconds: PropTypes.string, minutes: PropTypes.string})
+};
 const ChangeTimeDialog = ({ data }) => {
     const translation = useTranslation()
     const dialog = useComponentDialog();
@@ -23,12 +28,10 @@ const ChangeTimeDialog = ({ data }) => {
         minutes: "00",
         seconds: "00"
     })
-    const [state, setState] = useState(null)
 
     const [originalTime, setOriginalTime] = useState(new DateTime())
 
     const close = () => {
-        document.body.style.overflow = "visible"
         dialog.closeDialog("ChangeTimeDialog")
     }
 
@@ -87,18 +90,16 @@ const ChangeTimeDialog = ({ data }) => {
     }, [])
 
     return (
-        <Dialog title={translation.translate("dialog.changeTime")} dialogContent={
-            <div>
-                <DateTimeInput currentTimeState={currentTime} setCurrentTimeState={setCurrentTime} />
+        <Dialog title={translation.translate("dialog.changeTime")} name="ChangeTimeDialog">
+            <DateTimeInput currentTimeState={currentTime} setCurrentTimeState={setCurrentTime} />
 
-                <DropdownContent items={["A", "B", "C"]} currentState={state} setCurrentState={setState}/>
+            <TimeInputContent currentTimeState={currentTime} setCurrentTimeState={setCurrentTime}/>
 
-                <div className="changeTimeActionButtons">
-                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
-                    <ButtonCard title={translation.translate("dialog.confirm")} action={changeTime}/>
-                </div>
+            <div className="changeTimeActionButtons">
+                <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
+                <ButtonCard title={translation.translate("dialog.confirm")} clickAction={changeTime}/>
             </div>
-        } />
+        </Dialog>
     );
 }
 

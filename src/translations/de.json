@@ -97,6 +97,7 @@
   "dialog": {
     "changeTime": "Zeit ändern",
     "changePlan": "Plan ändern",
+    "changeCredentials": "Kontodaten ändern",
     "cancel": "Abbrechen",
     "confirm": "Bestätigen",
     "yes": "Ja",

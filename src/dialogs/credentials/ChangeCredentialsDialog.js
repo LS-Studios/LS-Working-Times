@@ -5,10 +5,9 @@ import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth, signInWithEmailAndPassword, updateEmail, updatePassword, EmailAuthProvider} from "firebase/auth";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {getDatabase, get, ref, set} from "firebase/database";
-import {validateEmail, validatePassword} from "@LS-Studios/use-user-auth/UserAuthHelper";
-import {useComponentDialog} from "@LS-Studios/components/contextproviders/ComponentDialogProvider"
 import {useTranslation} from "@LS-Studios/use-translation";
-import {ButtonCard, InputContent, Dialog} from "@LS-Studios/components";
+import {ButtonCard, InputContent, Dialog, useComponentDialog, useComponentTheme} from "@LS-Studios/components";
+import {validateEmail, validatePassword} from "@LS-Studios/use-user-auth";
 
 const ChangeCredentialsDialog = ({data}) => {
     const translation = useTranslation()
@@ -47,7 +46,6 @@ const ChangeCredentialsDialog = ({data}) => {
     }, [])
 
     const close = () => {
-        document.body.style.overflow = "visible"
         dialog.closeDialog("ChangeCredentialsDialog")
     }
 
@@ -97,17 +95,17 @@ const ChangeCredentialsDialog = ({data}) => {
     }
 
     return (
-        <Dialog title="" dialogContent={
-            <div>
-                <InputContent title={translation.translate("login.email")} type="email" useDivider={false} currentState={currentEmail} setCurrentState={setCurrentEmail}/>
-                <InputContent title={translation.translate("login.password")} type="password" useDivider={false} currentState={currentPassword} setCurrentState={setCurrentPassword}/>
-                { error != "" ? <div className="loginErrorText">{error}</div> : null }
-                <div className="yesNoDialogButtons">
-                    <ButtonCard title={translation.translate("dialog.cancel")} action={close}/>
-                    <ButtonCard title={translation.translate("dialog.confirm")} action={action}/>
-                </div>
+        <Dialog title={translation.translate("dialog.changeCredentials")} name="ChangeCredentialsDialog">
+            <InputContent title={translation.translate("login.email")} type="email" useDivider={false} currentState={currentEmail} setCurrentState={setCurrentEmail}/>
+            <InputContent title={translation.translate("login.password")} type="password" useDivider={false} currentState={currentPassword} setCurrentState={setCurrentPassword}/>
+
+            { error != "" ? <div className="loginErrorText">{error}</div> : null }
+
+            <div className="yesNoDialogButtons">
+                <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
+                <ButtonCard title={translation.translate("dialog.confirm")} clickAction={action}/>
             </div>
-        } />
+        </Dialog>
     );
 }
 

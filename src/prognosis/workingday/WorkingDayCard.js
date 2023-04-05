@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import "./WorkingDayCard.scss"
-import {getThemeClass} from "../../helper/Theme/Theme";
 import {BsPlusLg} from "react-icons/bs";
-import Card from "../../cards/Card";
-import ToggleContent from "../../cards/ToggleInput/ToggleContent";
-import {t} from "../../helper/LanguageTransaltion/Transalation";
 import WorkingDayRangeCard from "./card/WorkingDayRangeCard";
 import {DateTime} from "../../timing/timer/DateTime";
+import {Card, Divider, ToggleContent, useComponentTheme} from "@LS-Studios/components";
+import {useTranslation} from "@LS-Studios/use-translation";
 
 function WorkingDayCard({day, workingDays, setWorkingDays}) {
+    const translation = useTranslation()
+    const theme = useComponentTheme()
+
     const addRange = () => {
         setWorkingDays(current => {
             let newWorkingDays = JSON.parse(JSON.stringify(current))
@@ -23,18 +24,18 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
         <Card cardContent={
             <div className="workingDayCardHolder">
                 <div className='workingDayCardTitle'>
-                    <b>{t("prognosis.weekDay"+day[1])}</b>
+                    <b>{translation.translate("prognosis.weekDay"+day[1])}</b>
 
-                    <div className={getThemeClass("divider")}/>
+                    <div className={theme.getThemeClass("divider")}/>
 
                     <ToggleContent currentState={currentTimeType} setCurrentState={(newState) => {
                         setCurrentTimeType(newState)
                         workingDays[day[1]][3] = newState
-                    }} toggleList={[t("prognosis.undefined"), t("prognosis.defined")]}/>
+                    }} toggleList={[translation.translate("prognosis.undefined"), translation.translate("prognosis.defined")]}/>
 
                     {
                         currentTimeType == 1 ? <div>
-                            <div className={getThemeClass("divider")}/>
+                            <Divider />
 
                             <div className="workingDayCardRangeList">
                                 {
@@ -44,9 +45,9 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
                                 }
                             </div>
 
-                            <div className={getThemeClass("divider")}/>
+                            <Divider />
 
-                            <BsPlusLg className={getThemeClass("workingDayCardAddButton")} onClick={addRange}/>
+                            <BsPlusLg className={theme.getThemeClass("workingDayCardAddButton")} onClick={addRange}/>
                         </div> : null
                     }
                 </div>

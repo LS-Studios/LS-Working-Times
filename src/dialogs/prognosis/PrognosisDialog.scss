@@ -1,4 +1,4 @@
-.editSaveTimeDialogActionButtons {
+.prognosisDialogActionButtons {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -6,48 +6,5 @@
     width: 265px;
     font-size: 18px;
     margin-top: 5px;
-}
-
-.editSaveTimeDialog {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-
-.editSaveTimeDialog > h4 {
-    margin: 5px -2px -2px;
-}
-
-.editSaveTimeDialogDatePicker {
-    border: 0;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-.darkEditSaveTimeDialogDatePicker {
-    @extend .editSaveTimeDialogDatePicker;
-    background-color: #2C3A47;
-    color: #CCCCCC;
-}
-
-.brightEditSaveTimeDialogDatePicker {
-    @extend .editSaveTimeDialogDatePicker;
-    background-color: #BCBCBC;
-    color: #353535;
-}
-
-.editSaveTimeDialogDivider {
-    width: 271px;
-    margin-top: 8px;
-}
-
-.darkEditSaveTimeDialogDivider {
-    @extend .editSaveTimeDialogDivider;
-    border-top: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.brightEditSaveTimeDialogDivider {
-    @extend .editSaveTimeDialogDivider;
-    border-top: 2px solid rgba(0, 0, 0, 0.1);
+    gap: 10px;
 }

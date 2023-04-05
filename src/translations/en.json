@@ -98,6 +98,7 @@
   "dialog": {
     "changeTime": "Change time",
     "changePlan": "Change plan",
+    "changeCredentials": "Change credentials",
     "cancel": "Cancel",
     "confirm": "Confirm",
     "yes": "Yes",

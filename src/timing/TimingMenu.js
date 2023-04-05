@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import ValueCard from "../cards/Value/ValueCard";
-import {formatDate, getDateFromString, getDateWithoutTime, getEndOfWeek, getStartOfWeek} from "../helper/Helper";
 import {DateTime} from "./timer/DateTime";
 import Timer from "./timer/Timer";
-import ButtonCard from "../cards/Button/ButtonCard";
 import "./TimingMenu.css"
 import {
     getDatabase,
@@ -13,21 +10,21 @@ import {
     push,
     get
 } from "firebase/database"
-import {useDialog} from "use-react-dialog";
 import {useNavigate} from "react-router-dom";
 import {TimerClass} from "./timer/TimerClass";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
-import ClipLoader from "react-spinners/ClipLoader";
-import {t} from "../helper/LanguageTransaltion/Transalation";
-import {getCurrentTheme, getThemeClass} from "../helper/Theme/Theme";
-import {loadingSpinner} from "../spinner/LoadingSpinner";
 import {useInterval} from "../helper/UseInterval";
+import {ButtonCard, Spinner, useComponentDialog, useComponentTheme, ValueCard} from "@LS-Studios/components";
+import {useTranslation} from "@LS-Studios/use-translation";
+import {formatDate, getDateFromString, getDateWithoutTime, getEndOfWeek, getStartOfWeek} from "@LS-Studios/date-helper";
 
 function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
-    const { dialogs, openDialog } = useDialog();
+    const translation = useTranslation()
+    const theme = useComponentTheme()
+    const dialog = useComponentDialog();
 
     const navigate = useNavigate()
 
@@ -284,34 +281,30 @@ function TimingMenu({saved, selectedSaveDate, setSavesIsLoading}) {
     return (
         <div className="timingMenu">
             <div className="timingMenuTimers">
-                <ValueCard title={t("timer.date")} value={startTimeIsLoading ? loadingSpinner : (startTime != null ? formatDate(startTime) : t("timer.notStarted"))}/>
-                <ValueCard title={t("timer.startTime")} value={startTimeIsLoading ? loadingSpinner : (startTime != null ? startTime.toLocaleTimeString("de") : t("timer.notStarted"))} onClick={() => {
-                    if (startTime != null) {
-                        openDialog("ChangeTimeDialog", {
-                            value: DateTime.dateTimeFromDate(startTime).toTimeString(),
-                            type: "start-time"
-                        })
-                    }
-                }} clickable={startTime != null}/>
+                <ValueCard title={translation.translate("timer.date")} value={startTimeIsLoading ? <Spinner type="cycle" /> : (startTime != null ? formatDate(startTime) : translation.translate("timer.notStarted"))}/>
+                <ValueCard title={translation.translate("timer.startTime")} value={startTimeIsLoading ? <Spinner type="cycle" /> : (startTime != null ? startTime.toLocaleTimeString("de") : translation.translate("timer.notStarted"))} clickAction={startTime != null ? () => {
+                    dialog.openDialog("ChangeTimeDialog", {
+                        value: DateTime.dateTimeFromDate(startTime).toTimeString(),
+                        type: "start-time"
+                    })
+                } : null}/>
             </div>
 
             <div className="timingMenuTimers">
-                <Timer name={t("timer.worked")} timer={workTimer} isLoading={timersAreLoading}/>
-                <Timer name={t("timer.break")} timer={breakTimer} clickable={startTime != null} isLoading={timersAreLoading} onClick={() => {
-                    if (startTime != null) {
-                        openDialog("ChangeTimeDialog", {
-                            value: new DateTime(breakTime.hours, breakTime.minutes, breakTime.seconds).toTimeString(),
-                            type: "break-time"
-                        })
-                    }
-                }}/>
+                <Timer name={translation.translate("timer.worked")} timer={workTimer} isLoading={timersAreLoading}/>
+                <Timer name={translation.translate("timer.break")} timer={breakTimer} isLoading={timersAreLoading} clickAction={startTime != null ? () => {
+                    dialog.openDialog("ChangeTimeDialog", {
+                        value: new DateTime(breakTime.hours, breakTime.minutes, breakTime.seconds).toTimeString(),
+                        type: "break-time"
+                    })
+                } : null}/>
             </div>
 
             <div className="timingMenuButtons">
-                <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : null} title={workTimer.getIsRunning ? t("timer.stopWorking") : t("timer.startWorking")} action={toggleOverallTimer}/>
-                <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : null} title={breakTimer.getIsRunning ? t("timer.stopBreak") : t("timer.startBreak")} action={toggleBreakTimer}/>
-                <ButtonCard className={startTimeIsLoading ? getThemeClass("disabled") : (startTime != null ? getThemeClass("buttonCard") : getThemeClass("disabled"))} title={t("timer.resetAndSave")} action={startTime != null ? resetTimers : function (){}}/>
-                <ValueCard className={getThemeClass("singleLineValueCard")} title={t("timer.workedTimeThisWeek")} value={timersAreLoading ? loadingSpinner : getWorkedTimeInCurrentWeek()}/>
+                <ButtonCard disabled={startTimeIsLoading} title={workTimer.getIsRunning ? translation.translate("timer.stopWorking") : translation.translate("timer.startWorking")} clickAction={toggleOverallTimer}/>
+                <ButtonCard disabled={startTimeIsLoading || startTime == null} title={breakTimer.getIsRunning ? translation.translate("timer.stopBreak") : translation.translate("timer.startBreak")} clickAction={toggleBreakTimer}/>
+                <ButtonCard disabled={startTimeIsLoading || startTime == null} title={translation.translate("timer.resetAndSave")} clickAction={startTime != null ? resetTimers : function (){}}/>
+                <ValueCard className={theme.getThemeClass("singleLineValueCard")} title={translation.translate("timer.workedTimeThisWeek")} value={timersAreLoading ? <Spinner type="cycle"/> : getWorkedTimeInCurrentWeek()}/>
             </div>
         </div>
     );

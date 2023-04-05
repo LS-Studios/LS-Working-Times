@@ -1,16 +1,13 @@
 import "./Timer.css"
-import ValueCard from "../../cards/Value/ValueCard";
-import ClipLoader from "react-spinners/ClipLoader";
 import {DateTime} from "./DateTime";
 import React from "react";
-import {getCurrentTheme} from "../../helper/Theme/Theme";
-import {loadingSpinner} from "../../spinner/LoadingSpinner";
+import {Spinner, ValueCard} from "@LS-Studios/components";
 
-function Timer({name, timer, isLoading, clickable, onClick}) {
+function Timer({name, timer, isLoading, clickAction}) {
     return (
-        <ValueCard title={name} value={isLoading ? loadingSpinner : (
+        <ValueCard title={name} value={isLoading ? <Spinner type="cycle"/> : (
             new DateTime(timer.getHours, timer.getMinutes, timer.getSeconds).toTimeString())
-        } clickable={clickable} onClick={onClick}/>
+        } clickAction={clickAction}/>
     );
 }
 
