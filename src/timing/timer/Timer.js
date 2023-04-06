@@ -5,7 +5,7 @@ import {Spinner, ValueCard} from "@LS-Studios/components";
 
 function Timer({name, timer, isLoading, clickAction}) {
     return (
-        <ValueCard title={name} value={isLoading ? <Spinner type="cycle"/> : (
+        <ValueCard title={name} value={isLoading ? <Spinner type="dots"/> : (
             new DateTime(timer.getHours, timer.getMinutes, timer.getSeconds).toTimeString())
         } clickAction={clickAction}/>
     );

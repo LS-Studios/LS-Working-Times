@@ -20,7 +20,7 @@ import {
     TimeInputContent,
     TimeInputCard,
     CheckboxListCard,
-    Title, Divider
+    Title, Divider, DropdownContent
 } from "@LS-Studios/components"
 import {getDateFromString, getEndOfWeek, getStartOfWeek} from "@LS-Studios/date-helper"
 
@@ -322,11 +322,9 @@ function Prognosis({setCurrentMenu}) {
 
     return (
         <div className="prognosis">
-            <Card>
-                <Title value={translation.translate("prognosis.menuName")} />
-                <Divider />
+            <Card title={translation.translate("prognosis.menuName")}>
                 {
-                    alreadyWorkedTimeIsLoading[0] ? <Spinner type='cycle'/> :
+                    alreadyWorkedTimeIsLoading[0] ? <Spinner type='dots'/> :
                         <div className="prognosisCard">
                             {
                                 calculatedState.length > 0 ? calculatedState.sort((a,b) => { return a[0]-b[0] }).map((calculated, i) => {
@@ -339,12 +337,27 @@ function Prognosis({setCurrentMenu}) {
 
             <InputCard title={translation.translate("prognosis.hoursPerWeek")} inputType={1} focusOnClick={true} currentState={hoursPerWeekInput} setCurrentState={setHoursPerWeekInput}/>
 
-            <Card>
-                <ToggleContent title={translation.translate("prognosis.alreadyWorked")} currentState={alreadyWorkedState} setCurrentState={setAlreadyWorkedState} toggleList={[translation.translate("prognosis.current"), translation.translate("prognosis.custom")]}/>
+            <Card title={translation.translate("prognosis.alreadyWorked")}>
+                <DropdownContent items={[translation.translate("prognosis.current"), translation.translate("prognosis.custom")]} currentState={alreadyWorkedState} setCurrentState={setAlreadyWorkedState}/>
+
                 <Divider />
+
                 <div className="prognosisAlreadyWorkedToggle">
                     {
-                        alreadyWorkedState == 0 ? <div>{alreadyWorkedTimeIsLoading[0] ? <Spinner type="cycle" /> : alreadyWorkedTimerTime.toTimeString()}</div> : <TimeInputContent currentTimeState={alreadyWorkedTimeInput} setCurrentTimeState={setAlreadyWorkedTimeInput} maxHourValue={null}/>
+                        alreadyWorkedState.pos === 0 ?
+                            <div style={{marginTop:10}}>
+                                {
+                                    alreadyWorkedTimeIsLoading[0] ?
+                                    <div style={{display: "flex", justifyContent:"center"}}>
+                                        <Spinner type="dots" />
+                                    </div> :
+                                    <b>{alreadyWorkedTimerTime.toTimeString()}</b>
+                                }
+                            </div> :
+                            <TimeInputContent
+                                currentTimeState={alreadyWorkedTimeInput}
+                                setCurrentTimeState={setAlreadyWorkedTimeInput}
+                                maxHourValue={null}/>
                     }
                 </div>
             </Card>

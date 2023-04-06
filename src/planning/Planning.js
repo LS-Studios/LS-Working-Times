@@ -132,20 +132,18 @@ function Planning({setCurrentMenu}) {
     return (
         <div>
             <Card>
-                <div>
-                    <InputContent title={translation.translate("planning.description")} currentState={currentNewPlanInput}
-                               setCurrentState={setCurrentNewPlanInput} inputType={3}
-                               placeholder={translation.translate("planning.placeholder")}/>
+                <InputContent title={translation.translate("planning.description")} currentState={currentNewPlanInput}
+                              setCurrentState={setCurrentNewPlanInput} inputType={3}
+                              placeholder={translation.translate("planning.placeholder")}/>
 
-                    <Divider />
+                <Divider />
 
-                    <DateContent title={translation.translate("planning.dateOfPlan")} currentState={currentPlanDate} setCurrentState={setCurrentPlanDate} />
-                </div>
+                <DateContent title={translation.translate("planning.dateOfPlan")} currentState={currentPlanDate} setCurrentState={setCurrentPlanDate} />
             </Card>
 
-            <div style={{marginTop:20}}>
-                <ButtonCard title={translation.translate("planning.add")} clickAction={addNewPlan}/>
+            <ButtonCard title={translation.translate("planning.add")} clickAction={addNewPlan}/>
 
+            <div style={{marginTop:10}}>
                 <ContentInWeekCard dataArray={plannings} title={translation.translate("planning.plannings")} noItemMessage={translation.translate("planning.noSavedPlannings")} ItemCard={PlanningCard} selectedDate={selectedPlanningDate} setSelectedDate={setSelectedPlanningDate} isLoading={planningsIsLoading}/>
             </div>
         </div>

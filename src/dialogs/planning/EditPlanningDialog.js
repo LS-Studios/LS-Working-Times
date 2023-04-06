@@ -1,15 +1,22 @@
 import "./EditPlanningDialog.scss"
-import React, {useEffect, useRef, useState} from "react";
-import {getDatabase, ref, set, get} from "firebase/database";
+import React, {useEffect, useState} from "react";
+import {getDatabase, ref, set} from "firebase/database";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import {formatDate, getDateFromString} from "@LS-Studios/date-helper";
 import {useTranslation} from "@LS-Studios/use-translation"
-import {ButtonCard, Divider, TimeInputContent, InputContent, Dialog, useComponentDialog} from "@LS-Studios/components";
+import {
+    ButtonCard,
+    Divider,
+    InputContent,
+    Dialog,
+    useComponentDialog,
+    DateContent
+} from "@LS-Studios/components";
 
-const EditSaveTimeDialog = ({data}) => {
+const EditPlanningDialog = ({data}) => {
     const translation = useTranslation()
     const dialog = useComponentDialog();
 
@@ -22,7 +29,7 @@ const EditSaveTimeDialog = ({data}) => {
     }, [])
 
     const close = () => {
-        dialog.closeDialog("EditSaveTimeDialog")
+        dialog.closeDialog("EditPlanningDialog")
     }
 
     const updatePlan = () => {
@@ -41,18 +48,16 @@ const EditSaveTimeDialog = ({data}) => {
     }
 
     return (
-        <Dialog title={translation.translate("dialog.changePlan")} name="EditSaveTimeDialog">
-            <Divider/>
-
-            <h4>{translation.translate("planning.description")}</h4>
-            <InputContent currentState={currentNewPlanInput}
+        <Dialog title={translation.translate("dialog.changePlan")} name="EditPlanningDialog">
+            <div style={{marginTop:8}}><b>{translation.translate("planning.description")}</b></div>
+            <InputContent isBold={false} currentState={currentNewPlanInput}
                           setCurrentState={setCurrentNewPlanInput} inputType={3}
                           placeholder={translation.translate("planning.placeholder")}/>
 
-            <h4>{translation.translate("planning.dateOfPlan")}</h4>
-            <TimeInputContent currentState={currentPlanDate} setCurrentState={setCurrentPlanDate} type="date"/>
+            <b>{translation.translate("planning.dateOfPlan")}</b>
+            <DateContent currentState={currentPlanDate} setCurrentState={setCurrentPlanDate} type="date"/>
 
-            <Divider/>
+            <Divider marginTop={16}/>
 
             <div className="editPlanDialogActionButtons">
                 <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
@@ -62,4 +67,4 @@ const EditSaveTimeDialog = ({data}) => {
     );
 }
 
-export default EditSaveTimeDialog
+export default EditPlanningDialog

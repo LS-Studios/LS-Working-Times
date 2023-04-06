@@ -133,8 +133,8 @@ function LoginForm() {
 
     return (
         <div className="login-form">
-            <InputCard type="text" title={translation.translate("login.email")} submitFunc={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
-            <InputCard type="password" title={translation.translate("login.password")} submitFunc={submitLogin} currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
+            <InputCard type="text" title={translation.translate("login.email")} submitAction={submitLogin} currentState={emailInput} setCurrentState={setEmailInput} placeholder="max123@mustermann.de"/>
+            <InputCard type="password" title={translation.translate("login.password")} submitAction={submitLogin} currentState={passwordInput} setCurrentState={setPasswordInput} placeholder="abcdefg"/>
             <div>{ error != "" ? <div className="loginErrorText">{error}</div> : null }</div>
             <div>
                 <ButtonCard title={translation.translate("login.login")} clickAction={submitLogin}/>

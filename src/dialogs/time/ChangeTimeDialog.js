@@ -11,14 +11,6 @@ import {useTranslation} from "@LS-Studios/use-translation";
 import {padTo2Digits} from "@LS-Studios/date-helper";
 import * as PropTypes from "prop-types";
 
-function DateTimeInput(props) {
-    return null;
-}
-
-DateTimeInput.propTypes = {
-    setCurrentTimeState: PropTypes.func,
-    currentTimeState: PropTypes.shape({hours: PropTypes.string, seconds: PropTypes.string, minutes: PropTypes.string})
-};
 const ChangeTimeDialog = ({ data }) => {
     const translation = useTranslation()
     const dialog = useComponentDialog();
@@ -91,8 +83,6 @@ const ChangeTimeDialog = ({ data }) => {
 
     return (
         <Dialog title={translation.translate("dialog.changeTime")} name="ChangeTimeDialog">
-            <DateTimeInput currentTimeState={currentTime} setCurrentTimeState={setCurrentTime} />
-
             <TimeInputContent currentTimeState={currentTime} setCurrentTimeState={setCurrentTime}/>
 
             <div className="changeTimeActionButtons">

@@ -28,9 +28,10 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
     return (
         <div className={theme.getThemeClass("contentInWeekCard")}>
             <Title value={title} />
+
             <div className="contentInWeekCardSelect">
                 <IoCaretBack className={theme.getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
-                <div style={{width:"206px"}}>
+                <div>
                     <DateContent useBackgroundColor={false} customSelectedText={selectedDateText} currentState={selectedDate} setCurrentState={setSelectedDate} />
                 </div>
                 <IoCaretForward className={theme.getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
@@ -48,7 +49,7 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
                 })
             }
             {
-                isLoading ? <Spinner type="cycle"/> : (dataArray.filter(data => {
+                isLoading ? <Spinner type="dots"/> : (dataArray.filter(data => {
                     const date = getDateFromString(data.date)
                     return date >= getStartOfWeek(selectedDate) && date <= getEndOfWeek(selectedDate)
                 }).length === 0 ? <div className="noContent">{noItemMessage}</div> : null)

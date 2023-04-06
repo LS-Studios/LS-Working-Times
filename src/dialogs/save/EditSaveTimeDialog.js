@@ -1,6 +1,6 @@
 import "./EditSaveDialog.scss"
-import React, {useEffect, useRef, useState} from "react";
-import {getDatabase, ref, set, get} from "firebase/database";
+import React, {useEffect, useState} from "react";
+import {getDatabase, ref, set} from "firebase/database";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/LSWalletConfig";
