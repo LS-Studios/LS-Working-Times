@@ -5,5 +5,4 @@ export const LSWorkingTimesConfig = {
     storageBucket: "ls-working-timer.appspot.com",
     messagingSenderId: "125951493646",
     appId: "1:125951493646:web:3009aa0a89ae53544ede5f"
-
 }

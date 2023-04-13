@@ -102,7 +102,7 @@ function Screens() {
             } else {
                 return true
             }
-        }} changeLink={link => navigate(link)} currentMenu={currentMenu} setCurrentMenu={setCurrentMenu} footerName={"LS-Wallet"}>
+        }} changeLink={link => navigate(link)} currentMenu={currentMenu} setCurrentMenu={setCurrentMenu} footerName={"LS-Working-Times"}>
             <Routes>
                 <Route path="/login" element={<Login setCurrentMenu={setCurrentMenu}/>}/>
                 <Route

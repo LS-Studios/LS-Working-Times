@@ -14,24 +14,3 @@ body {
 
     background-color: var(--bg-color)
 }
-
-.holder {
-    padding-bottom: 200px;
-}
-
-.spacer1
-{
-    width: 100%;
-    height: 50px;
-}
-
-.spacer2
-{
-    width: 100%;
-    height: 75px;
-}
-
-.blur {
-    filter: blur(2px);
-    pointer-events: none;
-}
