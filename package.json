@@ -5,8 +5,9 @@
   "dependencies": {
     "@LS-Studios/components": "file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz",
     "@LS-Studios/date-helper": "file:../ls-react-components/LS-Library/datehelper/LS-Studios-date-helper-0.0.3.tgz",
+    "@LS-Studios/general": "file:../ls-react-components/LS-Library/general/LS-Studios-general-0.0.1.tgz",
     "@LS-Studios/use-local-storage": "file:../ls-react-components/LS-Library/uselocalstorage/LS-Studios-use-local-storage-0.0.3.tgz",
-    "@LS-Studios/use-translation": "file:../ls-react-components/LS-Library/usetranslation/LS-Studios-use-translation-0.0.31.tgz",
+    "@LS-Studios/use-theme": "file:../ls-react-components/LS-Library/usetheme/LS-Studios-use-theme-0.0.10.tgz",
     "@LS-Studios/use-user-auth": "file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

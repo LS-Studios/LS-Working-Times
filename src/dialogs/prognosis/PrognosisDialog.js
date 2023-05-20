@@ -1,8 +1,8 @@
 import "./PrognosisDialog.scss"
 import React, {useEffect, useRef, useState} from "react";
-import {DateTime} from "../../timing/timer/DateTime";
+import {DateTime} from "../../classes/DateTime";
 import {useTranslation} from "@LS-Studios/use-translation";
-import {Divider, TimeInputContent, ButtonCard, useComponentDialog, Dialog} from "@LS-Studios/components";
+import {Divider, TimeInputContent, ButtonCard, useComponentDialog, Dialog, Title} from "@LS-Studios/components";
 import {padTo2Digits} from "@LS-Studios/date-helper";
 
 const PrognosisDialog = ({data}) => {
@@ -52,8 +52,9 @@ const PrognosisDialog = ({data}) => {
     }
 
     return (
-        <Dialog title={("dialog.changeTime")} name="PrognosisDialog">
-            <Divider/>
+        <>
+            <Title value={translation.translate("dialog.changeTime")} style={{fontSize:20}}/>
+            <Divider marginBottom={5}/>
 
             <h4>{translation.translate("timer.startTime")}</h4>
             <TimeInputContent currentTimeState={currentStartTime} setCurrentTimeState={setCurrentStartTime}/>
@@ -67,7 +68,7 @@ const PrognosisDialog = ({data}) => {
                 <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
                 <ButtonCard title={translation.translate("dialog.confirm")} clickAction={updatePrognosis}/>
             </div>
-        </Dialog>
+        </>
     );
 }
 

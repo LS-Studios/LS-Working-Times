@@ -1,8 +1,8 @@
 import './App.scss';
-import React, {useEffect} from "react";
+import React from "react";
 import {BrowserRouter as Router} from "react-router-dom"
-import Providers from "./providers/Providers";
-import Screens from "./Screens";
+import Providers from "./old/providers/Providers";
+import Screens from "./old/Screens";
 
 function App() {
     return (

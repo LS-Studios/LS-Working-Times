@@ -2,13 +2,21 @@ import "./EditSaveDialog.scss"
 import React, {useEffect, useState} from "react";
 import {getDatabase, ref, set} from "firebase/database";
 import {initializeApp} from "firebase/app";
-import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
-import {LSWalletConfig} from "../../firebase/LSWalletConfig";
+import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
+import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import {formatDate, getDateFromString, padTo2Digits} from "@LS-Studios/date-helper";
-import {DateTime} from "../../timing/timer/DateTime";
+import {DateTime} from "../../classes/DateTime";
 import {useTranslation} from "@LS-Studios/use-translation";
-import {ButtonCard, Divider, TimeInputContent, DateContent, Dialog, useComponentDialog} from "@LS-Studios/components";
+import {
+    ButtonCard,
+    Divider,
+    TimeInputContent,
+    DateContent,
+    Dialog,
+    useComponentDialog,
+    Title
+} from "@LS-Studios/components";
 
 const EditSaveTimeDialog = ({data}) => {
     const translation = useTranslation()
@@ -49,7 +57,7 @@ const EditSaveTimeDialog = ({data}) => {
         const breakTime = new DateTime(breakTimeState.hours, breakTimeState.minutes, breakTimeState.seconds)
         const workedTime = endTime.subtractDateTime(startTime).subtractDateTime(breakTime)
 
-        set(ref(db, "/users/"+auth.currentUser.uid+"/saved/"+data.save.id), {
+        set(ref(db, "/users/"+auth.user.id+"/saved/"+data.save.id), {
             id:data.save.id,
             date:formatDate(selectedDate),
             startTime: startTime.toTimeString(),
@@ -85,7 +93,10 @@ const EditSaveTimeDialog = ({data}) => {
     }, [])
 
     return (
-        <Dialog title={translation.translate("dialog.changeTime")} name="EditSaveTimeDialog">
+        <>
+            <Title value={translation.translate("dialog.changeTime")} style={{fontSize:20}}/>
+            <Divider marginBottom={5}/>
+
             <div>{translation.translate("timer.date")}</div>
             <DateContent currentState={selectedDate} setCurrentState={setSelectedDate}/>
 
@@ -104,7 +115,7 @@ const EditSaveTimeDialog = ({data}) => {
                 <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
                 <ButtonCard title={translation.translate("dialog.confirm")} clickAction={updateSave}/>
             </div>
-        </Dialog>
+        </>
     );
 }
 

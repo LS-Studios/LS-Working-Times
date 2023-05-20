@@ -2,11 +2,19 @@ import "./ChangeTimeDialog.scss"
 import React, {useEffect, useState} from "react";
 import {getDatabase, ref, set, get} from "firebase/database";
 import {initializeApp} from "firebase/app";
-import {LSWorkingTimesConfig} from "../../firebase/LSWorkingTimesConfig";
-import {LSWalletConfig} from "../../firebase/LSWalletConfig";
+import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
+import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
 import {getAuth} from "firebase/auth";
-import {DateTime} from "../../timing/timer/DateTime";
-import {ButtonCard, Dialog, DropdownContent, TimeInputContent, useComponentDialog} from "@LS-Studios/components";
+import {DateTime} from "../../classes/DateTime";
+import {
+    ButtonCard,
+    Dialog,
+    Divider,
+    DropdownContent,
+    TimeInputContent,
+    Title,
+    useComponentDialog
+} from "@LS-Studios/components";
 import {useTranslation} from "@LS-Studios/use-translation";
 import {padTo2Digits} from "@LS-Studios/date-helper";
 import * as PropTypes from "prop-types";
@@ -39,11 +47,11 @@ const ChangeTimeDialog = ({ data }) => {
             parseInt(currentTime.seconds)
         )
 
-        get(ref(db, "/users/"+auth.currentUser.uid+"/break-taken-stop")).then((snapshot) => {
+        get(ref(db, "/users/"+auth.user.id+"/break-taken-stop")).then((snapshot) => {
             if (snapshot.exists()) {
                 const dateTime = originalTime.getAbsoluteDiffToDateTime(newDateTime)
                 const newBreakTakenStopTime = DateTime.dateTimeFromString(snapshot.val()).addDateTime(dateTime)
-                set(ref(db, "/users/"+auth.currentUser.uid+"/break-taken-stop"), newBreakTakenStopTime.toTimeString())
+                set(ref(db, "/users/"+auth.user.id+"/break-taken-stop"), newBreakTakenStopTime.toTimeString())
             } else {
                 console.log("No data available");
             }
@@ -52,14 +60,14 @@ const ChangeTimeDialog = ({ data }) => {
         });
 
         if (data.type == "start-time") {
-            set(ref(db, "/users/"+auth.currentUser.uid+"/start-time"), newDateTime.toTimeString())
+            set(ref(db, "/users/"+auth.user.id+"/start-time"), newDateTime.toTimeString())
         } else if (data.type == "break-time") {
-            get(ref(db, "/users/"+auth.currentUser.uid+"/work-taken-stop")).then((snapshot) => {
+            get(ref(db, "/users/"+auth.user.id+"/work-taken-stop")).then((snapshot) => {
                 if (snapshot.exists()) {
                     const dateTime = originalTime.getAbsoluteDiffToDateTime(newDateTime)
                     const newBreakTakenStopTime = DateTime.dateTimeFromString(snapshot.val()).subtractDateTime(dateTime)
 
-                    set(ref(db, "/users/"+auth.currentUser.uid+"/work-taken-stop"), newBreakTakenStopTime.toTimeString())
+                    set(ref(db, "/users/"+auth.user.id+"/work-taken-stop"), newBreakTakenStopTime.toTimeString())
                 } else {
                     console.log("No data available");
                 }
@@ -82,14 +90,17 @@ const ChangeTimeDialog = ({ data }) => {
     }, [])
 
     return (
-        <Dialog title={translation.translate("dialog.changeTime")} name="ChangeTimeDialog">
+        <>
+            <Title value={translation.translate("dialog.changeTime")} style={{fontSize:20}}/>
+            <Divider marginBottom={5}/>
+
             <TimeInputContent currentTimeState={currentTime} setCurrentTimeState={setCurrentTime}/>
 
             <div className="changeTimeActionButtons">
                 <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
                 <ButtonCard title={translation.translate("dialog.confirm")} clickAction={changeTime}/>
             </div>
-        </Dialog>
+        </>
     );
 }
 

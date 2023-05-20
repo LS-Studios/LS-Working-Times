@@ -1,0 +1,99 @@
+{
+  "screen-bg-color": "#BCBCBC",
+  "card": {
+    "bg-color": "#DBDBDB",
+    "darker-bg-color": "#BCBCBC",
+    "text-color": "#353535",
+    "shadow-color": "#00000033",
+    "hover-shadow-color": "#0000004D"
+  },
+  "dialog": {
+    "bg-color": "#DBDBDB",
+    "text-color": "#353535"
+  },
+  "divider": {
+    "color": "#0000001B"
+  },
+  "expandable": {
+    "expand-button": "#BCBCBC"
+  },
+  "footer": {
+    "bg-color": "#DBDBDB",
+    "text-color": "#353535"
+  },
+  "header": {
+    "bg-color": "#DBDBDB",
+    "text-color": "#353535",
+    "category-text-color": "#353535",
+    "category-border-color": "#353535",
+    "category-active-bg-color": "#b9b9b9",
+    "category-not-active-bg-color": "#DBDBDB",
+    "category-bg-hover-color": "#b9b9b9",
+    "category-value-item-bg-color": "#43586b"
+  },
+  "input": {
+    "bg-color": "#c5c5c5",
+    "text-color": "#353535",
+    "not-active-border-color": "#bbbbbb",
+    "active-border-color": "#9d9d9d"
+  },
+  "number-input": {
+    "change-value-bg-color": "#BCBCBC",
+    "change-value-icon-color": "#353535"
+  },
+  "spinner": {
+    "color": "#353535"
+  },
+  "dropdown": {
+    "selected-bg-color": "#c5c5c5",
+    "selected-border-color": "#bbbbbb",
+    "menu-bg-color": "#c5c5c5",
+    "menu-hovered-item-color": "#aeaeae"
+  },
+  "drop-dialog": {
+    "border-color": "#9d9d9d"
+  },
+  "date-picker": {
+    "bg-color": "#c5c5c5",
+    "calender": {
+      "primary": "#000000FF",
+      "bg": "#C5C5C5FF",
+      "shadow": "#00000019",
+      "today": "#00000019",
+      "selected": "#0000007F",
+      "hover": "#00000033",
+      "deselect": "#000000CC"
+    }
+  },
+  "toggle": {
+    "color": "#353535"
+  },
+  "checkbox": {
+    "icon-color": "#353535",
+    "hover-color": "#b6b6b6",
+    "unchecked-bg-color": "#BCBCBC",
+    "checked-bg-color": "#ababab",
+    "border-color": "#ababab"
+  },
+  "bar-chart": {
+    "text-color": "#353535",
+    "grid-color": "#35353533"
+  },
+  "item-card": {
+    "bg-color": "#BCBCBC",
+    "button-color": "#A1A1A1"
+  },
+  "button-card": {
+    "dialog-bg-color": "#BCBCBC",
+    "dialog-text-color": "#353535"
+  },
+  "graph-overview": {
+    "past-income": "#51775280",
+    "future-income": "#517752",
+    "past-expenses": "#8c5a5a80",
+    "future-expenses": "#8c5a5a"
+  },
+  "auth": {
+    "ls-header-text-color": "#353535"
+  }
+}
