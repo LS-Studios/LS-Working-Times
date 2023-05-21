@@ -1,12 +1,11 @@
 import React from 'react';
-import ContentCard from "../../../../cards/content/ContentCard";
-import {useComponentDialog} from "@LS-Studios/components";
+import ContentCard from "../content/ContentCard";
+import {useContextDialog, useContextTranslation} from "@LS-Studios/components";
 import {padTo2Digits} from "@LS-Studios/date-helper";
-import {useTranslation} from "@LS-Studios/use-translation";
 
-const WorkingDayRangeCard = ({workingDayIndex, rangeIndex, workingDays,  setWorkingDays, isExpanded=false}) => {
-    const translation = useTranslation()
-    const dialog = useComponentDialog()
+const WorkingDayCard = ({workingDayIndex, rangeIndex, workingDays,  setWorkingDays, isExpanded=false}) => {
+    const translation = useContextTranslation()
+    const dialog = useContextDialog()
 
     const deleteRange = (e) => {
         dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouRelayWantToDeleteThisTimeRange"), yesAction:() => {
@@ -41,4 +40,4 @@ const WorkingDayRangeCard = ({workingDayIndex, rangeIndex, workingDays,  setWork
     );
 };
 
-export default WorkingDayRangeCard;
+export default WorkingDayCard;

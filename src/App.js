@@ -1,8 +1,8 @@
 import './App.scss';
 import React from "react";
 import {BrowserRouter as Router} from "react-router-dom"
-import Providers from "./old/providers/Providers";
-import Screens from "./old/Screens";
+import Providers from "./providers/Providers";
+import Screens from "./screens/Screens";
 
 function App() {
     return (

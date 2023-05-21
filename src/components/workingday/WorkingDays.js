@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
-import "./WorkingDayCard.scss"
+import "./WorkingDays.scss"
 import {BsPlusLg} from "react-icons/bs";
-import WorkingDayRangeCard from "./card/WorkingDayRangeCard";
-import {DateTime} from "../../../classes/DateTime";
-import {Card, Divider, ToggleContent, useComponentTheme} from "@LS-Studios/components";
-import {useTranslation} from "@LS-Studios/use-translation";
+import WorkingDayCard from "../../cards/workingday/WorkingDayCard";
+import {DateTime} from "../../classes/DateTime";
+import {Card, Divider, ToggleContent, useContextTheme, useContextTranslation} from "@LS-Studios/components";
 
-function WorkingDayCard({day, workingDays, setWorkingDays}) {
-    const translation = useTranslation()
-    const theme = useComponentTheme()
+function WorkingDays({day, workingDays, setWorkingDays}) {
+    const translation = useContextTranslation()
+    const theme = useContextTheme()
 
     const addRange = () => {
         setWorkingDays(current => {
@@ -26,7 +25,7 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
                 <div className='workingDayCardTitle'>
                     <b>{translation.translate("prognosis.weekDay"+day[1])}</b>
 
-                    <div className={theme.getThemeClass("divider")}/>
+                    <Divider />
 
                     <ToggleContent currentState={currentTimeType} setCurrentState={(newState) => {
                         setCurrentTimeType(newState)
@@ -40,7 +39,7 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
                             <div className="workingDayCardRangeList">
                                 {
                                     day[2].map((workingDayRange, i) => {
-                                        return <WorkingDayRangeCard key={i} workingDayIndex={day[1]} rangeIndex={i} workingDays={workingDays} setWorkingDays={setWorkingDays}/>
+                                        return <WorkingDayCard key={i} workingDayIndex={day[1]} rangeIndex={i} workingDays={workingDays} setWorkingDays={setWorkingDays}/>
                                     })
                                 }
                             </div>
@@ -56,4 +55,4 @@ function WorkingDayCard({day, workingDays, setWorkingDays}) {
     );
 }
 
-export default WorkingDayCard;
+export default WorkingDays;

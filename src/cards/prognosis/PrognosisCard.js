@@ -1,10 +1,10 @@
 import React from 'react';
 import "./PrognosisCard.scss"
 import ContentCard from "../content/ContentCard";
-import {useTranslation} from "@LS-Studios/use-translation";
+import {useContextTranslation} from "@LS-Studios/components";
 
 function PrognosisCard({data, isExpanded}) {
-    const translation = useTranslation()
+    const translation = useContextTranslation()
 
     return (
         <ContentCard title={translation.translate("prognosis.weekDay"+data[0])} content={

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import "./Prognosis.css"
-import WorkingDayCard from "./workingday/WorkingDayCard";
+import WorkingDays from "../../components/workingday/WorkingDays";
 import {get, getDatabase, onChildAdded, onChildChanged, onChildRemoved, onValue, ref} from "firebase/database";
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
@@ -10,24 +10,23 @@ import {DateTime} from "../../classes/DateTime";
 import {useNavigate} from "react-router-dom";
 import {useInterval} from "../../customhook/UseInterval";
 import PrognosisCard from "../../cards/prognosis/PrognosisCard";
-import {useTranslation} from "@LS-Studios/use-translation"
 import {
-    useComponentTheme,
     Spinner,
     Card,
-    ToggleContent,
     InputCard,
     TimeInputContent,
     TimeInputCard,
     CheckboxListCard,
-    Title, Divider, DropdownContent
+    Title, Divider, DropdownContent, useContextTranslation, useContextTheme, useContextUserAuth
 } from "@LS-Studios/components"
 import {getDateFromString, getEndOfWeek, getStartOfWeek} from "@LS-Studios/date-helper"
+import {getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 function Prognosis({setCurrentMenu}) {
-    const translation = useTranslation()
-    const theme = useComponentTheme()
+    const translation = useContextTranslation()
+    const theme = useContextTheme()
     const navigate = useNavigate()
+    const auth = useContextUserAuth()
 
     const [saved, setSaved] = useState([]);
     const [startTime, setStartTime] = useState(null);
@@ -79,130 +78,101 @@ function Prognosis({setCurrentMenu}) {
     useEffect(() => {
         setCurrentMenu(3)
 
-        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
-        const db = getDatabase(lsWorkingTimesApp)
-        const auth = getAuth(lsWalletApp)
-
         const unsubscribeArray = []
 
+        const firebaseDB = getFirebaseDB()
+
         unsubscribeArray.push(
-            auth.onAuthStateChanged(function(user) {
-                if (user == null) {
-                    unsubscribeArray.forEach(unsubscribe => unsubscribe())
-                    navigate("/login")
-                    return
+            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/start-time"), snapshot => {
+                const data = snapshot.val()
+
+                if (data == null || data === "") {
+                    setStartTime(null)
                 }
+                else
+                    setStartTime(DateTime.dateTimeFromString(data).getDate())
+            }))
+        unsubscribeArray.push(
+            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/work-stop-time"), snapshot => {
+                const data = snapshot.val()
 
-                unsubscribeArray.push(
-                    onValue(ref(db, "/users/" + user.uid + "/start-time"), snapshot => {
-                        const data = snapshot.val()
+                if (data == null || data === "")
+                    setWorkStopTime(null)
+                else
+                    setWorkStopTime(DateTime.dateTimeFromString(data))
+            }))
+        unsubscribeArray.push(
+            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/work-taken-stop"), snapshot => {
+                const data = snapshot.val()
 
-                        if (data == null || data === "") {
-                            setStartTime(null)
-                        }
-                        else
-                            setStartTime(DateTime.dateTimeFromString(data).getDate())
-                    }))
-                unsubscribeArray.push(
-                    onValue(ref(db, "/users/" + user.uid + "/work-stop-time"), snapshot => {
-                        const data = snapshot.val()
+                if (data == null || data === "")
+                    setWorkTakenStop(new DateTime(0,0,0))
+                else
+                    setWorkTakenStop(DateTime.dateTimeFromString(data))
+            }))
+        unsubscribeArray.push(
+            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/work-is-running"), snapshot => {
+                const data = snapshot.val()
 
-                        if (data == null || data === "")
-                            setWorkStopTime(null)
-                        else
-                            setWorkStopTime(DateTime.dateTimeFromString(data))
-                    }))
-                unsubscribeArray.push(
-                    onValue(ref(db, "/users/" + user.uid + "/work-taken-stop"), snapshot => {
-                        const data = snapshot.val()
+                if (data == null || data === "")
+                    setWorkIsRunning(false)
+                else
+                    setWorkIsRunning(data)
+            }))
 
-                        if (data == null || data === "")
-                            setWorkTakenStop(new DateTime(0,0,0))
-                        else
-                            setWorkTakenStop(DateTime.dateTimeFromString(data))
-                    }))
-                unsubscribeArray.push(
-                    onValue(ref(db, "/users/" + user.uid + "/work-is-running"), snapshot => {
-                        const data = snapshot.val()
+        unsubscribeArray.push(
+            onChildAdded(ref(firebaseDB, "/users/" + auth.user.id + "/saved"), snapshot => {
+                const value = snapshot.val()
 
-                        if (data == null || data === "")
-                            setWorkIsRunning(false)
-                        else
-                            setWorkIsRunning(data)
-                    }))
+                setAlreadyWorkedTimeIsLoading([true, true])
 
-                get(ref(db, "/users/" + user.uid + "/language")).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        translation.changeLanguage(snapshot.val())
-                    } else {
-                        console.log("No data available");
-                    }
-                }).catch((error) => {
-                    console.error(error);
-                });
+                if (value != null) {
+                    setSaved(prevState => (
+                        [value].concat(prevState)
+                    ))
+                }
+            }))
+        unsubscribeArray.push(
+            onChildChanged(ref(firebaseDB, "/users/" + auth.user.id + "/saved"), changedSnapshot => {
+                const value = changedSnapshot.val()
+                if (value != null) {
+                    get(ref(firebaseDB, "/users/" + auth.user.id + "/saved")).then((snapshot) => {
+                        if (snapshot.exists()) {
+                            const saves = []
+                            snapshot.forEach(childSnapshot => {
+                                saves.push(childSnapshot.val())
+                            })
 
-                get(ref(db, "/users/" + user.uid + "/theme")).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        theme.changeTheme(snapshot.val())
-                    } else {
-                        console.log("No data available");
-                    }
-                }).catch((error) => {
-                    console.error(error);
-                });
-
-                unsubscribeArray.push(
-                    onChildAdded(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
-                        const value = snapshot.val()
-
-                        setAlreadyWorkedTimeIsLoading([true, true])
-
-                        if (value != null) {
-                            setSaved(prevState => (
-                                [value].concat(prevState)
-                            ))
-                        }
-                    }))
-                unsubscribeArray.push(
-                    onChildChanged(ref(db, "/users/" + user.uid + "/saved"), changedSnapshot => {
-                        const value = changedSnapshot.val()
-                        if (value != null) {
-                            get(ref(db, "/users/" + user.uid + "/saved")).then((snapshot) => {
-                                if (snapshot.exists()) {
-                                    const saves = []
-                                    snapshot.forEach(childSnapshot => {
-                                        saves.push(childSnapshot.val())
-                                    })
-
-                                    const newState = saves.map(obj => {
-                                        if (obj.id === value.id) {
-                                            return value;
-                                        }
-
-                                        return obj;
-                                    });
-
-                                    setSaved(newState);
-                                } else {
-                                    console.log("No data available");
+                            const newState = saves.map(obj => {
+                                if (obj.id === value.id) {
+                                    return value;
                                 }
-                            }).catch((error) => {
-                                console.error(error);
+
+                                return obj;
                             });
+
+                            setSaved(newState);
+                        } else {
+                            console.log("No data available");
                         }
-                    }))
-                unsubscribeArray.push(
-                    onChildRemoved(ref(db, "/users/" + user.uid + "/saved"), snapshot => {
-                        const value = snapshot.val()
-                        if (value != null) {
-                            setSaved((current) =>
-                                current.filter((save) => save.id !== value.id)
-                            );
-                        }
-                    }))
-            })
-        )
+                    }).catch((error) => {
+                        console.error(error);
+                    });
+                }
+            }))
+        unsubscribeArray.push(
+            onChildRemoved(ref(firebaseDB, "/users/" + auth.user.id + "/saved"), snapshot => {
+                const value = snapshot.val()
+                if (value != null) {
+                    setSaved((current) =>
+                        current.filter((save) => save.id !== value.id)
+                    );
+                }
+            }))
+
+        return () => {
+            unsubscribeArray.forEach(unsub => unsub())
+        }
     }, [])
 
     useInterval(() => {
@@ -387,7 +357,7 @@ function Prognosis({setCurrentMenu}) {
                 {
                     workingDays.map((workingDay, i) => {
                         if (workingDay[0] && checkIfIsStillInWeek(i)) {
-                            return <WorkingDayCard key={i} day={workingDay} workingDays={workingDays} setWorkingDays={setWorkingDays}/>
+                            return <WorkingDays key={i} day={workingDay} workingDays={workingDays} setWorkingDays={setWorkingDays}/>
                         }
                     })
                 }

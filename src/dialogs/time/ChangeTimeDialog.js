@@ -8,20 +8,15 @@ import {getAuth} from "firebase/auth";
 import {DateTime} from "../../classes/DateTime";
 import {
     ButtonCard,
-    Dialog,
     Divider,
-    DropdownContent,
     TimeInputContent,
-    Title,
-    useComponentDialog
+    Title, useContextDialog, useContextTranslation
 } from "@LS-Studios/components";
-import {useTranslation} from "@LS-Studios/use-translation";
 import {padTo2Digits} from "@LS-Studios/date-helper";
-import * as PropTypes from "prop-types";
 
 const ChangeTimeDialog = ({ data }) => {
-    const translation = useTranslation()
-    const dialog = useComponentDialog();
+    const translation = useContextTranslation()
+    const dialog = useContextDialog();
 
     const [currentTime, setCurrentTime] = useState({
         hours: "00",
@@ -32,7 +27,7 @@ const ChangeTimeDialog = ({ data }) => {
     const [originalTime, setOriginalTime] = useState(new DateTime())
 
     const close = () => {
-        dialog.closeDialog("ChangeTimeDialog")
+        dialog.closeTopDialog()
     }
 
     const changeTime = () => {

@@ -5,15 +5,14 @@ import {getDatabase, ref, remove} from "firebase/database"
 import {initializeApp} from "firebase/app";
 import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
 import ContentCard from "../content/ContentCard";
-import {useComponentDialog, useComponentUserAuth} from "@LS-Studios/components";
-import {useTranslation} from "@LS-Studios/use-translation";
+import {useContextDialog, useContextTranslation, useContextUserAuth} from "@LS-Studios/components";
 import {getDateNameByString} from "@LS-Studios/date-helper";
 import {getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 function SavedCard({data, isExpanded}) {
-    const translation = useTranslation()
-    const auth = useComponentUserAuth()
-    const dialog = useComponentDialog();
+    const translation = useContextTranslation()
+    const auth = useContextUserAuth()
+    const dialog = useContextDialog();
 
     const getEndTimeString = () => {
         const startDateTime = DateTime.dateTimeFromString(data.startTime)

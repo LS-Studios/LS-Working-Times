@@ -5,14 +5,22 @@ import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import PlanningCard from "../../cards/planing/PlanningCard";
-import {Card, DateContent, ButtonCard, InputContent, Divider, useComponentTheme} from "@LS-Studios/components";
+import {
+    Card,
+    DateContent,
+    ButtonCard,
+    InputContent,
+    Divider,
+    useContextTranslation,
+    useContextTheme, useContextUserAuth
+} from "@LS-Studios/components";
 import ContentInWeekCard from "../../cards/contentinweek/ContentInWeekCard";
-import {useTranslation} from "@LS-Studios/use-translation";
 import {formatDate} from "@LS-Studios/date-helper";
+import {getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 function Planning({setCurrentMenu}) {
-    const translation = useTranslation()
-    const theme = useComponentTheme()
+    const translation = useContextTranslation()
+    const auth = useContextUserAuth()
 
     const [currentNewPlanInput, setCurrentNewPlanInput] = useState("");
     const [currentPlanDate, setCurrentPlanDate] = useState(new Date());
@@ -23,101 +31,73 @@ function Planning({setCurrentMenu}) {
     useEffect(() => {
         setCurrentMenu(2)
 
-        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
-        const db = getDatabase(lsWorkingTimesApp)
-        const auth = getAuth(lsWalletApp)
-
         const unsubscribeArray = []
 
+        const firebaseDB = getFirebaseDB()
+
+        get(ref(firebaseDB, "/users/" + auth.user.id + "/plannings")).then((snapshot) => {
+            if (!snapshot.exists())
+                setPlanningsIsLoading(false)
+        }).catch((error) => {
+            console.error(error);
+        });
         unsubscribeArray.push(
-            auth.onAuthStateChanged(function(user) {
-                get(ref(db, "/users/" + user.uid + "/language")).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        translation.changeLanguage(snapshot.val())
-                    } else {
-                        console.log("No data available");
-                    }
-                }).catch((error) => {
-                    console.error(error);
-                });
+            onChildAdded(ref(firebaseDB, "/users/" + auth.user.id + "/plannings"), snapshot => {
+                const value = snapshot.val()
+                if (value != null) {
+                    setPlanningsIsLoading(false)
 
-                get(ref(db, "/users/" + user.uid + "/theme")).then((snapshot) => {
-                    if (snapshot.exists()) {
-                        theme.changeTheme(snapshot.val())
-                    } else {
-                        console.log("No data available");
-                    }
-                }).catch((error) => {
-                    console.error(error);
-                });
+                    setPlannings(prevState => (
+                        [value].concat(prevState)
+                    ))
+                }
+            }))
+        unsubscribeArray.push(
+            onChildChanged(ref(firebaseDB, "/users/" + auth.user.id + "/plannings"), changedSnapshot => {
+                const value = changedSnapshot.val()
+                if (value != null) {
+                    get(ref(firebaseDB, "/users/" + auth.user.id + "/plannings")).then((snapshot) => {
+                        if (snapshot.exists()) {
+                            const plannings = []
+                            snapshot.forEach(childSnapshot => {
+                                plannings.push(childSnapshot.val())
+                            })
 
-                get(ref(db, "/users/" + user.uid + "/plannings")).then((snapshot) => {
-                    if (!snapshot.exists())
-                        setPlanningsIsLoading(false)
-                }).catch((error) => {
-                    console.error(error);
-                });
-                unsubscribeArray.push(
-                    onChildAdded(ref(db, "/users/" + user.uid + "/plannings"), snapshot => {
-                        const value = snapshot.val()
-                        if (value != null) {
-                            setPlanningsIsLoading(false)
-
-                            setPlannings(prevState => (
-                                [value].concat(prevState)
-                            ))
-                        }
-                    }))
-                unsubscribeArray.push(
-                    onChildChanged(ref(db, "/users/" + user.uid + "/plannings"), changedSnapshot => {
-                        const value = changedSnapshot.val()
-                        if (value != null) {
-                            get(ref(db, "/users/" + user.uid + "/plannings")).then((snapshot) => {
-                                if (snapshot.exists()) {
-                                    const plannings = []
-                                    snapshot.forEach(childSnapshot => {
-                                        plannings.push(childSnapshot.val())
-                                    })
-
-                                    const newState = plannings.map(obj => {
-                                        if (obj.id === value.id) {
-                                            return value;
-                                        }
-
-                                        return obj;
-                                    });
-
-                                    setPlannings(newState);
-                                } else {
-                                    console.log("No data available");
+                            const newState = plannings.map(obj => {
+                                if (obj.id === value.id) {
+                                    return value;
                                 }
-                            }).catch((error) => {
-                                console.error(error);
+
+                                return obj;
                             });
+
+                            setPlannings(newState);
+                        } else {
+                            console.log("No data available");
                         }
-                    }))
-                unsubscribeArray.push(
-                    onChildRemoved(ref(db, "/users/" + user.uid + "/plannings"), snapshot => {
-                        const value = snapshot.val()
-                        if (value != null) {
-                            setPlannings((current) =>
-                                current.filter((planning) => planning.id !== value.id)
-                            );
-                        }
-                    }))
-            })
-        )
+                    }).catch((error) => {
+                        console.error(error);
+                    });
+                }
+            }))
+        unsubscribeArray.push(
+            onChildRemoved(ref(firebaseDB, "/users/" + auth.user.id + "/plannings"), snapshot => {
+                const value = snapshot.val()
+                if (value != null) {
+                    setPlannings((current) =>
+                        current.filter((planning) => planning.id !== value.id)
+                    );
+                }
+            }))
+
+        return () => {
+            unsubscribeArray.forEach(unsub => unsub())
+        }
     }, [])
 
     const addNewPlan = () => {
         if (currentNewPlanInput.replace("\\s+", "") !== "") {
-            const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-            const lsWalletApp = initializeApp(LSWalletConfig, "LS-Wallet")
-            const db = getDatabase(lsWorkingTimesApp)
-            const auth = getAuth(lsWalletApp)
-
-            const newPlanningRef = push(ref(db, "/users/" + auth.user.id + "/plannings"));
+            const newPlanningRef = push(ref(getFirebaseDB(), "/users/" + auth.user.id + "/plannings"));
 
             set(newPlanningRef, {
                 id: newPlanningRef.key,

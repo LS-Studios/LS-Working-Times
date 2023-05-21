@@ -6,13 +6,12 @@ import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import {getDatabase, ref, remove} from "firebase/database";
 import ContentCard from "../content/ContentCard";
-import {useTranslation} from "@LS-Studios/use-translation";
 import {getDateNameByString} from "@LS-Studios/date-helper";
-import {useComponentDialog} from "@LS-Studios/components";
+import {useContextDialog, useContextTranslation} from "@LS-Studios/components";
 
 const PlanningCard = ({data, isExpanded=false}) => {
-    const translation = useTranslation()
-    const dialog = useComponentDialog();
+    const translation = useContextTranslation()
+    const dialog = useContextDialog();
 
     const deletePlan = (e) => {
         dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouRelayWantToDeleteThisPlan"), yesAction:() => {

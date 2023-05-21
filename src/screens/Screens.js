@@ -11,7 +11,7 @@ import useLocalStorage from "@LS-Studios/use-local-storage";
 import { onAuthStateChanged } from "firebase/auth";
 import {ref, get} from "firebase/database";
 import {AuthRequired, getUserFirebaseAuth, getUserFirebaseDB} from "@LS-Studios/use-user-auth";
-import Timing from "./timing/Timing";
+import Saves from "../components/saves/Saves";
 import Planning from "./planning/Planning";
 import Prognosis from "./prognosis/Prognosis";
 import AdditionalSettings from "./settings/AdditionalSettings";
@@ -125,7 +125,7 @@ function Screens() {
                     path="/timing"
                     element={
                         <AuthRequired userAuth={auth} notAuthenticated={() => navigate("/login")}>
-                            <Timing setCurrentMenu={setCurrentMenu}/>
+                            <Saves setCurrentMenu={setCurrentMenu}/>
                         </AuthRequired>
                     }
                 />

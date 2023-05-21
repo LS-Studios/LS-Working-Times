@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {IoCaretBack, IoCaretForward} from "react-icons/io5";
 import "./ContentInWeekCard.scss"
 import {getStartOfWeekDayValue, formatDate, getStartOfWeek, getEndOfWeek, getDateFromString} from "@LS-Studios/date-helper"
-import {DateContent, Spinner, Title, useComponentTheme} from "@LS-Studios/components";
+import {DateContent, Spinner, Title, useContextTheme} from "@LS-Studios/components";
 
 function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedDate, setSelectedDate, isLoading}) {
-    const theme = useComponentTheme()
+    const theme = useContextTheme()
 
     const [selectedDateText, setSelectedDateText] = useState("")
 

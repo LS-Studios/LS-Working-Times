@@ -10,15 +10,16 @@ export const TimerType = {
     Break: "break"
 }
 
-function TimerProvider({timerContext, name, timerType, clickAction}) {
+function TimerProvider({timerContext, startTime, name, timerType, clickAction}) {
     const auth = useContextUserAuth()
 
-    const [startTime, setStartTime] = useState(null)
     const [currentTime, setCurrentTime] = useState(new DateTime(0,0,0))
-    const [timeIsFetching, setTimeIsFetching] = useState(true)
+
     const [timeIsRunning, setTimeIsRunning] = useState(false);
     const [timeStopTime, setTimeStopTime] = useState(null);
     const [timeTakenStop, setTimeTakenStop] = useState(new DateTime(0, 0, 0));
+
+    const [timeIsFetching, setTimeIsFetching] = useState(true)
 
     useEffect(() => {
         const firebaseDB = getFirebaseDB()
@@ -26,21 +27,10 @@ function TimerProvider({timerContext, name, timerType, clickAction}) {
         const unsubscribeArray = []
 
         unsubscribeArray.push(
-            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/start-currentTime"), snapshot => {
+            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-stop-time"), snapshot => {
                 const data = snapshot.val()
 
                 setTimeIsFetching(false)
-
-                if (data == null || data === "") {
-                    setStartTime(null)
-                    resetTimer()
-                }
-                else
-                    setStartTime(DateTime.dateTimeFromString(data).getDate())
-            }))
-        unsubscribeArray.push(
-            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-stop-currentTime"), snapshot => {
-                const data = snapshot.val()
 
                 if (data == null || data === "")
                     setTimeStopTime(null)
@@ -115,11 +105,12 @@ function TimerProvider({timerContext, name, timerType, clickAction}) {
             currentTime,
             timeStopTime,
             timeIsRunning,
+            timeIsFetching,
             startTimer,
             stopTimer,
             updateTimer
         }),
-        [startTime, currentTime, timeStopTime, timeIsRunning]
+        [startTime, currentTime, timeStopTime, timeIsRunning, timeIsFetching]
     );
 
     return (

@@ -6,19 +6,16 @@ import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
 import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import {formatDate, getDateFromString} from "@LS-Studios/date-helper";
-import {useTranslation} from "@LS-Studios/use-translation"
 import {
     ButtonCard,
     Divider,
     InputContent,
-    Dialog,
-    useComponentDialog,
-    DateContent, Title
+    DateContent, Title, useContextTranslation, useContextDialog
 } from "@LS-Studios/components";
 
 const EditPlanningDialog = ({data}) => {
-    const translation = useTranslation()
-    const dialog = useComponentDialog();
+    const translation = useContextTranslation()
+    const dialog = useContextDialog();
 
     const [currentNewPlanInput, setCurrentNewPlanInput] = useState("");
     const [currentPlanDate, setCurrentPlanDate] = useState(new Date());
@@ -29,7 +26,7 @@ const EditPlanningDialog = ({data}) => {
     }, [])
 
     const close = () => {
-        dialog.closeDialog("EditPlanningDialog")
+        dialog.closeTopDialog()
     }
 
     const updatePlan = () => {

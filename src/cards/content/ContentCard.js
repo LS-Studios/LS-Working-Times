@@ -1,12 +1,17 @@
 import React, {useState} from 'react';
 import "./ContentCard.scss"
-import {useTranslation} from "@LS-Studios/use-translation";
-import {ButtonCard, Divider, ItemCard, Layout, Title, useComponentTheme} from "@LS-Studios/components";
+import {
+    ButtonCard,
+    Divider,
+    ItemCard,
+    Layout,
+    Title,
+    useContextTranslation
+} from "@LS-Studios/components";
 import {Gone, GoneType} from "@LS-Studios/general";
 
 const ContentCard = ({content, title, isExpanded, deleteAction, editAction}) => {
-    const translation = useTranslation()
-    const theme = useComponentTheme()
+    const translation = useContextTranslation()
 
     const [expanded, setExpanded] = useState(isExpanded)
 

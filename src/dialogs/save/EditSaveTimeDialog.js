@@ -7,20 +7,17 @@ import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
 import {getAuth} from "firebase/auth";
 import {formatDate, getDateFromString, padTo2Digits} from "@LS-Studios/date-helper";
 import {DateTime} from "../../classes/DateTime";
-import {useTranslation} from "@LS-Studios/use-translation";
 import {
     ButtonCard,
     Divider,
     TimeInputContent,
     DateContent,
-    Dialog,
-    useComponentDialog,
-    Title
+    Title, useContextTranslation, useContextDialog
 } from "@LS-Studios/components";
 
 const EditSaveTimeDialog = ({data}) => {
-    const translation = useTranslation()
-    const dialog = useComponentDialog();
+    const translation = useContextTranslation()
+    const dialog = useContextDialog();
 
     const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -43,7 +40,7 @@ const EditSaveTimeDialog = ({data}) => {
     })
 
     const close = () => {
-        dialog.closeDialog("EditSaveTimeDialog")
+        dialog.closeTopDialog()
     }
 
     const updateSave = () => {

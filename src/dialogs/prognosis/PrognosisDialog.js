@@ -1,13 +1,18 @@
 import "./PrognosisDialog.scss"
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {DateTime} from "../../classes/DateTime";
-import {useTranslation} from "@LS-Studios/use-translation";
-import {Divider, TimeInputContent, ButtonCard, useComponentDialog, Dialog, Title} from "@LS-Studios/components";
+import {
+    Divider,
+    TimeInputContent,
+    ButtonCard,
+    Title,
+    useContextTranslation, useContextTheme
+} from "@LS-Studios/components";
 import {padTo2Digits} from "@LS-Studios/date-helper";
 
 const PrognosisDialog = ({data}) => {
-    const translation = useTranslation()
-    const dialog = useComponentDialog();
+    const translation = useContextTranslation()
+    const dialog = useContextTheme();
 
     const [currentStartTime, setCurrentStartTime] = useState({
         hours: "08",
@@ -37,7 +42,7 @@ const PrognosisDialog = ({data}) => {
     },[])
 
     const close = () => {
-        dialog.closeDialog("PrognosisDialog")
+        dialog.closeTopDialog()
     }
 
     const updatePrognosis = () => {
