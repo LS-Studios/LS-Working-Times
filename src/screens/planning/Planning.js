@@ -12,7 +12,7 @@ import {
     InputContent,
     Divider,
     useContextTranslation,
-    useContextTheme, useContextUserAuth
+    useContextUserAuth
 } from "@LS-Studios/components";
 import ContentInWeekCard from "../../cards/contentinweek/ContentInWeekCard";
 import {formatDate} from "@LS-Studios/date-helper";
@@ -29,7 +29,7 @@ function Planning({setCurrentMenu}) {
     const [selectedPlanningDate, setSelectedPlanningDate] = useState(new Date())
 
     useEffect(() => {
-        setCurrentMenu(2)
+        setCurrentMenu(3)
 
         const unsubscribeArray = []
 

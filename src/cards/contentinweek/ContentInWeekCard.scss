@@ -8,28 +8,6 @@
     width: 271px;
 }
 
-.darkContentInWeekCard {
-    @extend .contentInWeekCard;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    background-color: #2C3A47;
-    color: #CCCCCC;
-}
-
-.darkContentInWeekCard:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
-}
-
-.brightContentInWeekCard {
-    @extend .contentInWeekCard;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    background-color: #DBDBDB;
-    color: #353535;
-}
-
-.brightContentInWeekCard:hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.3);
-}
-
 .contentInWeekCardTitle {
     margin: 5px;
 }
@@ -49,15 +27,7 @@
 }
 
 .darkContentInWeekSelectIcon {
-    background-color: #212A33;
-    border: 0;
-    border-radius: 6px;
-    padding: 3px;
-    cursor: pointer;
-}
-
-.brightContentInWeekSelectIcon {
-    background-color: #BCBCBC;
+    background-color: var(--item-card-button-color);;
     border: 0;
     border-radius: 6px;
     padding: 3px;

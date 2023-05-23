@@ -46,7 +46,7 @@ function WorkingDays({day, workingDays, setWorkingDays}) {
 
                             <Divider />
 
-                            <BsPlusLg className={theme.getThemeClass("workingDayCardAddButton")} onClick={addRange}/>
+                            <BsPlusLg className="workingDayCardAddButton" onClick={addRange}/>
                         </div> : null
                     }
                 </div>

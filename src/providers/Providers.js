@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createContext} from 'react';
 import de from "../translations/de.json"
 import en from "../translations/en.json"
 import DarkTheme from "../themes/DarkTheme.json"
@@ -19,6 +19,11 @@ import ChangeTimeDialog from "../dialogs/time/ChangeTimeDialog";
 import EditSaveTimeDialog from "../dialogs/save/EditSaveTimeDialog";
 import EditPlanningDialog from "../dialogs/planning/EditPlanningDialog";
 import PrognosisDialog from "../dialogs/prognosis/PrognosisDialog";
+import TimerProvider, {TimerType} from "../components/timer/TimerProvider";
+import {DateTime} from "../classes/DateTime";
+
+export const workTimerContext = createContext(null)
+export const breakTimerContext = createContext(null)
 
 function Providers({children}) {
     return (
@@ -38,7 +43,11 @@ function Providers({children}) {
                             "EditPlanningDialog":EditPlanningDialog,
                             "PrognosisDialog":PrognosisDialog
                         }}>
-                            { children }
+                            <TimerProvider timerContext={workTimerContext} timerType={TimerType.Work}>
+                                <TimerProvider timerContext={breakTimerContext} timerType={TimerType.Break}>
+                                    { children }
+                                </TimerProvider>
+                            </TimerProvider>
                         </ContextDialogProvider>
                     </ContextTranslationProvider>
                 </ContextUserAuthProvider>

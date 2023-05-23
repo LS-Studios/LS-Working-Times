@@ -1,9 +1,7 @@
-import React, {useState} from 'react';
+import React from 'react';
 import "./SaveCard.scss"
 import {DateTime} from "../../classes/DateTime";
-import {getDatabase, ref, remove} from "firebase/database"
-import {initializeApp} from "firebase/app";
-import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
+import {ref, remove} from "firebase/database"
 import ContentCard from "../content/ContentCard";
 import {useContextDialog, useContextTranslation, useContextUserAuth} from "@LS-Studios/components";
 import {getDateNameByString} from "@LS-Studios/date-helper";

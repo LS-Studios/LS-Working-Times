@@ -2,11 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {IoCaretBack, IoCaretForward} from "react-icons/io5";
 import "./ContentInWeekCard.scss"
 import {getStartOfWeekDayValue, formatDate, getStartOfWeek, getEndOfWeek, getDateFromString} from "@LS-Studios/date-helper"
-import {DateContent, Spinner, Title, useContextTheme} from "@LS-Studios/components";
+import {Card, DateContent, Spinner, Title} from "@LS-Studios/components";
 
 function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedDate, setSelectedDate, isLoading}) {
-    const theme = useContextTheme()
-
     const [selectedDateText, setSelectedDateText] = useState("")
 
     useEffect(() => {
@@ -26,15 +24,13 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
     }
 
     return (
-        <div className={theme.getThemeClass("contentInWeekCard")}>
+        <Card>
             <Title value={title} />
 
             <div className="contentInWeekCardSelect">
-                <IoCaretBack className={theme.getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfPreviousWeek}/>
-                <div>
-                    <DateContent useBackgroundColor={false} customSelectedText={selectedDateText} currentState={selectedDate} setCurrentState={setSelectedDate} />
-                </div>
-                <IoCaretForward className={theme.getThemeClass("contentInWeekSelectIcon")} onClick={getSavesOfNextWeek}/>
+                <IoCaretBack className="contentInWeekSelectIcon" onClick={getSavesOfPreviousWeek}/>
+                <DateContent style={{width:"85%"}} useBackgroundColor={false} customSelectedText={selectedDateText} currentState={selectedDate} setCurrentState={setSelectedDate} />
+                <IoCaretForward className="contentInWeekSelectIcon" onClick={getSavesOfNextWeek}/>
             </div>
             {
                 dataArray.filter(data => {
@@ -54,7 +50,7 @@ function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedD
                     return date >= getStartOfWeek(selectedDate) && date <= getEndOfWeek(selectedDate)
                 }).length === 0 ? <div className="noContent">{noItemMessage}</div> : null)
             }
-        </div>
+        </Card>
     );
 }
 

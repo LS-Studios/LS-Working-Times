@@ -1963,7 +1963,7 @@
 "@LS-Studios/components@file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz":
   version "0.0.522"
   resolved "file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz"
-  integrity sha512-pqChPoWLmpdKWpI3v62Jr416fLcfSpFTASS9vVEHzchPCdMGAiLQbL8zoxPfpKQnKsC60mU/A9mV9o8+9P/ubQ==
+  integrity sha512-QOgVntX+AiwazMglajkOYA47jXMglLSSnnJZRzFiDMlUIO1Kw1WsUhc1eDIZ0CbdbNKAtFpDBaWTDluUHf/DQw==
 
 "@LS-Studios/date-helper@file:../ls-react-components/LS-Library/datehelper/LS-Studios-date-helper-0.0.3.tgz":
   version "0.0.3"
@@ -1988,7 +1988,7 @@
 "@LS-Studios/use-user-auth@file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz":
   version "0.0.7"
   resolved "file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz"
-  integrity sha512-KEgOEXkYyZIym7EcRlqEO6bU/5hise1irmkIHZ1olrvs60DDuY3Y+wZHGKl86y9b5VTFqELL76vhFQQ2BRi55g==
+  integrity sha512-jeYjdspyhxUvpsHqUszDM+8UYwmVg3lFhHa0anITI8m7+tufYxEGiUMlfR5V0F9D/PYizn+I0I4p3fyME4mdLg==
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"

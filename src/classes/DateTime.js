@@ -1,5 +1,5 @@
 export class DateTime {
-    constructor(hours, minutes, seconds) {
+    constructor(hours=0, minutes=0, seconds=0) {
         this.hours = hours != null ? parseInt(hours) : DateTime.dateTimeFromDate(new Date()).getHours
         this.minutes = minutes != null ? parseInt(minutes) : DateTime.dateTimeFromDate(new Date()).getMinutes
         this.seconds = seconds != null ? parseInt(seconds) : DateTime.dateTimeFromDate(new Date()).getSeconds

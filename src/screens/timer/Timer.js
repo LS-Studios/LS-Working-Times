@@ -1,33 +1,29 @@
-import React, {createContext, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {DateTime} from "../../classes/DateTime";
-import TimerProvider, {TimerType} from "../../components/timer/TimerProvider";
 import "./Timer.css"
 import {
     ref,
     onValue,
     set,
-    push,
-    get
+    push, get
 } from "firebase/database"
 import {useInterval} from "../../customhook/UseInterval";
 import {
-    ButtonCard,
-    Spinner, useContextDialog, useContextTheme, useContextTranslation,
+    ButtonCard, Layout,
+    Spinner, useContextDialog, useContextTranslation,
     useContextUserAuth,
     ValueCard
 } from "@LS-Studios/components";
-import {formatDate, getDateFromString, getDateWithoutTime, getEndOfWeek, getStartOfWeek} from "@LS-Studios/date-helper";
+import {formatDate} from "@LS-Studios/date-helper";
 import {getFirebaseDB} from "../../firebase/FirebaseHelper";
 import Saves from "../../components/saves/Saves";
+import {breakTimerContext, workTimerContext} from "../../providers/Providers";
+import TimerComponent from "../../components/timer/TimerComponent";
 
-function Timer({saved, selectedSaveDate, setSavesIsLoading}) {
+function Timer({setCurrentMenu}) {
     const translation = useContextTranslation()
-    const theme = useContextTheme()
     const dialog = useContextDialog();
     const auth = useContextUserAuth()
-
-    const workTimerContext = createContext(null)
-    const breakTimerContext = createContext(null)
 
     const workTimer = useContext(workTimerContext)
     const breakTimer = useContext(breakTimerContext)
@@ -35,13 +31,10 @@ function Timer({saved, selectedSaveDate, setSavesIsLoading}) {
     const [startTime, setStartTime] = useState(null)
     const [startTimeIsFetching, setStartTimeIsFetching] = useState(true)
 
+    const [saves, setSaves] = useState([])
+
     useEffect(() => {
-        get(ref(getFirebaseDB(), "/users/" + auth.user.id + "/saved")).then((snapshot) => {
-            if (!snapshot.exists())
-                setSavesIsLoading(false)
-        }).catch((error) => {
-            console.error(error);
-        });
+        setCurrentMenu(2)
 
         const unsubscribeArray = []
 
@@ -68,15 +61,15 @@ function Timer({saved, selectedSaveDate, setSavesIsLoading}) {
 
     useInterval(() => {
         if (workTimer.startTime != null) {
-            workTimer.updateTime(false)
-            breakTimer.updateTime(false)
+            workTimer.updateTimer(startTime, false)
+            breakTimer.updateTimer(startTime, false)
         }
 
         if (workTimer.timeIsRunning) {
-            workTimer.updateTime()
+            workTimer.updateTimer(startTime)
         }
         if (breakTimer.timeIsRunning) {
-            breakTimer.updateTime()
+            breakTimer.updateTimer(startTime)
         }
     }, 1000);
 
@@ -151,55 +144,33 @@ function Timer({saved, selectedSaveDate, setSavesIsLoading}) {
         }
     }
 
-    const getWorkedTimeInCurrentWeek = () => {
-        const savesThisWeek = saved.filter(save => {
-            const saveDate = getDateFromString(save.date)
-            return saveDate >= getStartOfWeek(selectedSaveDate) && saveDate <= getEndOfWeek(selectedSaveDate)
-        })
-
-        let workedThisWeek = new DateTime(0, 0, 0)
-
-        savesThisWeek.forEach(save => {
-            workedThisWeek = workedThisWeek.addDateTime(DateTime.dateTimeFromString(save.worked))
-        })
-
-        if (getDateWithoutTime(selectedSaveDate) >= getStartOfWeek(new Date()) && getDateWithoutTime(selectedSaveDate) <= getEndOfWeek(new Date())) {
-            workedThisWeek = workedThisWeek.addDateTime(new DateTime(workTimer.getHours, workTimer.getMinutes, workTimer.getSeconds))
-        }
-
-        return workedThisWeek.toTimeString()
-    }
-
     return (
         <div className="timingMenu">
-            <div className="timingMenuTimers">
-                <ValueCard title={translation.translate("timer.date")} value={startTimeIsFetching ? <Spinner type="dots" /> : (startTime != null ? formatDate(startTime) : translation.translate("timer.notStarted"))}/>
-                <ValueCard title={translation.translate("timer.startTime")} value={startTimeIsFetching ? <Spinner type="dots" /> : (startTime != null ? startTime.toLocaleTimeString("de") : translation.translate("timer.notStarted"))} clickAction={startTime != null ? () => {
+            <Layout style={{width: 271}}>
+                <ValueCard style={{width: "100%"}} title={translation.translate("timer.date")} value={startTimeIsFetching ? <Spinner type="dots" /> : (startTime != null ? formatDate(startTime) : translation.translate("timer.notStarted"))}/>
+                <ValueCard style={{width: "100%"}} title={translation.translate("timer.startTime")} value={startTimeIsFetching ? <Spinner type="dots" /> : (startTime != null ? startTime.toLocaleTimeString("de") : translation.translate("timer.notStarted"))} clickAction={startTime != null ? () => {
                     dialog.openDialog("ChangeTimeDialog", {
                         value: DateTime.dateTimeFromDate(workTimer.startTime).toTimeString(),
                         type: "start-time"
                     })
                 } : null}/>
-            </div>
+            </Layout>
 
-            <div className="timingMenuTimers">
-                <TimerProvider timerContext={workTimerContext} startTime={startTime} timerType={TimerType.Work} name={translation.translate("timer.worked")}/>
-                <TimerProvider timerContext={breakTimerContext} startTime={startTime} timerType={TimerType.Break} name={translation.translate("timer.break")} clickAction={startTime != null ? () => {
+            <Layout style={{width: 271}}>
+                <TimerComponent timer={workTimer} name={translation.translate("timer.worked")} />
+                <TimerComponent timer={breakTimer} name={translation.translate("timer.break")} clickAction={startTime != null ? () => {
                     dialog.openDialog("ChangeTimeDialog", {
                         value: new DateTime(breakTimer.currentTime.hours, breakTimer.currentTime.minutes, breakTimer.currentTime.seconds).toTimeString(),
                         type: "break-time"
                     })
-                } : null}/>
-            </div>
+                } : null} />
+            </Layout>
 
-            <div className="timingMenuButtons">
-                <ButtonCard disabled={startTimeIsFetching} title={workTimer.isRunning ? translation.translate("timer.stopWorking") : translation.translate("timer.startWorking")} clickAction={toggleOverallTimer}/>
-                <ButtonCard disabled={startTimeIsFetching || workTimer.startTime == null} title={breakTimer.isRunning ? translation.translate("timer.stopBreak") : translation.translate("timer.startBreak")} clickAction={toggleBreakTimer}/>
-                <ButtonCard disabled={startTimeIsFetching || workTimer.startTime == null} title={translation.translate("timer.resetAndSave")} clickAction={startTime != null ? resetTimers : function (){}}/>
-                <ValueCard className={theme.getThemeClass("singleLineValueCard")} title={translation.translate("timer.workedTimeThisWeek")} value={(workTimer.timeIsFetching || breakTimer.timeIsFetching) ? <Spinner type="dots"/> : getWorkedTimeInCurrentWeek()}/>
-            </div>
+            <ButtonCard disabled={startTimeIsFetching} title={workTimer.isRunning ? translation.translate("timer.stopWorking") : translation.translate("timer.startWorking")} clickAction={toggleOverallTimer}/>
+            <ButtonCard disabled={startTimeIsFetching || workTimer.startTime == null} title={breakTimer.isRunning ? translation.translate("timer.stopBreak") : translation.translate("timer.startBreak")} clickAction={toggleBreakTimer}/>
+            <ButtonCard disabled={startTimeIsFetching || workTimer.startTime == null} title={translation.translate("timer.resetAndSave")} clickAction={startTime != null ? resetTimers : function (){}}/>
 
-            <Saves />
+            <Saves saves={saves} setSaves={setSaves} />
         </div>
     );
 }

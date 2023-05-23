@@ -55,7 +55,7 @@
     "changePlan": "Change plan"
   },
   "timer": {
-    "menuName": "Timer",
+    "menu-name": "Timer",
     "date": "Date",
     "notStarted": "Not started",
     "startTime": "Start time",
@@ -81,7 +81,7 @@
     "edit": "Edit"
   },
   "prognosis": {
-    "menuName": "Prognosis",
+    "menu-name": "Prognosis",
     "weekDay0": "Monday",
     "weekDay1": "Tuesday",
     "weekDay2": "Wednesday",
@@ -110,7 +110,7 @@
     "noMoreWorkThisWeek": "This week, according to the given values, it is no longer necessary to work."
   },
   "planning": {
-    "menuName": "Planning",
+    "menu-name": "Planning",
     "plannings": "Plannings",
     "noSavedPlannings": "No saved plannings",
     "description": "Description",

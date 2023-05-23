@@ -1,4 +1,3 @@
-import "./TimerProvider.css"
 import {DateTime} from "../../classes/DateTime";
 import React, {useEffect, useMemo, useState} from "react";
 import {useContextUserAuth, ValueCard} from "@LS-Studios/components";
@@ -10,7 +9,7 @@ export const TimerType = {
     Break: "break"
 }
 
-function TimerProvider({timerContext, startTime, name, timerType, clickAction}) {
+function TimerProvider({timerContext, timerType, children}) {
     const auth = useContextUserAuth()
 
     const [currentTime, setCurrentTime] = useState(new DateTime(0,0,0))
@@ -26,43 +25,45 @@ function TimerProvider({timerContext, startTime, name, timerType, clickAction}) 
 
         const unsubscribeArray = []
 
-        unsubscribeArray.push(
-            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-stop-time"), snapshot => {
-                const data = snapshot.val()
+        if (auth.user != null) {
+            unsubscribeArray.push(
+                onValue(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-stop-time"), snapshot => {
+                    const data = snapshot.val()
 
-                setTimeIsFetching(false)
+                    setTimeIsFetching(false)
 
-                if (data == null || data === "")
-                    setTimeStopTime(null)
-                else
-                    setTimeStopTime(DateTime.dateTimeFromString(data))
-            }))
-        unsubscribeArray.push(
-            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-taken-stop"), snapshot => {
-                const data = snapshot.val()
+                    if (data == null || data === "")
+                        setTimeStopTime(null)
+                    else
+                        setTimeStopTime(DateTime.dateTimeFromString(data))
+                }))
+            unsubscribeArray.push(
+                onValue(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-taken-stop"), snapshot => {
+                    const data = snapshot.val()
 
-                if (data == null || data === "")
-                    setTimeTakenStop(new DateTime(0,0,0))
-                else
-                    setTimeTakenStop(DateTime.dateTimeFromString(data))
-            }))
-        unsubscribeArray.push(
-            onValue(
-                ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-is-running"),
+                    if (data == null || data === "")
+                        setTimeTakenStop(new DateTime(0, 0, 0))
+                    else
+                        setTimeTakenStop(DateTime.dateTimeFromString(data))
+                }))
+            unsubscribeArray.push(
+                onValue(
+                    ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-is-running"),
                     snapshot => {
-                const data = snapshot.val()
+                        const data = snapshot.val()
 
-                if (data == null || data === "")
-                    setTimeIsRunning(false)
-                else
-                    setTimeIsRunning(data)
-            })
-        )
+                        if (data == null || data === "")
+                            setTimeIsRunning(false)
+                        else
+                            setTimeIsRunning(data)
+                    })
+            )
+        }
 
         return () => {
             unsubscribeArray.forEach(unsub => unsub())
         }
-    }, [])
+    }, [auth.user])
 
     const startTimer = () => {
         const firebaseDB = getFirebaseDB()
@@ -91,7 +92,7 @@ function TimerProvider({timerContext, startTime, name, timerType, clickAction}) 
         set(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-taken-stop"), "00:00:00")
     }
 
-    const updateTimer = (takeCurrent = true) => {
+    const updateTimer = (startTime, takeCurrent = true) => {
         const dateTimeDiff = (takeCurrent ? new DateTime() : timeStopTime).getDateDiffToDateTime(DateTime.dateTimeFromDate(startTime), timeTakenStop)
 
         setCurrentTime({...currentTime, hours: dateTimeDiff.hours,
@@ -101,27 +102,21 @@ function TimerProvider({timerContext, startTime, name, timerType, clickAction}) 
 
     const value = useMemo(
         () => ({
-            startTime,
             currentTime,
             timeStopTime,
             timeIsRunning,
             timeIsFetching,
             startTimer,
             stopTimer,
-            updateTimer
+            updateTimer,
+            resetTimer
         }),
-        [startTime, currentTime, timeStopTime, timeIsRunning, timeIsFetching]
+        [currentTime, timeStopTime, timeIsRunning, timeIsFetching]
     );
 
     return (
         <timerContext.Provider value={value}>
-            <ValueCard title={name} isLoading={timeIsFetching} value={
-                new DateTime(
-                    currentTime.hours,
-                    currentTime.minutes,
-                    currentTime.seconds
-                ).toTimeString()
-            } clickAction={clickAction}/>
+            {children}
         </timerContext.Provider>
     );
 }

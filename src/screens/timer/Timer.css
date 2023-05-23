@@ -5,19 +5,6 @@
     flex-direction: column;
 }
 
-.timingMenuTimers {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    width: 271px;
-    gap: 10px;
-}
-
-.timingMenuButtons {
-    margin-bottom: 10px;
-}
-
 .disabled {
     opacity: 0.5;
     pointer-events: none;

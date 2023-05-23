@@ -8,13 +8,12 @@ import {
     useContextUserAuth
 } from "@LS-Studios/components";
 import useLocalStorage from "@LS-Studios/use-local-storage";
-import { onAuthStateChanged } from "firebase/auth";
 import {ref, get} from "firebase/database";
-import {AuthRequired, getUserFirebaseAuth, getUserFirebaseDB} from "@LS-Studios/use-user-auth";
-import Saves from "../components/saves/Saves";
+import {AuthRequired, getUserFirebaseDB} from "@LS-Studios/use-user-auth";
 import Planning from "./planning/Planning";
 import Prognosis from "./prognosis/Prognosis";
 import AdditionalSettings from "./settings/AdditionalSettings";
+import Timer from "./timer/Timer";
 
 function Screens() {
     const translation = useContextTranslation()
@@ -28,46 +27,42 @@ function Screens() {
     const [jumpInLink, setJumpInLink] = useState("/lists")
 
     useEffect(() => {
-        const unsubscribeArray = []
+        // console.log("1")
+        //
+        // get(ref(getFirebaseDB(), "/")).then((snapshot) => {
+        //     console.log("2")
+        // })
 
-        if (auth.user != null && !auth.user.isGuest) {
-            auth.syncStateWithFirebaseUser().then((syncUser) => {
-                translation.changeLanguage(syncUser.language)
-                theme.changeTheme(syncUser.theme)
-            })
-
-            unsubscribeArray.push(
-                onAuthStateChanged(getUserFirebaseAuth(), (user) => {
-                    if (user == null) {
-                        unsubscribeArray.forEach(unsubscribe => unsubscribe())
-                        auth.logout()
-                        return
-                    }
-                }))
-        }
-
-        return () => {
-            unsubscribeArray.forEach(unsub => unsub())
-        }
-    }, [])
-
-    useEffect(() => {
-        if (auth.user == null) {
-            navigate("/login")
-        } else {
+        if (auth.user != null) {
             const firebaseDB = getUserFirebaseDB()
 
             get(ref(firebaseDB, "/users/" + auth.user.id + "/theme")).then((snapshot) => {
                 theme.changeTheme(snapshot.val())
+                auth.updateCredentials(
+                    null,
+                    null,
+                    null,
+                    null,
+                    snapshot.val(),
+                    translation
+                )
             })
 
             get(ref(firebaseDB, "/users/" + auth.user.id + "/language")).then((snapshot) => {
                 translation.changeLanguage(snapshot.val())
+                auth.updateCredentials(
+                    null,
+                    null,
+                    null,
+                    snapshot.val(),
+                    null,
+                    translation
+                )
             })
         }
 
         setMenuText(auth.user ? auth.user.name : translation.translate("login.login"))
-    }, [auth.user])
+    }, [])
 
     useEffect(() => {
         document.querySelector(":root").style.setProperty("--bg-color", theme.getThemeColor("screen-bg-color"))
@@ -85,13 +80,15 @@ function Screens() {
     return (
         <OuterBody menuList={[
             {name:menuText},
-            {name:translation.translate("timer.menuName"), link:"/timer"},
-            {name:translation.translate("planning.menuName"), link:"/planning"},
-            {name:translation.translate("prognosis.menuName"), link:"/prognosis"},
-            {name:translation.translate("settings.menuName"), link:"/settings"}
+            {name:translation.translate("settings.menu-name"), link:"/settings"},
+            {name:translation.translate("timer.menu-name"), link:"/timer"},
+            {name:translation.translate("planning.menu-name"), link:"/planning"},
+            {name:translation.translate("prognosis.menu-name"), link:"/prognosis"}
         ]} isAvailable={(menu, i) => {
             if (auth.user == null) {
                 return i === 0;
+            } else {
+                return true
             }
         }} changeLink={link => navigate(link)} currentMenu={currentMenu} setCurrentMenu={setCurrentMenu} footerName={"LS-Working-Times"}>
             <Routes>
@@ -125,7 +122,7 @@ function Screens() {
                     path="/timing"
                     element={
                         <AuthRequired userAuth={auth} notAuthenticated={() => navigate("/login")}>
-                            <Saves setCurrentMenu={setCurrentMenu}/>
+                            <Timer setCurrentMenu={setCurrentMenu}/>
                         </AuthRequired>
                     }
                 />
