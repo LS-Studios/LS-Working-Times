@@ -1,87 +1,49 @@
 import "./ChangeTimeDialog.scss"
 import React, {useEffect, useState} from "react";
-import {getDatabase, ref, set, get} from "firebase/database";
-import {initializeApp} from "firebase/app";
-import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
-import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
-import {getAuth} from "firebase/auth";
+import {ref, set, get} from "firebase/database";
 import {DateTime} from "../../classes/DateTime";
 import {
     ButtonCard,
-    Divider,
+    Divider, Layout,
     TimeInputContent,
-    Title, useContextDialog, useContextTranslation
+    Title, useContextDialog, useContextTranslation, useContextUserAuth
 } from "@LS-Studios/components";
 import {padTo2Digits} from "@LS-Studios/date-helper";
+import {getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 const ChangeTimeDialog = ({ data }) => {
     const translation = useContextTranslation()
     const dialog = useContextDialog();
-
     const [currentTime, setCurrentTime] = useState({
         hours: "00",
         minutes: "00",
         seconds: "00"
     })
 
-    const [originalTime, setOriginalTime] = useState(new DateTime())
-
     const close = () => {
         dialog.closeTopDialog()
     }
 
     const changeTime = () => {
-        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        const db = getDatabase(lsWorkingTimesApp)
-        const app = initializeApp(LSWalletConfig, "LS-Wallet")
-        const auth = getAuth(app)
-
         const newDateTime = new DateTime(
             parseInt(currentTime.hours),
             parseInt(currentTime.minutes),
             parseInt(currentTime.seconds)
         )
 
-        get(ref(db, "/users/"+auth.user.id+"/break-taken-stop")).then((snapshot) => {
-            if (snapshot.exists()) {
-                const dateTime = originalTime.getAbsoluteDiffToDateTime(newDateTime)
-                const newBreakTakenStopTime = DateTime.dateTimeFromString(snapshot.val()).addDateTime(dateTime)
-                set(ref(db, "/users/"+auth.user.id+"/break-taken-stop"), newBreakTakenStopTime.toTimeString())
-            } else {
-                console.log("No data available");
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-
-        if (data.type == "start-time") {
-            set(ref(db, "/users/"+auth.user.id+"/start-time"), newDateTime.toTimeString())
-        } else if (data.type == "break-time") {
-            get(ref(db, "/users/"+auth.user.id+"/work-taken-stop")).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const dateTime = originalTime.getAbsoluteDiffToDateTime(newDateTime)
-                    const newBreakTakenStopTime = DateTime.dateTimeFromString(snapshot.val()).subtractDateTime(dateTime)
-
-                    set(ref(db, "/users/"+auth.user.id+"/work-taken-stop"), newBreakTakenStopTime.toTimeString())
-                } else {
-                    console.log("No data available");
-                }
-            }).catch((error) => {
-                console.error(error);
-            });
-        }
+        data.setNewTime(newDateTime)
 
         close()
     }
 
     useEffect(() => {
-        const dateTime = DateTime.dateTimeFromString(data.value)
+        const dateTime = data.value
 
-        setCurrentTime({...currentTime, hours: padTo2Digits(dateTime.getHours),
-            minutes: padTo2Digits(dateTime.getMinutes),
-            seconds: padTo2Digits(dateTime.getSeconds)})
-
-        setOriginalTime(dateTime)
+        setCurrentTime({
+            hours: padTo2Digits(dateTime.hours),
+            minutes: padTo2Digits(dateTime.minutes),
+            seconds: padTo2Digits(dateTime.seconds)
+        })
     }, [])
 
     return (
@@ -91,10 +53,10 @@ const ChangeTimeDialog = ({ data }) => {
 
             <TimeInputContent currentTimeState={currentTime} setCurrentTimeState={setCurrentTime}/>
 
-            <div className="changeTimeActionButtons">
-                <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
-                <ButtonCard title={translation.translate("dialog.confirm")} clickAction={changeTime}/>
-            </div>
+            <Layout>
+                <ButtonCard justButton buttonStyle={{width:"100%"}} title={translation.translate("dialog.cancel")} clickAction={close}/>
+                <ButtonCard justButton buttonStyle={{width:"100%"}} title={translation.translate("dialog.confirm")} clickAction={changeTime}/>
+            </Layout>
         </>
     );
 }

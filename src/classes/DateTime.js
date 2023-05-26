@@ -1,10 +1,20 @@
 export class DateTime {
     constructor(hours=0, minutes=0, seconds=0) {
-        this.hours = hours != null ? parseInt(hours) : DateTime.dateTimeFromDate(new Date()).getHours
-        this.minutes = minutes != null ? parseInt(minutes) : DateTime.dateTimeFromDate(new Date()).getMinutes
-        this.seconds = seconds != null ? parseInt(seconds) : DateTime.dateTimeFromDate(new Date()).getSeconds
+        this.hours = parseInt(hours)
+        this.minutes = parseInt(minutes)
+        this.seconds = parseInt(seconds)
 
         this.getDateDiffToDateTime = this.getDateDiffToDateTime.bind(this)
+    }
+
+    static currentTime() {
+        const date = new Date()
+
+        return new DateTime(
+            DateTime.dateTimeFromDate(date).hours,
+            DateTime.dateTimeFromDate(date).minutes,
+            DateTime.dateTimeFromDate(date).seconds
+        )
     }
 
     static dateTimeFromDate(date) {
@@ -33,9 +43,9 @@ export class DateTime {
         if (dateTime != null) {
             const date = this.getDate()
 
-            date.setHours(date.getHours() - dateTime.getHours - (takenStop != null ? takenStop.getHours : 0))
-            date.setMinutes(date.getMinutes() - dateTime.getMinutes - (takenStop != null ? takenStop.getMinutes : 0))
-            date.setSeconds(date.getSeconds() - dateTime.getSeconds - (takenStop != null ? takenStop.getSeconds : 0))
+            date.setHours(date.getHours() - dateTime.hours - (takenStop != null ? takenStop.hours : 0))
+            date.setMinutes(date.getMinutes() - dateTime.minutes - (takenStop != null ? takenStop.minutes : 0))
+            date.setSeconds(date.getSeconds() - dateTime.seconds - (takenStop != null ? takenStop.seconds : 0))
 
             return new DateTime(
                 date.getHours(),
@@ -48,9 +58,9 @@ export class DateTime {
     getAbsoluteDiffToDateTime(dateTime) {
         if (dateTime != null) {
             return new DateTime(
-                this.hours - dateTime.getHours,
-                this.minutes - dateTime.getMinutes,
-                this.seconds - dateTime.getSeconds
+                this.hours - dateTime.hours,
+                this.minutes - dateTime.minutes,
+                this.seconds - dateTime.seconds
             )
         }
     }
@@ -96,10 +106,10 @@ export class DateTime {
             }
 
             //Use date to auto increase hours
-            newHours = newHours + dateTime.getHours
+            newHours = newHours + dateTime.hours
 
-            addMinutes(dateTime.getMinutes)
-            addSeconds(dateTime.getSeconds)
+            addMinutes(dateTime.minutes)
+            addSeconds(dateTime.seconds)
 
             return new DateTime(
                 newHours,
@@ -169,10 +179,10 @@ export class DateTime {
             }
 
             //Use date to auto increase hours
-            newHours = newHours - dateTime.getHours
+            newHours = newHours - dateTime.hours
 
-            subtractMinutes(dateTime.getMinutes)
-            subtractSeconds(dateTime.getSeconds)
+            subtractMinutes(dateTime.minutes)
+            subtractSeconds(dateTime.seconds)
 
             return new DateTime(
                 newHours,
@@ -188,10 +198,10 @@ export class DateTime {
         if (dateTime != null) {
             let newHours = this.hours
             let newMinutes = this.minutes
-            let newSeconds = (this.seconds === 0 || dateTime.getSeconds === 0) ? 0 : this.seconds / dateTime.getSeconds
+            let newSeconds = (this.seconds === 0 || dateTime.seconds === 0) ? 0 : this.seconds / dateTime.seconds
 
-            if (newMinutes !== 0 && dateTime.getMinutes !== 0 && newMinutes % dateTime.getMinutes !== 0) {
-                const minuteDiv = (newMinutes / dateTime.getSeconds).toFixed(2)
+            if (newMinutes !== 0 && dateTime.minutes !== 0 && newMinutes % dateTime.minutes !== 0) {
+                const minuteDiv = (newMinutes / dateTime.seconds).toFixed(2)
                 const minuteDivSplit = minuteDiv.split(".")
                 newMinutes = parseInt( minuteDivSplit[0])
                 let calcDateTime = new DateTime(newHours, newMinutes, newSeconds)
@@ -200,11 +210,11 @@ export class DateTime {
                 newMinutes = calcDateTime.minutes
                 newSeconds = calcDateTime.seconds
             } else {
-                newMinutes = (newMinutes === 0 || dateTime.getMinutes === 0) ? 0 : newMinutes / dateTime.getMinutes
+                newMinutes = (newMinutes === 0 || dateTime.minutes === 0) ? 0 : newMinutes / dateTime.minutes
             }
 
-            if (newHours !== 0 && dateTime.getHours !== 0 && newHours % dateTime.getHours !== 0) {
-                const hourDiv = (newHours / dateTime.getHours).toFixed(2)
+            if (newHours !== 0 && dateTime.hours !== 0 && newHours % dateTime.hours !== 0) {
+                const hourDiv = (newHours / dateTime.hours).toFixed(2)
                 const hourDivSplit = hourDiv.split(".")
                 newHours = parseInt(hourDivSplit[0])
                 let calcDateTime = new DateTime(newHours, newMinutes, newSeconds)
@@ -218,7 +228,7 @@ export class DateTime {
                 newMinutes = calcDateTime.minutes
                 newSeconds = calcDateTime.seconds
             } else {
-                newHours = (newHours === 0 || dateTime.getHours === 0) ? 0 : newHours / dateTime.getHours
+                newHours = (newHours === 0 || dateTime.hours === 0) ? 0 : newHours / dateTime.hours
             }
 
             return new DateTime(

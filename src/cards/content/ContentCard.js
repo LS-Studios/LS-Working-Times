@@ -32,7 +32,7 @@ const ContentCard = ({content, title, isExpanded, deleteAction, editAction}) => 
     }
 
     return (
-        <ItemCard onClick={expand}>
+        <ItemCard style={{width: 250}} onClick={expand}>
             <Title value={title} />
 
             <Gone isVisible={expanded} goneType={GoneType.HEIGHT}>
@@ -43,10 +43,10 @@ const ContentCard = ({content, title, isExpanded, deleteAction, editAction}) => 
                 <Gone isVisible={editAction}>
                     { content != null ? <Divider marginTop={2}/> : null }
 
-                    <Layout>
-                        <ButtonCard title={translation.translate("timer.delete")} clickAction={deleteData} />
-                        <ButtonCard title={translation.translate("timer.edit")} clickAction={editData} />
-                    </Layout>
+                    <div className="itemCardButtonBar">
+                        <div onClick={deleteData}>{translation.translate("timer.delete")}</div>
+                        <div onClick={editData}>{translation.translate("timer.edit")}</div>
+                    </div>
                 </Gone>
             </Gone>
         </ItemCard>

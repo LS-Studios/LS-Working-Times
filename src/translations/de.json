@@ -44,17 +44,24 @@
     "close": "Schließen",
     "yes": "Ja",
     "no": "Nein",
+    "deleteAccount": "Konto löschen",
     "doYouReallyWantToDeleteThisAccount": "Möchtest du dieses Konto wirklich löschen?",
-    "doYouRelayWantToDeleteThisSave": "Möchtest du diese gespeichte Zeit wirklich löschen?",
+    "deleteSave": "Gespeicherte Zeit löschen",
+    "doYouRelayWantToDeleteThisSave": "Möchtest du diese gespeicherte Zeit wirklich löschen?",
+    "deletePlan": "Plan löschen?",
     "doYouRelayWantToDeleteThisPlan": "Möchtest du diesen Plan wirklich löschen?",
+    "deleteTimeRange": "Zeitspanne löschen?",
     "doYouRelayWantToDeleteThisTimeRange": "Möchtest du diese Zeitspanne wirklich löschen?",
-    "doYouReallyWantToDeleteAllData": "Möchtest du wirklich alle gepeicheten Zeit löschen?",
+    "deleteAllData": "Alle gespeicherten Zeit löschen",
+    "doYouReallyWantToDeleteAllData": "Möchtest du wirklich alle gespeicherten Zeit löschen?",
     "changeTime": "Zeit ändern",
-    "changePlan": "Plan ändern"
+    "changePlan": "Plan ändern",
+    "create": "Erstellen"
   },
   "timer": {
     "menu-name": "Timer",
     "date": "Datum",
+    "name": "Name",
     "notStarted": "Nicht gestarted",
     "startTime": "Startzeit",
     "endTime": "Endzeit",
@@ -76,7 +83,13 @@
     "workedTime": "Gearbeitete Zeit",
     "breakTime": "Pausenzeit",
     "delete": "Löschen",
-    "edit": "Bearbeiten"
+    "edit": "Bearbeiten",
+    "change-timer": "Timer wechseln",
+    "editTimer": "Timer bearbeiten",
+    "createTimer": "Timer erstellen",
+    "current": " (Aktuell)",
+    "search-for-timer": "Nach Timer suchen",
+    "no-timers": "Keine Timer"
   },
   "prognosis": {
     "menu-name": "Prognose",
@@ -105,7 +118,8 @@
     "averageStartTime": "Durchschnittliche Startzeit",
     "averageEndTime": "Durchschnittliche Endzeit",
     "averageBreakTime": "Durchschnittliche Pausenzeit",
-    "noMoreWorkThisWeek": "Diese woche muss nach den gegebenen werten nicht mehr gearbeitet werden."
+    "noMoreWorkThisWeek": "Diese woche muss nach den gegebenen werten nicht mehr gearbeitet werden.",
+    "noTimeRanges": "Keine Zeitspannen"
   },
   "planning": {
     "menu-name": "Planung",

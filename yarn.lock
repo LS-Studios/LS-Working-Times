@@ -1963,7 +1963,7 @@
 "@LS-Studios/components@file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz":
   version "0.0.522"
   resolved "file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz"
-  integrity sha512-QOgVntX+AiwazMglajkOYA47jXMglLSSnnJZRzFiDMlUIO1Kw1WsUhc1eDIZ0CbdbNKAtFpDBaWTDluUHf/DQw==
+  integrity sha512-Dt8fimAXSkkDyunll2PWOvEW/BQJ86jUEngt+8wi7oeyvhfKIriQw6iJulAImBRFjpkHPK4kpSRI5ZL5Z7uLaw==
 
 "@LS-Studios/date-helper@file:../ls-react-components/LS-Library/datehelper/LS-Studios-date-helper-0.0.3.tgz":
   version "0.0.3"
@@ -1973,12 +1973,12 @@
 "@LS-Studios/general@file:../ls-react-components/LS-Library/general/LS-Studios-general-0.0.1.tgz":
   version "0.0.1"
   resolved "file:../ls-react-components/LS-Library/general/LS-Studios-general-0.0.1.tgz"
-  integrity sha512-C9QLyxYMQxT45S9JQ4vdwHXNkoBZDaZ54ZMR5JnKo0fgJxbCAFDe8WRJNyOjP/Mrvuq9qzDPh7ESHfV5Nl0DUA==
+  integrity sha512-dGNJBNlEUrE9dDLIGePiy45fYfB4dQ9AqXAKwjFCbQtcpGWzPnBIUi0kxFhjE8GuqPsu5koMgdiMOD4hKIEi+Q==
 
 "@LS-Studios/use-local-storage@file:../ls-react-components/LS-Library/uselocalstorage/LS-Studios-use-local-storage-0.0.3.tgz":
   version "0.0.3"
   resolved "file:../ls-react-components/LS-Library/uselocalstorage/LS-Studios-use-local-storage-0.0.3.tgz"
-  integrity sha512-cHHPHyDl1PxxHGBhsYE4fOwJn5hLTU7lz1yLu0p2i4eWBcNRaNN8jyWoWExUVh2Q9SvQdZVdiXgodJb3STWiXA==
+  integrity sha512-seoWoP31/3ORTmCFJXzGlSoW7KdCRiip220RhGYtUEyqf/zXwnOPBBlhzOb66j54DwZiy7kELCTL7mL38n7lQQ==
 
 "@LS-Studios/use-theme@file:../ls-react-components/LS-Library/usetheme/LS-Studios-use-theme-0.0.10.tgz":
   version "0.0.10"
@@ -1988,7 +1988,7 @@
 "@LS-Studios/use-user-auth@file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz":
   version "0.0.7"
   resolved "file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz"
-  integrity sha512-jeYjdspyhxUvpsHqUszDM+8UYwmVg3lFhHa0anITI8m7+tufYxEGiUMlfR5V0F9D/PYizn+I0I4p3fyME4mdLg==
+  integrity sha512-GtokDJPHSn/+H/Pt9jDy5CRfQ2CZ9oXojVNHa9N5UxozSdCirv+qAxjyfeCYOJ++3H50Kz9IlmAVhQmPIEfcFQ==
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"

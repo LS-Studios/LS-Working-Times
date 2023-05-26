@@ -1,21 +1,20 @@
 import "./EditPlanningDialog.scss"
 import React, {useEffect, useState} from "react";
-import {getDatabase, ref, set} from "firebase/database";
-import {initializeApp} from "firebase/app";
-import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
-import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
-import {getAuth} from "firebase/auth";
+import {ref, set} from "firebase/database";
 import {formatDate, getDateFromString} from "@LS-Studios/date-helper";
 import {
     ButtonCard,
     Divider,
     InputContent,
-    DateContent, Title, useContextTranslation, useContextDialog
+    DateContent, Title, useContextTranslation, useContextDialog, useContextUserAuth, Layout, useContextGlobalVariables
 } from "@LS-Studios/components";
+import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 const EditPlanningDialog = ({data}) => {
     const translation = useContextTranslation()
     const dialog = useContextDialog();
+    const auth = useContextUserAuth()
+    const globalVariables = useContextGlobalVariables()
 
     const [currentNewPlanInput, setCurrentNewPlanInput] = useState("");
     const [currentPlanDate, setCurrentPlanDate] = useState(new Date());
@@ -30,12 +29,7 @@ const EditPlanningDialog = ({data}) => {
     }
 
     const updatePlan = () => {
-        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        const db = getDatabase(lsWorkingTimesApp)
-        const app = initializeApp(LSWalletConfig, "LS-Wallet")
-        const auth = getAuth(app)
-
-        set(ref(db, "/users/"+auth.user.id+"/plannings/"+data.plan.id), {
+        set(ref(getFirebaseDB(), getCurrentTimerPath(globalVariables.getLSVar("currentTimerId"), auth.user) + "plannings/" + data.plan.id), {
             id:data.plan.id,
             date:formatDate(currentPlanDate),
             content:currentNewPlanInput
@@ -59,10 +53,10 @@ const EditPlanningDialog = ({data}) => {
 
             <Divider marginTop={16}/>
 
-            <div className="editPlanDialogActionButtons">
-                <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
-                <ButtonCard title={translation.translate("dialog.confirm")} clickAction={updatePlan}/>
-            </div>
+            <Layout>
+                <ButtonCard justButton buttonStyle={{width:"100%"}} title={translation.translate("dialog.cancel")} clickAction={close}/>
+                <ButtonCard justButton buttonStyle={{width:"100%"}} title={translation.translate("dialog.confirm")} clickAction={updatePlan}/>
+            </Layout>
         </>
     );
 }

@@ -1,15 +1,12 @@
 import React from 'react';
-import {DateTime} from "../../classes/DateTime";
-import {ValueCard} from "@LS-Studios/components";
+import {useContextTranslation, ValueCard} from "@LS-Studios/components";
 
 function TimerComponent({name, clickAction, timer}) {
+    const translation = useContextTranslation()
+
     return (
         <ValueCard title={name} isLoading={timer.timeIsFetching} value={
-            new DateTime(
-                timer.currentTime.hours,
-                timer.currentTime.minutes,
-                timer.currentTime.seconds
-            ).toTimeString()
+            timer.currentTime ? timer.currentTime.toTimeString() : translation.translate("timer.notStarted")
         } clickAction={clickAction}/>
     );
 }

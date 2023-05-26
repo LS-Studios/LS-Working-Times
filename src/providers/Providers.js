@@ -13,14 +13,15 @@ import {
     ContextDialogProvider,
     ContextThemeProvider,
     ContextTranslationProvider,
-    ContextUserAuthProvider
+    ContextUserAuthProvider,
+    ContextGlobalVariablesProvider
 } from "@LS-Studios/components";
 import ChangeTimeDialog from "../dialogs/time/ChangeTimeDialog";
 import EditSaveTimeDialog from "../dialogs/save/EditSaveTimeDialog";
 import EditPlanningDialog from "../dialogs/planning/EditPlanningDialog";
 import PrognosisDialog from "../dialogs/prognosis/PrognosisDialog";
-import TimerProvider, {TimerType} from "../components/timer/TimerProvider";
-import {DateTime} from "../classes/DateTime";
+import CreateEditTimerDialog from "../dialogs/edittimer/CreateEditTimerDialog";
+import ChangeTimerDialog from "../dialogs/changetimer/ChangeTimerDialog";
 
 export const workTimerContext = createContext(null)
 export const breakTimerContext = createContext(null)
@@ -34,21 +35,21 @@ function Providers({children}) {
             }}>
                 <ContextUserAuthProvider>
                     <ContextTranslationProvider translationFiles={{de, en}}>
-                        <ContextDialogProvider dialogs={{
-                            "ChangeCredentialsDialog":ChangeCredentialsDialog,
-                            "OptionDialog":OptionDialog,
-                            "ItemDialog":ItemDialog,
-                            "ChangeTimeDialog":ChangeTimeDialog,
-                            "EditSaveTimeDialog":EditSaveTimeDialog,
-                            "EditPlanningDialog":EditPlanningDialog,
-                            "PrognosisDialog":PrognosisDialog
-                        }}>
-                            <TimerProvider timerContext={workTimerContext} timerType={TimerType.Work}>
-                                <TimerProvider timerContext={breakTimerContext} timerType={TimerType.Break}>
+                        <ContextGlobalVariablesProvider>
+                            <ContextDialogProvider dialogs={{
+                                "ChangeCredentialsDialog":ChangeCredentialsDialog,
+                                "OptionDialog":OptionDialog,
+                                "ItemDialog":ItemDialog,
+                                "ChangeTimeDialog":ChangeTimeDialog,
+                                "EditSaveTimeDialog":EditSaveTimeDialog,
+                                "EditPlanningDialog":EditPlanningDialog,
+                                "PrognosisDialog":PrognosisDialog,
+                                "CreateEditTimerDialog":CreateEditTimerDialog,
+                                "ChangeTimerDialog":ChangeTimerDialog
+                            }}>
                                     { children }
-                                </TimerProvider>
-                            </TimerProvider>
-                        </ContextDialogProvider>
+                            </ContextDialogProvider>
+                        </ContextGlobalVariablesProvider>
                     </ContextTranslationProvider>
                 </ContextUserAuthProvider>
             </ContextThemeProvider>

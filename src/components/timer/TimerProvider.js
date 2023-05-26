@@ -1,8 +1,8 @@
 import {DateTime} from "../../classes/DateTime";
 import React, {useEffect, useMemo, useState} from "react";
-import {useContextUserAuth, ValueCard} from "@LS-Studios/components";
+import {useContextGlobalVariables, useContextUserAuth} from "@LS-Studios/components";
 import {get, onValue, ref, set} from "firebase/database";
-import {getFirebaseDB} from "../../firebase/FirebaseHelper";
+import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 export const TimerType = {
     Work: "work",
@@ -11,26 +11,42 @@ export const TimerType = {
 
 function TimerProvider({timerContext, timerType, children}) {
     const auth = useContextUserAuth()
+    const globalVariables = useContextGlobalVariables()
 
-    const [currentTime, setCurrentTime] = useState(new DateTime(0,0,0))
+    const [currentTime, setCurrentTime] = useState(null)
 
     const [timeIsRunning, setTimeIsRunning] = useState(false);
     const [timeStopTime, setTimeStopTime] = useState(null);
-    const [timeTakenStop, setTimeTakenStop] = useState(new DateTime(0, 0, 0));
+    const [timeTakenStop, setTimeTakenStop] = useState(new DateTime());
 
     const [timeIsFetching, setTimeIsFetching] = useState(true)
+
+    const currentTimerId = globalVariables.getLSVar("currentTimerId")
 
     useEffect(() => {
         const firebaseDB = getFirebaseDB()
 
         const unsubscribeArray = []
 
-        if (auth.user != null) {
-            unsubscribeArray.push(
-                onValue(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-stop-time"), snapshot => {
-                    const data = snapshot.val()
+        if (!auth.userIsFetching && auth.user) {
+            setTimeIsFetching(true)
+            setCurrentTime(null)
+            setTimeIsRunning(false)
+            setTimeStopTime(null)
+            setTimeTakenStop(new DateTime())
 
-                    setTimeIsFetching(false)
+            get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timerType + "-star-time")).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const startTime = DateTime.dateTimeFromString(snapshot.val())
+                    updateTimer(startTime)
+                }
+
+                setTimeIsFetching(false)
+            })
+
+            unsubscribeArray.push(
+                onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timerType + "-stop-time"), snapshot => {
+                    const data = snapshot.val()
 
                     if (data == null || data === "")
                         setTimeStopTime(null)
@@ -38,18 +54,16 @@ function TimerProvider({timerContext, timerType, children}) {
                         setTimeStopTime(DateTime.dateTimeFromString(data))
                 }))
             unsubscribeArray.push(
-                onValue(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-taken-stop"), snapshot => {
+                onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timerType + "-taken-stop"), snapshot => {
                     const data = snapshot.val()
 
                     if (data == null || data === "")
-                        setTimeTakenStop(new DateTime(0, 0, 0))
+                        setTimeTakenStop(new DateTime())
                     else
                         setTimeTakenStop(DateTime.dateTimeFromString(data))
                 }))
             unsubscribeArray.push(
-                onValue(
-                    ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-is-running"),
-                    snapshot => {
+                onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timerType + "-is-running"), snapshot => {
                         const data = snapshot.val()
 
                         if (data == null || data === "")
@@ -63,41 +77,47 @@ function TimerProvider({timerContext, timerType, children}) {
         return () => {
             unsubscribeArray.forEach(unsub => unsub())
         }
-    }, [auth.user])
+    }, [auth.userIsFetching, currentTimerId])
 
-    const startTimer = () => {
+    const startTimer = (user) => {
         const firebaseDB = getFirebaseDB()
 
-        set(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-is-running"), true)
+        set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, user) + timerType + "-is-running"), true)
 
-        const newStopTime = timeTakenStop.addDateTime(new DateTime().getDateDiffToDateTime(timeStopTime))
+        const newStopTime = timeTakenStop.addDateTime(DateTime.currentTime().getDateDiffToDateTime(timeStopTime))
 
-        set(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-taken-stop"), newStopTime.toTimeString())
+        set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, user) + timerType + "-taken-stop"), newStopTime.toTimeString())
     };
 
-    const stopTimer = () => {
-        const firebaseDB = getFirebaseDB()
-        set(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-is-running"), false)
-        set(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-stop-currentTime"), new DateTime().toTimeString())
-    }
-
-    const resetTimer = () => {
-        stopTimer()
-        setCurrentTime({...currentTime, hours: 0, minutes: 0, seconds: 0})
-
+    const stopTimer = (user, actualTimerId) => {
         const firebaseDB = getFirebaseDB()
 
-        set(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-is-running"), false)
-        set(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-stop-currentTime"), "")
-        set(ref(firebaseDB, "/users/" + auth.user.id + "/" + timerType + "-taken-stop"), "00:00:00")
+        set(ref(firebaseDB, getCurrentTimerPath(actualTimerId || currentTimerId, user) + timerType + "-is-running"), false)
+        set(ref(firebaseDB, getCurrentTimerPath(actualTimerId || currentTimerId, user) + timerType + "-stop-time"), DateTime.currentTime().toTimeString())
     }
 
-    const updateTimer = (startTime, takeCurrent = true) => {
-        const dateTimeDiff = (takeCurrent ? new DateTime() : timeStopTime).getDateDiffToDateTime(DateTime.dateTimeFromDate(startTime), timeTakenStop)
+    const resetTimer = (user, actualTimerId) => {
+        stopTimer(user, actualTimerId)
+        setCurrentTime(null)
+        const firebaseDB = getFirebaseDB()
 
-        setCurrentTime({...currentTime, hours: dateTimeDiff.hours,
-            minutes: dateTimeDiff.minutes,
-            seconds: dateTimeDiff.seconds})
+        set(ref(firebaseDB, getCurrentTimerPath(actualTimerId || currentTimerId, user) + timerType + "-is-running"), false)
+        set(ref(firebaseDB, getCurrentTimerPath(actualTimerId || currentTimerId, user) + timerType + "-stop-time"), "")
+        set(ref(firebaseDB, getCurrentTimerPath(actualTimerId || currentTimerId, user) + timerType + "-taken-stop"), "00:00:00")
+    }
+
+    const updateTimer = (startTime) => {
+        if (!timeIsFetching) {
+            const dateTimeDiff = (timeIsRunning ? DateTime.currentTime() : timeStopTime).getDateDiffToDateTime(startTime, timeTakenStop)
+
+            setCurrentTime(
+                new DateTime(
+                    dateTimeDiff.hours,
+                    dateTimeDiff.minutes,
+                    dateTimeDiff.seconds
+                )
+            )
+        }
     };
 
     const value = useMemo(

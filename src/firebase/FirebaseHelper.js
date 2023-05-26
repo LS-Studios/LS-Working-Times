@@ -8,3 +8,7 @@ export const getFirebaseDB = () => {
 
     return firebaseDB
 }
+
+export const getCurrentTimerPath = (currentTimerId, user) => {
+    return "/users/" + user.id + "/timers/" + currentTimerId + "/";
+};

@@ -9,9 +9,16 @@ function AdditionalSettings() {
     const translation = useContextTranslation()
 
     const resetData = () => {
-        dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouReallyWantToDeleteAllData"), yesAction:() => {
-                remove(ref(getFirebaseDB(), "/users/"+auth.user.id+"/saved"))
-            }})
+        dialog.openDialog("OptionDialog", {
+            title: translation.translate("dialog.deleteAllData"),
+            message: translation.translate("dialog.doYouReallyWantToDeleteAllData"),
+            options: [{
+                name: translation.translate("dialog.yes"),
+                action: () => remove(ref(getFirebaseDB(), "/users/"+auth.user.id+"/saved"))
+            }, {
+                name: translation.translate("dialog.no")
+            }]
+        })
     }
 
     return (

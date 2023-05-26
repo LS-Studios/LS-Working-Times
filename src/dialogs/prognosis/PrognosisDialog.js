@@ -6,13 +6,13 @@ import {
     TimeInputContent,
     ButtonCard,
     Title,
-    useContextTranslation, useContextTheme
+    useContextTranslation, useContextTheme, Layout, useContextDialog
 } from "@LS-Studios/components";
 import {padTo2Digits} from "@LS-Studios/date-helper";
 
 const PrognosisDialog = ({data}) => {
     const translation = useContextTranslation()
-    const dialog = useContextTheme();
+    const dialog = useContextDialog();
 
     const [currentStartTime, setCurrentStartTime] = useState({
         hours: "08",
@@ -61,18 +61,18 @@ const PrognosisDialog = ({data}) => {
             <Title value={translation.translate("dialog.changeTime")} style={{fontSize:20}}/>
             <Divider marginBottom={5}/>
 
-            <h4>{translation.translate("timer.startTime")}</h4>
+            <Title value={translation.translate("timer.startTime")} />
             <TimeInputContent currentTimeState={currentStartTime} setCurrentTimeState={setCurrentStartTime}/>
 
-            <h4>{translation.translate("timer.endTime")}</h4>
+            <Title value={translation.translate("timer.endTime")} />
             <TimeInputContent currentTimeState={currentEndTime} setCurrentTimeState={setCurrentEndTime}/>
 
             <Divider/>
 
-            <div className="prognosisDialogActionButtons">
-                <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
-                <ButtonCard title={translation.translate("dialog.confirm")} clickAction={updatePrognosis}/>
-            </div>
+            <Layout>
+                <ButtonCard justButton buttonStyle={{width:"100%"}} title={translation.translate("dialog.cancel")} clickAction={close}/>
+                <ButtonCard justButton buttonStyle={{width:"100%"}} title={translation.translate("dialog.confirm")} clickAction={updatePrognosis}/>
+            </Layout>
         </>
     );
 }

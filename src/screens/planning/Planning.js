@@ -1,9 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {get, getDatabase, onChildAdded, onChildChanged, onChildRemoved, push, ref, set} from "firebase/database";
-import {initializeApp} from "firebase/app";
-import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
-import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
-import {getAuth} from "firebase/auth";
+import {get, onChildAdded, onChildChanged, onChildRemoved, push, ref, set} from "firebase/database";
 import PlanningCard from "../../cards/planing/PlanningCard";
 import {
     Card,
@@ -12,15 +8,16 @@ import {
     InputContent,
     Divider,
     useContextTranslation,
-    useContextUserAuth
+    useContextUserAuth, useContextGlobalVariables
 } from "@LS-Studios/components";
 import ContentInWeekCard from "../../cards/contentinweek/ContentInWeekCard";
 import {formatDate} from "@LS-Studios/date-helper";
-import {getFirebaseDB} from "../../firebase/FirebaseHelper";
+import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
 
-function Planning({setCurrentMenu}) {
+function Planning() {
     const translation = useContextTranslation()
     const auth = useContextUserAuth()
+    const globalVariables = useContextGlobalVariables()
 
     const [currentNewPlanInput, setCurrentNewPlanInput] = useState("");
     const [currentPlanDate, setCurrentPlanDate] = useState(new Date());
@@ -28,21 +25,21 @@ function Planning({setCurrentMenu}) {
     const [planningsIsLoading, setPlanningsIsLoading] = useState(true)
     const [selectedPlanningDate, setSelectedPlanningDate] = useState(new Date())
 
-    useEffect(() => {
-        setCurrentMenu(3)
+    const currentTimerId = globalVariables.getLSVar("currentTimerId")
 
+    useEffect(() => {
         const unsubscribeArray = []
 
         const firebaseDB = getFirebaseDB()
 
-        get(ref(firebaseDB, "/users/" + auth.user.id + "/plannings")).then((snapshot) => {
+        get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "plannings")).then((snapshot) => {
             if (!snapshot.exists())
                 setPlanningsIsLoading(false)
         }).catch((error) => {
             console.error(error);
         });
         unsubscribeArray.push(
-            onChildAdded(ref(firebaseDB, "/users/" + auth.user.id + "/plannings"), snapshot => {
+            onChildAdded(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "plannings"), snapshot => {
                 const value = snapshot.val()
                 if (value != null) {
                     setPlanningsIsLoading(false)
@@ -53,10 +50,10 @@ function Planning({setCurrentMenu}) {
                 }
             }))
         unsubscribeArray.push(
-            onChildChanged(ref(firebaseDB, "/users/" + auth.user.id + "/plannings"), changedSnapshot => {
+            onChildChanged(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "plannings"), changedSnapshot => {
                 const value = changedSnapshot.val()
                 if (value != null) {
-                    get(ref(firebaseDB, "/users/" + auth.user.id + "/plannings")).then((snapshot) => {
+                    get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "plannings")).then((snapshot) => {
                         if (snapshot.exists()) {
                             const plannings = []
                             snapshot.forEach(childSnapshot => {
@@ -81,7 +78,7 @@ function Planning({setCurrentMenu}) {
                 }
             }))
         unsubscribeArray.push(
-            onChildRemoved(ref(firebaseDB, "/users/" + auth.user.id + "/plannings"), snapshot => {
+            onChildRemoved(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "plannings"), snapshot => {
                 const value = snapshot.val()
                 if (value != null) {
                     setPlannings((current) =>
@@ -97,7 +94,7 @@ function Planning({setCurrentMenu}) {
 
     const addNewPlan = () => {
         if (currentNewPlanInput.replace("\\s+", "") !== "") {
-            const newPlanningRef = push(ref(getFirebaseDB(), "/users/" + auth.user.id + "/plannings"));
+            const newPlanningRef = push(ref(getFirebaseDB(), getCurrentTimerPath(currentTimerId, auth.user) + "plannings"));
 
             set(newPlanningRef, {
                 id: newPlanningRef.key,

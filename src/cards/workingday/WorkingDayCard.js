@@ -2,19 +2,30 @@ import React from 'react';
 import ContentCard from "../content/ContentCard";
 import {useContextDialog, useContextTranslation} from "@LS-Studios/components";
 import {padTo2Digits} from "@LS-Studios/date-helper";
+import {ref, remove} from "firebase/database";
+import {getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 const WorkingDayCard = ({workingDayIndex, rangeIndex, workingDays,  setWorkingDays, isExpanded=false}) => {
     const translation = useContextTranslation()
     const dialog = useContextDialog()
 
     const deleteRange = (e) => {
-        dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouRelayWantToDeleteThisTimeRange"), yesAction:() => {
-                setWorkingDays(current => {
-                    let newWorkingDays = JSON.parse(JSON.stringify(current));
-                    newWorkingDays[workingDayIndex][2].splice(rangeIndex, 1)
-                    return newWorkingDays
-                });
-            }})
+        dialog.openDialog("OptionDialog", {
+            title: translation.translate("dialog.deleteTimeRange"),
+            message: translation.translate("dialog.doYouRelayWantToDeleteThisTimeRange"),
+            options: [{
+                name: translation.translate("dialog.yes"),
+                action: () => {
+                    setWorkingDays(current => {
+                        let newWorkingDays = JSON.parse(JSON.stringify(current));
+                        newWorkingDays[workingDayIndex][2].splice(rangeIndex, 1)
+                        return newWorkingDays
+                    });
+                }
+            }, {
+                name: translation.translate("dialog.no")
+            }]
+        })
     }
 
     const editRange = (e) => {

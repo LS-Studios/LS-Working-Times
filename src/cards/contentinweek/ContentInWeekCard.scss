@@ -1,17 +1,3 @@
-.contentInWeekCard {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    border: 0;
-    border-radius: 6px;
-    width: 271px;
-}
-
-.contentInWeekCardTitle {
-    margin: 5px;
-}
-
 .contentInWeekCardSelect {
     margin-bottom: 5px;
     display: flex;
@@ -26,15 +12,8 @@
     cursor: pointer;
 }
 
-.darkContentInWeekSelectIcon {
-    background-color: var(--item-card-button-color);;
-    border: 0;
+.contentInWeekSelectIcon {
+    background-color: var(--item-card-bg-color);
     border-radius: 6px;
     padding: 3px;
-    cursor: pointer;
-}
-
-.noContent {
-    margin-bottom: 5px;
-    font-size: 14px;
 }

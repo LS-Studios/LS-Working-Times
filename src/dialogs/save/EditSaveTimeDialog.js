@@ -1,10 +1,6 @@
 import "./EditSaveDialog.scss"
 import React, {useEffect, useState} from "react";
-import {getDatabase, ref, set} from "firebase/database";
-import {initializeApp} from "firebase/app";
-import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
-import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
-import {getAuth} from "firebase/auth";
+import {ref, set} from "firebase/database";
 import {formatDate, getDateFromString, padTo2Digits} from "@LS-Studios/date-helper";
 import {DateTime} from "../../classes/DateTime";
 import {
@@ -12,12 +8,15 @@ import {
     Divider,
     TimeInputContent,
     DateContent,
-    Title, useContextTranslation, useContextDialog
+    Title, useContextTranslation, useContextDialog, useContextUserAuth, Layout, useContextGlobalVariables
 } from "@LS-Studios/components";
+import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 const EditSaveTimeDialog = ({data}) => {
     const translation = useContextTranslation()
     const dialog = useContextDialog();
+    const auth = useContextUserAuth()
+    const globalVariables = useContextGlobalVariables()
 
     const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -44,17 +43,12 @@ const EditSaveTimeDialog = ({data}) => {
     }
 
     const updateSave = () => {
-        const lsWorkingTimesApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
-        const db = getDatabase(lsWorkingTimesApp)
-        const app = initializeApp(LSWalletConfig, "LS-Wallet")
-        const auth = getAuth(app)
-
         const startTime = new DateTime(startTimeState.hours, startTimeState.minutes, startTimeState.seconds)
         const endTime = new DateTime(endTimeState.hours, endTimeState.minutes, endTimeState.seconds)
         const breakTime = new DateTime(breakTimeState.hours, breakTimeState.minutes, breakTimeState.seconds)
         const workedTime = endTime.subtractDateTime(startTime).subtractDateTime(breakTime)
 
-        set(ref(db, "/users/"+auth.user.id+"/saved/"+data.save.id), {
+        set(ref(getFirebaseDB(), getCurrentTimerPath(globalVariables.getLSVar("currentTimerId"), auth.user) + "saved/" + data.save.id), {
             id:data.save.id,
             date:formatDate(selectedDate),
             startTime: startTime.toTimeString(),
@@ -73,20 +67,20 @@ const EditSaveTimeDialog = ({data}) => {
         const workedTimeDateTime = DateTime.dateTimeFromString(data.save.worked)
         const breakTimeDateTime = DateTime.dateTimeFromString(data.save.break)
 
-        setStartTimeState({...startTimeState, hours: padTo2Digits(startTimeDateTime.getHours),
-            minutes: padTo2Digits(startTimeDateTime.getMinutes),
-            seconds: padTo2Digits(startTimeDateTime.getSeconds)})
+        setStartTimeState({...startTimeState, hours: padTo2Digits(startTimeDateTime.hours),
+            minutes: padTo2Digits(startTimeDateTime.minutes),
+            seconds: padTo2Digits(startTimeDateTime.seconds)})
 
         const endTimeDatTime = startTimeDateTime.addDateTime(workedTimeDateTime).addDateTime(breakTimeDateTime)
 
-        setEndTimeState({...endTimeState, hours: padTo2Digits(endTimeDatTime.getHours),
-            minutes: padTo2Digits(endTimeDatTime.getMinutes),
-            seconds: padTo2Digits(endTimeDatTime.getSeconds)})
+        setEndTimeState({...endTimeState, hours: padTo2Digits(endTimeDatTime.hours),
+            minutes: padTo2Digits(endTimeDatTime.minutes),
+            seconds: padTo2Digits(endTimeDatTime.seconds)})
 
 
-        setBreakTimeState({...breakTimeState, hours: padTo2Digits(breakTimeDateTime.getHours),
-            minutes: padTo2Digits(breakTimeDateTime.getMinutes),
-            seconds: padTo2Digits(breakTimeDateTime.getSeconds)})
+        setBreakTimeState({...breakTimeState, hours: padTo2Digits(breakTimeDateTime.hours),
+            minutes: padTo2Digits(breakTimeDateTime.minutes),
+            seconds: padTo2Digits(breakTimeDateTime.seconds)})
     }, [])
 
     return (
@@ -108,10 +102,10 @@ const EditSaveTimeDialog = ({data}) => {
 
             <Divider/>
 
-            <div className="editSaveTimeDialogActionButtons">
-                <ButtonCard title={translation.translate("dialog.cancel")} clickAction={close}/>
-                <ButtonCard title={translation.translate("dialog.confirm")} clickAction={updateSave}/>
-            </div>
+            <Layout>
+                <ButtonCard justButton buttonStyle={{width:"100%"}} title={translation.translate("dialog.cancel")} clickAction={close}/>
+                <ButtonCard justButton buttonStyle={{width:"100%"}} title={translation.translate("dialog.confirm")} clickAction={updateSave}/>
+            </Layout>
         </>
     );
 }

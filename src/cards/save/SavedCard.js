@@ -3,14 +3,20 @@ import "./SaveCard.scss"
 import {DateTime} from "../../classes/DateTime";
 import {ref, remove} from "firebase/database"
 import ContentCard from "../content/ContentCard";
-import {useContextDialog, useContextTranslation, useContextUserAuth} from "@LS-Studios/components";
+import {
+    useContextDialog,
+    useContextGlobalVariables,
+    useContextTranslation,
+    useContextUserAuth
+} from "@LS-Studios/components";
 import {getDateNameByString} from "@LS-Studios/date-helper";
-import {getFirebaseDB} from "../../firebase/FirebaseHelper";
+import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
 
 function SavedCard({data, isExpanded}) {
     const translation = useContextTranslation()
     const auth = useContextUserAuth()
     const dialog = useContextDialog();
+    const globalVariables = useContextGlobalVariables()
 
     const getEndTimeString = () => {
         const startDateTime = DateTime.dateTimeFromString(data.startTime)
@@ -22,9 +28,16 @@ function SavedCard({data, isExpanded}) {
     }
 
     const deleteSave = (e) => {
-        dialog.openDialog("YesNoDialog", {message:translation.translate("dialog.doYouRelayWantToDeleteThisSave"), yesAction:() => {
-            remove(ref(getFirebaseDB(), "/users/" + auth.user.id + "/saved/"+data.id))
-        }})
+        dialog.openDialog("OptionDialog", {
+            title: translation.translate("dialog.deleteSave"),
+            message: translation.translate("dialog.doYouRelayWantToDeleteThisSave"),
+            options: [{
+                name: translation.translate("dialog.yes"),
+                action: () => remove(ref(getFirebaseDB(), getCurrentTimerPath(globalVariables.getLSVar("currentTimerId"), auth.user) + "saved/"+data.id))
+            }, {
+                name: translation.translate("dialog.no")
+            }]
+        })
     }
 
     const editSave = (e) => {

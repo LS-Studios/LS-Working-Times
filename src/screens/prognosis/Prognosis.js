@@ -1,13 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import "./Prognosis.css"
-import WorkingDays from "../../components/workingday/WorkingDays";
-import {get, getDatabase, onChildAdded, onChildChanged, onChildRemoved, onValue, ref} from "firebase/database";
-import {initializeApp} from "firebase/app";
-import {LSWorkingTimesConfig} from "../../firebase/config/LSWorkingTimesConfig";
-import {LSWalletConfig} from "../../firebase/config/LSWalletConfig";
-import {getAuth} from "firebase/auth";
+import WorkingDay from "../../components/workingday/WorkingDay";
+import {get, onChildAdded, onChildChanged, onChildRemoved, onValue, ref} from "firebase/database";
 import {DateTime} from "../../classes/DateTime";
-import {useNavigate} from "react-router-dom";
 import {useInterval} from "../../customhook/UseInterval";
 import PrognosisCard from "../../cards/prognosis/PrognosisCard";
 import {
@@ -17,17 +12,22 @@ import {
     TimeInputContent,
     TimeInputCard,
     CheckboxListCard,
-    Title, Divider, DropdownContent, useContextTranslation, useContextTheme, useContextUserAuth
+    Divider,
+    DropdownContent,
+    useContextTranslation,
+    useContextTheme,
+    useContextUserAuth,
+    SpinnerType, ListCard, Layout, useContextGlobalVariables
 } from "@LS-Studios/components"
 import {getDateFromString, getEndOfWeek, getStartOfWeek} from "@LS-Studios/date-helper"
-import {getFirebaseDB} from "../../firebase/FirebaseHelper";
-import {Gone} from "@LS-Studios/general";
+import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
+import {Gone, List} from "@LS-Studios/general";
+import useLocalStorage from "@LS-Studios/use-local-storage";
 
-function Prognosis({setCurrentMenu}) {
+function Prognosis() {
     const translation = useContextTranslation()
-    const theme = useContextTheme()
-    const navigate = useNavigate()
     const auth = useContextUserAuth()
+    const globalVariables = useContextGlobalVariables()
 
     const [saved, setSaved] = useState([]);
     const [startTime, setStartTime] = useState(null);
@@ -36,10 +36,10 @@ function Prognosis({setCurrentMenu}) {
     const [workStopTime, setWorkStopTime] = useState(null);
     const [workTakenStop, setWorkTakenStop] = useState(new DateTime(0, 0, 0));
 
-    const [hoursPerWeekInput, setHoursPerWeekInput] = useState("40")
-    const [alreadyWorkedState, setAlreadyWorkedState] = useState(0)
-    const [alreadyWorkedTimerTime, setAlreadyWorkedTimerTime] = useState(new DateTime(0,0,0))
-    const [alreadyWorkedTimeInput, setAlreadyWorkedTimeInput] = useState({
+    const [hoursPerWeekInput, setHoursPerWeekInput] = useLocalStorage("hoursPerWeekInput", "40")
+    const [alreadyWorkedState, setAlreadyWorkedState] = useLocalStorage("alreadyWorkedState", 0)
+    const [alreadyWorkedTimerTime, setAlreadyWorkedTimerTime] = useLocalStorage("alreadyWorkedTimerTime", new DateTime(0,0,0))
+    const [alreadyWorkedTimeInput, setAlreadyWorkedTimeInput] = useLocalStorage("alreadyWorkedTimeInput", {
         hours: "00",
         minutes: "00",
         seconds: "00"
@@ -47,21 +47,21 @@ function Prognosis({setCurrentMenu}) {
     const [alreadyWorkedTimeIsLoading, setAlreadyWorkedTimeIsLoading] = useState([true, false])
     const [calculatedState, setCalculatedState] = useState([]);
 
-    const [averageStartTime, setAverageStartTime] = useState({
+    const [averageStartTime, setAverageStartTime] = useLocalStorage("averageStartTime", {
         hours: "08",
         minutes: "00",
         seconds: "00"
     })
 
-    const [averageBreakTime, setAverageBreakTime] = useState({
+    const [averageBreakTime, setAverageBreakTime] = useLocalStorage("averageBreakTime", {
         hours: "00",
         minutes: "30",
         seconds: "00"
     })
 
-    const [workingDays, setWorkingDays] = useState([
+    const [workingDays, setWorkingDays] = useLocalStorage("workingDays", [
         //Monday
-        [true, 0, [[new DateTime(7,0,0), new DateTime(18,0,0)]], 0],
+        [true, 0, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
         //Tuesday
         [true, 1, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
         //Wednesday
@@ -76,25 +76,25 @@ function Prognosis({setCurrentMenu}) {
         [false, 6, [[new DateTime(8,0,0), new DateTime(18,0,0)]], 0],
     ])
 
-    useEffect(() => {
-        setCurrentMenu(4)
+    const currentTimerId = globalVariables.getLSVar("currentTimerId")
 
+    useEffect(() => {
         const unsubscribeArray = []
 
         const firebaseDB = getFirebaseDB()
 
         unsubscribeArray.push(
-            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/start-time"), snapshot => {
+            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "start-time"), snapshot => {
                 const data = snapshot.val()
 
                 if (data == null || data === "") {
                     setStartTime(null)
                 }
                 else
-                    setStartTime(DateTime.dateTimeFromString(data).getDate())
+                    setStartTime(DateTime.dateTimeFromString(data))
             }))
         unsubscribeArray.push(
-            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/work-stop-time"), snapshot => {
+            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "work-stop-time"), snapshot => {
                 const data = snapshot.val()
 
                 if (data == null || data === "")
@@ -103,7 +103,7 @@ function Prognosis({setCurrentMenu}) {
                     setWorkStopTime(DateTime.dateTimeFromString(data))
             }))
         unsubscribeArray.push(
-            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/work-taken-stop"), snapshot => {
+            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "work-taken-stop"), snapshot => {
                 const data = snapshot.val()
 
                 if (data == null || data === "")
@@ -112,7 +112,7 @@ function Prognosis({setCurrentMenu}) {
                     setWorkTakenStop(DateTime.dateTimeFromString(data))
             }))
         unsubscribeArray.push(
-            onValue(ref(firebaseDB, "/users/" + auth.user.id + "/work-is-running"), snapshot => {
+            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "work-is-running"), snapshot => {
                 const data = snapshot.val()
 
                 if (data == null || data === "")
@@ -122,7 +122,7 @@ function Prognosis({setCurrentMenu}) {
             }))
 
         unsubscribeArray.push(
-            onChildAdded(ref(firebaseDB, "/users/" + auth.user.id + "/saved"), snapshot => {
+            onChildAdded(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), snapshot => {
                 const value = snapshot.val()
 
                 setAlreadyWorkedTimeIsLoading([true, true])
@@ -134,10 +134,10 @@ function Prognosis({setCurrentMenu}) {
                 }
             }))
         unsubscribeArray.push(
-            onChildChanged(ref(firebaseDB, "/users/" + auth.user.id + "/saved"), changedSnapshot => {
+            onChildChanged(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), changedSnapshot => {
                 const value = changedSnapshot.val()
                 if (value != null) {
-                    get(ref(firebaseDB, "/users/" + auth.user.id + "/saved")).then((snapshot) => {
+                    get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved")).then((snapshot) => {
                         if (snapshot.exists()) {
                             const saves = []
                             snapshot.forEach(childSnapshot => {
@@ -162,7 +162,7 @@ function Prognosis({setCurrentMenu}) {
                 }
             }))
         unsubscribeArray.push(
-            onChildRemoved(ref(firebaseDB, "/users/" + auth.user.id + "/saved"), snapshot => {
+            onChildRemoved(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), snapshot => {
                 const value = snapshot.val()
                 if (value != null) {
                     setSaved((current) =>
@@ -199,13 +199,13 @@ function Prognosis({setCurrentMenu}) {
 
         if (workStopTime != null) {
             const dateTimeDiff = (
-                bool ? new DateTime() : workStopTime
+                bool ? DateTime.currentTime() : workStopTime
             ).getDateDiffToDateTime(
                 DateTime.dateTimeFromDate(startTime),
                 workTakenStop
             )
 
-            workedThisWeek = workedThisWeek.addDateTime(new DateTime(dateTimeDiff.getHours, dateTimeDiff.getMinutes, dateTimeDiff.getSeconds))
+            workedThisWeek = workedThisWeek.addDateTime(new DateTime(dateTimeDiff.hours, dateTimeDiff.minutes, dateTimeDiff.seconds))
         }
 
         setAlreadyWorkedTimerTime(workedThisWeek)
@@ -293,18 +293,15 @@ function Prognosis({setCurrentMenu}) {
 
     return (
         <div className="prognosis">
-            <Card title={translation.translate("prognosis.menu-name")}>
-                {
-                    alreadyWorkedTimeIsLoading[0] ? <Spinner type='dots'/> :
-                        <div className="prognosisCard">
-                            {
-                                calculatedState.length > 0 ? calculatedState.sort((a,b) => { return a[0]-b[0] }).map((calculated, i) => {
-                                    return <PrognosisCard key={i} data={calculated} isExpanded={false} />
-                                }) :  <div className="noContent">{translation.translate("prognosis.noMoreWorkThisWeek")}</div>
-                            }
-                        </div>
-                }
-            </Card>
+            <ListCard title={translation.translate("prognosis.menu-name")}
+                         isLoading={alreadyWorkedTimeIsLoading[0]}
+                         items={calculatedState}
+                         noItemsText={translation.translate("prognosis.noMoreWorkThisWeek")}
+                         itemMapFunc={calculatedState.sort((a,b) => {
+                             return a[0]-b[0] }
+                         ).map((calculated, i) => {
+                             return <PrognosisCard key={i} data={calculated} isExpanded={false} />
+                         })}/>
 
             <InputCard title={translation.translate("prognosis.hoursPerWeek")} inputType={1} focusOnClick={true} currentState={hoursPerWeekInput} setCurrentState={setHoursPerWeekInput}/>
 
@@ -317,9 +314,10 @@ function Prognosis({setCurrentMenu}) {
                     {
                         alreadyWorkedTimeIsLoading[0] ?
                             <div style={{display: "flex", justifyContent:"center"}}>
-                                <Spinner type="dots" />
-                            </div> :
-                            <b>{alreadyWorkedTimerTime.toTimeString()}</b>
+                                <Spinner type={SpinnerType.dots} />
+                            </div> : <div style={{margin: 5}}>
+                                {alreadyWorkedTimerTime.toTimeString()}
+                            </div>
                     }
                 </Gone>
 
@@ -336,31 +334,30 @@ function Prognosis({setCurrentMenu}) {
 
             <CheckboxListCard title={translation.translate("prognosis.workingDays")} checkboxList={workingDays.map((_, i) => translation.translate("prognosis.weekDay"+i))}
                 currentState={workingDays.map(workingDay => workingDay[0])}
-                          setCurrentState={
-                                (newStateArray) => {
-                                    console.log(newStateArray)
-                                    setWorkingDays(current => {
-                                        const newWorkingDays = JSON.parse(JSON.stringify(current))
-                                        newWorkingDays.map((newWorkingDay, i) => {
-                                            newStateArray.forEach((newState, s) => {
-                                                if (i === s) {
-                                                    newWorkingDays[i][0] = newState
-                                                }
-                                            })
-                                        })
+                setCurrentState={
+                      (newStateArray) => {
+                          setWorkingDays(current => {
+                              const newWorkingDays = JSON.parse(JSON.stringify(current))
+                              newWorkingDays.map((newWorkingDay, i) => {
+                                  newStateArray.forEach((newState, s) => {
+                                      if (i === s) {
+                                          newWorkingDays[i][0] = newState
+                                      }
+                                  })
+                              })
 
-                                        return newWorkingDays
-                                    })
-                                }}/>
-            <div>
-                {
-                    workingDays.map((workingDay, i) => {
-                        if (workingDay[0] && checkIfIsStillInWeek(i)) {
-                            return <WorkingDays key={i} day={workingDay} workingDays={workingDays} setWorkingDays={setWorkingDays}/>
-                        }
-                    })
+                              return newWorkingDays
+                           })
+                      }
                 }
-            </div>
+            />
+            {/*{*/}
+            {/*    workingDays.map((workingDay, i) => {*/}
+            {/*        if (workingDay[0] && checkIfIsStillInWeek(i)) {*/}
+            {/*            return <WorkingDay key={i} day={workingDay} workingDays={workingDays} setWorkingDays={setWorkingDays}/>*/}
+            {/*        }*/}
+            {/*    })*/}
+            {/*}*/}
         </div>
     );
 }
