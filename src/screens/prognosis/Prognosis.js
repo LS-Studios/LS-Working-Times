@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import "./Prognosis.css"
-import WorkingDay from "../../components/workingday/WorkingDay";
 import {get, onChildAdded, onChildChanged, onChildRemoved, onValue, ref} from "firebase/database";
 import {DateTime} from "../../classes/DateTime";
 import {useInterval} from "../../customhook/UseInterval";
@@ -15,9 +13,8 @@ import {
     Divider,
     DropdownContent,
     useContextTranslation,
-    useContextTheme,
     useContextUserAuth,
-    SpinnerType, ListCard, Layout, useContextGlobalVariables
+    SpinnerType, ListCard, useContextGlobalVariables
 } from "@LS-Studios/components"
 import {getDateFromString, getEndOfWeek, getStartOfWeek} from "@LS-Studios/date-helper"
 import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
@@ -32,12 +29,11 @@ function Prognosis() {
     const [saved, setSaved] = useState([]);
     const [startTime, setStartTime] = useState(null);
 
-    const [workIsRunning, setWorkIsRunning] = useState(false);
     const [workStopTime, setWorkStopTime] = useState(null);
     const [workTakenStop, setWorkTakenStop] = useState(new DateTime(0, 0, 0));
 
     const [hoursPerWeekInput, setHoursPerWeekInput] = useLocalStorage("hoursPerWeekInput", "40")
-    const [alreadyWorkedState, setAlreadyWorkedState] = useLocalStorage("alreadyWorkedState", 0)
+    const [alreadyWorkedState, setAlreadyWorkedState] = useLocalStorage("alreadyWorkedState", null)
     const [alreadyWorkedTimerTime, setAlreadyWorkedTimerTime] = useLocalStorage("alreadyWorkedTimerTime", new DateTime(0,0,0))
     const [alreadyWorkedTimeInput, setAlreadyWorkedTimeInput] = useLocalStorage("alreadyWorkedTimeInput", {
         hours: "00",
@@ -111,21 +107,14 @@ function Prognosis() {
                 else
                     setWorkTakenStop(DateTime.dateTimeFromString(data))
             }))
-        unsubscribeArray.push(
-            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "work-is-running"), snapshot => {
-                const data = snapshot.val()
 
-                if (data == null || data === "")
-                    setWorkIsRunning(false)
-                else
-                    setWorkIsRunning(data)
-            }))
+        get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved")).then(() => {
+            setAlreadyWorkedTimeIsLoading([true, true])
+        })
 
         unsubscribeArray.push(
             onChildAdded(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), snapshot => {
                 const value = snapshot.val()
-
-                setAlreadyWorkedTimeIsLoading([true, true])
 
                 if (value != null) {
                     setSaved(prevState => (
@@ -172,9 +161,11 @@ function Prognosis() {
             }))
 
         return () => {
+            setSaved([])
+            setCalculatedState([])
             unsubscribeArray.forEach(unsub => unsub())
         }
-    }, [])
+    }, [currentTimerId])
 
     useInterval(() => {
         if (alreadyWorkedTimeIsLoading[1])
@@ -201,7 +192,7 @@ function Prognosis() {
             const dateTimeDiff = (
                 bool ? DateTime.currentTime() : workStopTime
             ).getDateDiffToDateTime(
-                DateTime.dateTimeFromDate(startTime),
+                startTime,
                 workTakenStop
             )
 
@@ -292,7 +283,7 @@ function Prognosis() {
     }
 
     return (
-        <div className="prognosis">
+        <div>
             <ListCard title={translation.translate("prognosis.menu-name")}
                          isLoading={alreadyWorkedTimeIsLoading[0]}
                          items={calculatedState}

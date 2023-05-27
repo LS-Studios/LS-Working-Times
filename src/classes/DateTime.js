@@ -9,12 +9,7 @@ export class DateTime {
 
     static currentTime() {
         const date = new Date()
-
-        return new DateTime(
-            DateTime.dateTimeFromDate(date).hours,
-            DateTime.dateTimeFromDate(date).minutes,
-            DateTime.dateTimeFromDate(date).seconds
-        )
+        return DateTime.dateTimeFromDate(date)
     }
 
     static dateTimeFromDate(date) {

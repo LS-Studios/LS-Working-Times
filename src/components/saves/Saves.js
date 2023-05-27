@@ -88,9 +88,10 @@ function Saves({ saves, setSaves }) {
         }
 
         return () => {
+            setSaves([])
             unsubscribeArray.forEach(unsub => unsub())
         }
-    }, [auth.userIsFetching])
+    }, [auth.userIsFetching, currentTimerId])
 
     const getWorkedTimeInCurrentWeek = () => {
         const savesThisWeek = saves.filter(save => {

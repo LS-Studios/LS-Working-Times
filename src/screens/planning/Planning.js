@@ -88,9 +88,10 @@ function Planning() {
             }))
 
         return () => {
+            setPlannings([])
             unsubscribeArray.forEach(unsub => unsub())
         }
-    }, [])
+    }, [currentTimerId])
 
     const addNewPlan = () => {
         if (currentNewPlanInput.replace("\\s+", "") !== "") {

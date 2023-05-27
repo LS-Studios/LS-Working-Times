@@ -89,7 +89,8 @@
     "createTimer": "Timer erstellen",
     "current": " (Aktuell)",
     "search-for-timer": "Nach Timer suchen",
-    "no-timers": "Keine Timer"
+    "no-timers": "Keine Timer",
+    "new-timer": "Neuer Timer"
   },
   "prognosis": {
     "menu-name": "Prognose",

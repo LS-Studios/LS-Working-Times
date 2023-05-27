@@ -87,7 +87,8 @@
     "createTimer": "Create timer",
     "current": " (Current)",
     "search-for-timer": "Search for timer",
-    "no-timers": "No timers"
+    "no-timers": "No timers",
+    "new-timer": "New timer"
   },
   "prognosis": {
     "menu-name": "Prognosis",
