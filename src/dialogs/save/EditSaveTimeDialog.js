@@ -50,7 +50,7 @@ const EditSaveTimeDialog = ({data}) => {
 
         set(ref(getFirebaseDB(), getCurrentTimerPath(globalVariables.getLSVar("currentTimerId"), auth.user) + "saved/" + data.save.id), {
             id:data.save.id,
-            date:formatDate(selectedDate),
+            date:formatDate(selectedDate, translation),
             startTime: startTime.toTimeString(),
             worked: workedTime.toTimeString(),
             break: breakTime.toTimeString(),

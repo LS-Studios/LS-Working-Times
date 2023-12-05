@@ -1,17 +1,17 @@
 import {initializeApp} from "firebase/app";
 import {getDatabase} from "firebase/database";
-import {LSWorkingTimesConfig} from "./config/LSWorkingTimesConfig";
 import {getAuth} from "firebase/auth";
+import {LSWorkingTimesConfig} from "@LS-Studios/use-user-auth";
 
 export const getFirebaseDB = () => {
-    const firebaseApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+    const firebaseApp = initializeApp(LSWorkingTimesConfig.config, LSWorkingTimesConfig.name)
     const firebaseDB = getDatabase(firebaseApp)
 
     return firebaseDB
 }
 
 export const getFirebaseAuth = () => {
-    const firebaseApp = initializeApp(LSWorkingTimesConfig, "LS-Working-Times")
+    const firebaseApp = initializeApp(LSWorkingTimesConfig.config, LSWorkingTimesConfig.name)
     return getAuth(firebaseApp)
 }
 

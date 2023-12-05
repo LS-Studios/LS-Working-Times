@@ -31,7 +31,7 @@ const EditPlanningDialog = ({data}) => {
     const updatePlan = () => {
         set(ref(getFirebaseDB(), getCurrentTimerPath(globalVariables.getLSVar("currentTimerId"), auth.user) + "plannings/" + data.plan.id), {
             id:data.plan.id,
-            date:formatDate(currentPlanDate),
+            date:formatDate(currentPlanDate, translation),
             content:currentNewPlanInput
         })
 

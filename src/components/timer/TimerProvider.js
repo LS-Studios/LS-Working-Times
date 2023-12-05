@@ -3,6 +3,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import {useContextGlobalVariables, useContextUserAuth} from "@LS-Studios/components";
 import {get, onValue, ref, set} from "firebase/database";
 import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
+import useTimerStates from "../../customhook/useTimerStates";
 
 export const TimerType = {
     Work: "work",
@@ -15,9 +16,10 @@ function TimerProvider({timerContext, timerType, children}) {
 
     const [currentTime, setCurrentTime] = useState(null)
 
-    const [timeIsRunning, setTimeIsRunning] = useState(false);
-    const [timeStopTime, setTimeStopTime] = useState(null);
-    const [timeTakenStop, setTimeTakenStop] = useState(new DateTime());
+    const { startTime, setStartTime } = useTimerStates()
+    const { timeIsRunning, setTimeIsRunning } = useTimerStates()
+    const { timeStopTime, setTimeStopTime } = useTimerStates()
+    const { timeTakenStop, setTimeTakenStop } = useTimerStates()
 
     const [timeIsFetching, setTimeIsFetching] = useState(true)
 
@@ -30,19 +32,27 @@ function TimerProvider({timerContext, timerType, children}) {
 
         if (!auth.userIsFetching && auth.user) {
             setTimeIsFetching(true)
+            setStartTime(null)
             setCurrentTime(null)
             setTimeIsRunning(false)
             setTimeStopTime(null)
             setTimeTakenStop(new DateTime())
 
-            get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timerType + "-star-time")).then((snapshot) => {
-                if (snapshot.exists()) {
-                    const startTime = DateTime.dateTimeFromString(snapshot.val())
-                    updateTimer(startTime)
-                }
+            unsubscribeArray.push(
+                onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timerType + "-start-time"), snapshot => {
+                    const data = snapshot.val()
 
-                setTimeIsFetching(false)
-            })
+                    if (data == null || data === "") {
+                        setStartTime(null)
+                        resetTimer(auth.user, currentTimerId)
+                    } else {
+                        setStartTime(DateTime.dateTimeFromString(data))
+                        updateTimer()
+                    }
+
+                    setTimeIsFetching(false)
+                })
+            )
 
             unsubscribeArray.push(
                 onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timerType + "-stop-time"), snapshot => {
@@ -101,14 +111,15 @@ function TimerProvider({timerContext, timerType, children}) {
         setCurrentTime(null)
         const firebaseDB = getFirebaseDB()
 
+        set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timerType + "-start-time"), "")
         set(ref(firebaseDB, getCurrentTimerPath(actualTimerId || currentTimerId, user) + timerType + "-is-running"), false)
         set(ref(firebaseDB, getCurrentTimerPath(actualTimerId || currentTimerId, user) + timerType + "-stop-time"), "")
         set(ref(firebaseDB, getCurrentTimerPath(actualTimerId || currentTimerId, user) + timerType + "-taken-stop"), "00:00:00")
     }
 
-    const updateTimer = (startTime) => {
-        if (!timeIsFetching) {
-            const dateTimeDiff = (timeIsRunning ? DateTime.currentTime() : timeStopTime).getDateDiffToDateTime(startTime, timeTakenStop)
+    const updateTimer = () => {
+        if (!timeIsFetching && startTime) {
+            const dateTimeDiff = (timeIsRunning ? DateTime.currentTime() : (timeStopTime ? timeStopTime : startTime)).getDateDiffToDateTime(startTime, timeTakenStop)
 
             setCurrentTime(
                 new DateTime(
@@ -122,7 +133,9 @@ function TimerProvider({timerContext, timerType, children}) {
 
     const value = useMemo(
         () => ({
+            timerType,
             currentTime,
+            startTime,
             timeStopTime,
             timeIsRunning,
             timeIsFetching,
@@ -131,7 +144,7 @@ function TimerProvider({timerContext, timerType, children}) {
             updateTimer,
             resetTimer
         }),
-        [currentTime, timeStopTime, timeIsRunning, timeIsFetching]
+        [timerType, currentTime, startTime, timeStopTime, timeIsRunning, timeIsFetching]
     );
 
     return (

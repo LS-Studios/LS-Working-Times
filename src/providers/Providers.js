@@ -22,6 +22,7 @@ import EditPlanningDialog from "../dialogs/planning/EditPlanningDialog";
 import PrognosisDialog from "../dialogs/prognosis/PrognosisDialog";
 import CreateEditTimerDialog from "../dialogs/edittimer/CreateEditTimerDialog";
 import ChangeTimerDialog from "../dialogs/changetimer/ChangeTimerDialog";
+import {LSWorkingTimesConfig} from "@LS-Studios/use-user-auth";
 
 export const workTimerContext = createContext(null)
 export const breakTimerContext = createContext(null)
@@ -33,7 +34,7 @@ function Providers({children}) {
                 dark: DarkTheme,
                 bright: BrightTheme
             }}>
-                <ContextUserAuthProvider>
+                <ContextUserAuthProvider projektName={LSWorkingTimesConfig.name}>
                     <ContextTranslationProvider translationFiles={{de, en}}>
                         <ContextGlobalVariablesProvider>
                             <ContextDialogProvider dialogs={{

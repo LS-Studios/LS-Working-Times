@@ -51,31 +51,17 @@ function Planning() {
             }))
         unsubscribeArray.push(
             onChildChanged(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "plannings"), changedSnapshot => {
-                const value = changedSnapshot.val()
-                if (value != null) {
-                    get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "plannings")).then((snapshot) => {
-                        if (snapshot.exists()) {
-                            const plannings = []
-                            snapshot.forEach(childSnapshot => {
-                                plannings.push(childSnapshot.val())
-                            })
+                const changedPlan = changedSnapshot.val()
 
-                            const newState = plannings.map(obj => {
-                                if (obj.id === value.id) {
-                                    return value;
-                                }
-
-                                return obj;
-                            });
-
-                            setPlannings(newState);
-                        } else {
-                            console.log("No data available");
+                setPlannings((current) => {
+                    return current.map(obj => {
+                        if (obj.id === changedPlan.id) {
+                            return changedPlan;
                         }
-                    }).catch((error) => {
-                        console.error(error);
-                    });
-                }
+
+                        return obj;
+                    })
+                });
             }))
         unsubscribeArray.push(
             onChildRemoved(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "plannings"), snapshot => {
@@ -99,7 +85,7 @@ function Planning() {
 
             set(newPlanningRef, {
                 id: newPlanningRef.key,
-                date: formatDate(currentPlanDate),
+                date: formatDate(currentPlanDate, translation),
                 content: currentNewPlanInput
             });
 

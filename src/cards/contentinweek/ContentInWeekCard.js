@@ -4,35 +4,15 @@ import "./ContentInWeekCard.scss"
 import {getStartOfWeekDayValue, formatDate, getStartOfWeek, getEndOfWeek, getDateFromString} from "@LS-Studios/date-helper"
 import {Card, DateContent, Spinner, SpinnerType, Title} from "@LS-Studios/components";
 import {Gone, GoneType} from "@LS-Studios/general";
+import WeekSelectComponent from "../../components/weekselect/WeekSelectComponent";
 
 function ContentInWeekCard({dataArray, title, noItemMessage, ItemCard, selectedDate, setSelectedDate, isLoading}) {
-    const [selectedDateText, setSelectedDateText] = useState("")
-
-    useEffect(() => {
-        setSelectedDateText(
-            formatDate(
-                getStartOfWeek(selectedDate)) + " - " + formatDate(getEndOfWeek(selectedDate)
-            )
-        )
-    }, [selectedDate])
-
-    const getSavesOfPreviousWeek = () => {
-        setSelectedDate(new Date(selectedDate.setDate(getStartOfWeekDayValue(selectedDate)-7)))
-    }
-
-    const getSavesOfNextWeek = () => {
-        setSelectedDate(new Date(selectedDate.setDate(getStartOfWeekDayValue(selectedDate)+7)))
-    }
-
     return (
         <Card>
             <Title value={title} />
 
-            <div className="contentInWeekCardSelect">
-                <IoCaretBack className="contentInWeekSelectIcon" onClick={getSavesOfPreviousWeek}/>
-                <DateContent style={{width:"82%"}} useBackgroundColor={false} customSelectedText={selectedDateText} currentState={selectedDate} setCurrentState={setSelectedDate} />
-                <IoCaretForward className="contentInWeekSelectIcon" onClick={getSavesOfNextWeek}/>
-            </div>
+            <WeekSelectComponent selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+
             {
                 dataArray.filter(data => {
                     const date = getDateFromString(data.date)

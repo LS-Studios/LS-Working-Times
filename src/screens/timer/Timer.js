@@ -43,47 +43,16 @@ function TimerContent() {
     const workTimer = useContext(workTimerContext)
     const breakTimer = useContext(breakTimerContext)
 
-    const [startTime, setStartTime] = useState(null)
-    const [startTimeIsFetching, setStartTimeIsFetching] = useState(true)
-
     const [saves, setSaves] = useState([])
 
     const currentTimerId = globalVariables.getLSVar("currentTimerId")
 
-    useEffect(() => {
-        const unsubscribeArray = []
-
-        if (!auth.userIsFetching && auth.user) {
-            setStartTimeIsFetching(true)
-
-            const firebaseDB = getFirebaseDB()
-
-            unsubscribeArray.push(
-                onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "start-time"), snapshot => {
-                    const data = snapshot.val()
-
-                    setStartTimeIsFetching(false)
-
-                    if (data == null || data === "") {
-                        setStartTime(null)
-                        workTimer.resetTimer(auth.user, currentTimerId)
-                        breakTimer.resetTimer(auth.user, currentTimerId)
-                    } else {
-                        setStartTime(DateTime.dateTimeFromString(data))
-                    }
-                })
-            )
-        }
-
-        return () => {
-            unsubscribeArray.forEach(unsub => unsub())
-        }
-    }, [auth.user, currentTimerId])
+    const timersAreFetching = workTimer.timeIsFetching || breakTimer.timeIsFetching
 
     useInterval(() => {
-        if (!auth.userIsFetching && auth.user && startTime) {
-            workTimer.updateTimer(startTime, currentTimerId)
-            breakTimer.updateTimer(startTime, currentTimerId)
+        if (!auth.userIsFetching && auth.user) {
+            workTimer.updateTimer()
+            breakTimer.updateTimer()
         }
     }, 1000);
 
@@ -91,50 +60,47 @@ function TimerContent() {
         workTimer.resetTimer(auth.user)
         breakTimer.resetTimer(auth.user)
 
-        setStartTime(null)
-
         const firebaseDB = getFirebaseDB()
-
-        set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "start-time"), "")
 
         const newSaveRef = push(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"));
 
         set(newSaveRef, {
             id:newSaveRef.key,
-            date:formatDate(new Date()),
-            startTime: startTime.toTimeString(),
-            worked: new DateTime(workTimer.currentTime.hours, workTimer.currentTime.minutes, workTimer.currentTime.seconds).toTimeString(),
-            break: new DateTime(breakTimer.currentTime.hours, breakTimer.currentTime.minutes, breakTimer.currentTime.seconds).toTimeString()
+            date:formatDate(new Date(), translation),
+            startTime: workTimer.startTime.toTimeString(),
+            worked: workTimer.currentTime.toTimeString(),
+            break: breakTimer.currentTime.toTimeString()
         });
     }
 
-    const setTimerOnStartUp = () => {
+    const timerSetUp = () => {
         const firebaseDB = getFirebaseDB()
 
-        const setStopTime = (type) => {
-            const newDateTime = DateTime.currentTime()
+        const setStartTime = (timer) => {
+            if (timer.startTime == null) {
+                set(ref(getFirebaseDB(), getCurrentTimerPath(currentTimerId, auth.user) + timer.timerType + "-start-time"), DateTime.dateTimeFromDate(new Date()).toTimeString())
+            }
+        }
 
-            if (startTime == null)
-                set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + type + "-stop-time"), newDateTime.toTimeString())
+        const setStopTime = (timer) => {
+            if (timer.timeStopTime != null) return
+
+
+            if (timer.startTime == null)
+                set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timer.timerType + "-stop-time"), DateTime.currentTime().toTimeString())
             else
-                set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + type + "-stop-time"), startTime.toTimeString())
+                set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + timer.timerType + "-stop-time"), timer.startTime.toTimeString())
         }
 
-        if (startTime == null) {
-            set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "start-time"), DateTime.dateTimeFromDate(new Date()).toTimeString())
-        }
+        setStartTime(workTimer)
+        setStartTime(breakTimer)
 
-        if (workTimer.timeStopTime == null) {
-            setStopTime("work")
-        }
-
-        if (breakTimer.timeStopTime == null) {
-            setStopTime("break")
-        }
+        setStopTime(workTimer)
+        setStopTime(breakTimer)
     }
 
     const toggleWorkTimer = () => {
-        setTimerOnStartUp()
+        timerSetUp()
 
         if (workTimer.timeIsRunning) {
             workTimer.stopTimer(auth.user)
@@ -147,7 +113,10 @@ function TimerContent() {
     }
 
     const toggleBreakTimer = () => {
-        setTimerOnStartUp()
+        timerSetUp()
+
+        if (breakTimer.startTime == null)
+            set(ref(getFirebaseDB(), getCurrentTimerPath(currentTimerId, auth.user) + breakTimer.timerType + "-start-time"), DateTime.dateTimeFromDate(new Date()).toTimeString())
 
         if (breakTimer.timeIsRunning) {
             breakTimer.stopTimer(auth.user)
@@ -173,14 +142,14 @@ function TimerContent() {
             <ButtonCard title={translation.translate("timer.editTimer")} clickAction={editTimer}/>
 
             <Layout style={{width: 271}}>
-                <ValueCard style={{width: "100%"}} title={translation.translate("timer.date")} value={startTimeIsFetching ? <Spinner type={SpinnerType.dots} /> : (startTime != null ? formatDate(new Date()) : translation.translate("timer.notStarted"))}/>
-                <ValueCard style={{width: "100%"}} title={translation.translate("timer.startTime")} value={startTimeIsFetching ? <Spinner type={SpinnerType.dots} /> : (startTime != null ? startTime.toTimeString() : translation.translate("timer.notStarted"))} clickAction={startTime != null ? () => {
+                <ValueCard style={{width: "100%"}} title={translation.translate("timer.date")} value={timersAreFetching ? <Spinner type={SpinnerType.dots} /> : (workTimer.startTime != null ? formatDate(new Date(), translation) : translation.translate("timer.notStarted"))}/>
+                <ValueCard style={{width: "100%"}} title={translation.translate("timer.startTime")} value={timersAreFetching ? <Spinner type={SpinnerType.dots} /> : (workTimer.startTime != null ? workTimer.startTime.toTimeString() : translation.translate("timer.notStarted"))} clickAction={workTimer.startTime != null ? () => {
                     dialog.openDialog("ChangeTimeDialog", {
-                        value: startTime,
+                        value: workTimer.startTime,
                         setNewTime: (newTime) => {
                             const firebaseDB = getFirebaseDB()
 
-                            set(ref(firebaseDB, "/users/"+auth.user.id+"/start-time"), newTime.toTimeString())
+                            set(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + workTimer.timerType + "-start-time"), newTime.toTimeString())
                         }
                     })
                 } : null}/>
@@ -188,7 +157,7 @@ function TimerContent() {
 
             <Layout style={{width: 271}}>
                 <TimerComponent timer={workTimer} name={translation.translate("timer.worked")} />
-                <TimerComponent timer={breakTimer} name={translation.translate("timer.break")} clickAction={startTime != null ? () => {
+                <TimerComponent timer={breakTimer} name={translation.translate("timer.break")} clickAction={workTimer.startTime != null ? () => {
                     dialog.openDialog("ChangeTimeDialog", {
                         value: breakTimer.currentTime,
                         setNewTime: async (newTime) => {
@@ -198,21 +167,23 @@ function TimerContent() {
 
                             //Subtract work if break added
 
-                            const breakTakenStopSnapshot = await get(ref(firebaseDB, "/users/"+auth.user.id+"/break-taken-stop"))
+                            const breakTakenStopRef = ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "break-taken-stop")
+                            const breakTakenStopSnapshot = await get(breakTakenStopRef)
                             const newBreakTakenStopTime = DateTime.dateTimeFromString(breakTakenStopSnapshot.val()).addDateTime(dateTimeDiff)
-                            set(ref(firebaseDB, "/users/"+auth.user.id+"/break-taken-stop"), newBreakTakenStopTime.toTimeString())
+                            set(breakTakenStopRef, newBreakTakenStopTime.toTimeString())
 
-                            const workTakenStopSnapshot = await get(ref(firebaseDB, "/users/"+auth.user.id+"/work-taken-stop"))
+                            const workTakenStopRef = ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "work-taken-stop")
+                            const workTakenStopSnapshot = await get(workTakenStopRef)
                             const newWorkTakenStopTime = DateTime.dateTimeFromString(workTakenStopSnapshot.val()).subtractDateTime(dateTimeDiff)
-                            set(ref(firebaseDB, "/users/"+auth.user.id+"/work-taken-stop"), newWorkTakenStopTime.toTimeString())
+                            set(workTakenStopRef, newWorkTakenStopTime.toTimeString())
                         }
                     })
                 } : null} />
             </Layout>
 
-            <ButtonCard disabled={startTimeIsFetching} title={workTimer.timeIsRunning ? translation.translate("timer.stopWorking") : translation.translate("timer.startWorking")} clickAction={toggleWorkTimer}/>
-            <ButtonCard disabled={startTimeIsFetching || !startTime} title={breakTimer.timeIsRunning ? translation.translate("timer.stopBreak") : translation.translate("timer.startBreak")} clickAction={toggleBreakTimer}/>
-            <ButtonCard disabled={startTimeIsFetching || !startTime} title={translation.translate("timer.resetAndSave")} clickAction={startTime && resetTimers}/>
+            <ButtonCard disabled={timersAreFetching} title={workTimer.timeIsRunning ? translation.translate("timer.stopWorking") : translation.translate("timer.startWorking")} clickAction={toggleWorkTimer}/>
+            <ButtonCard disabled={timersAreFetching || !workTimer.startTime} title={breakTimer.timeIsRunning ? translation.translate("timer.stopBreak") : translation.translate("timer.startBreak")} clickAction={toggleBreakTimer}/>
+            <ButtonCard disabled={timersAreFetching || !workTimer.startTime} title={translation.translate("timer.resetAndSave")} clickAction={workTimer.startTime && resetTimers}/>
 
             <Saves saves={saves} setSaves={setSaves} />
         </div>

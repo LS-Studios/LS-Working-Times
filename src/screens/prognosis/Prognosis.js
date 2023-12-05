@@ -14,12 +14,23 @@ import {
     DropdownContent,
     useContextTranslation,
     useContextUserAuth,
-    SpinnerType, ListCard, useContextGlobalVariables
+    SpinnerType, ListCard, useContextGlobalVariables, DateContent
 } from "@LS-Studios/components"
-import {getDateFromString, getEndOfWeek, getStartOfWeek} from "@LS-Studios/date-helper"
+import {
+    getDateFromString,
+    getDateWithoutTime,
+    getEndOfWeek,
+    getStartOfWeek,
+    getStartOfWeekDayValue
+} from "@LS-Studios/date-helper"
 import {getCurrentTimerPath, getFirebaseDB} from "../../firebase/FirebaseHelper";
-import {Gone, List} from "@LS-Studios/general";
+import {Gone} from "@LS-Studios/general";
 import useLocalStorage from "@LS-Studios/use-local-storage";
+import WorkingDay from "../../components/workingday/WorkingDay";
+import {TimerType} from "../../components/timer/TimerProvider";
+import useTimerStates from "../../customhook/useTimerStates";
+import {IoCaretBack, IoCaretForward} from "react-icons/io5";
+import WeekSelectComponent from "../../components/weekselect/WeekSelectComponent";
 
 function Prognosis() {
     const translation = useContextTranslation()
@@ -27,14 +38,17 @@ function Prognosis() {
     const globalVariables = useContextGlobalVariables()
 
     const [saved, setSaved] = useState([]);
-    const [startTime, setStartTime] = useState(null);
 
-    const [workStopTime, setWorkStopTime] = useState(null);
-    const [workTakenStop, setWorkTakenStop] = useState(new DateTime(0, 0, 0));
+    const { startTime, setStartTime } = useTimerStates()
+    const { timeIsRunning, setTimeIsRunning } = useTimerStates()
+    const { timeStopTime, setTimeStopTime } = useTimerStates()
+    const { timeTakenStop, setTimeTakenStop } = useTimerStates()
+
+    const [selectedDate, setSelectedDate] = useState(new Date())
 
     const [hoursPerWeekInput, setHoursPerWeekInput] = useLocalStorage("hoursPerWeekInput", "40")
     const [alreadyWorkedState, setAlreadyWorkedState] = useLocalStorage("alreadyWorkedState", null)
-    const [alreadyWorkedTimerTime, setAlreadyWorkedTimerTime] = useLocalStorage("alreadyWorkedTimerTime", new DateTime(0,0,0))
+    const [alreadyWorkedTimerTime, setAlreadyWorkedTimerTime] = useState(new DateTime())
     const [alreadyWorkedTimeInput, setAlreadyWorkedTimeInput] = useLocalStorage("alreadyWorkedTimeInput", {
         hours: "00",
         minutes: "00",
@@ -80,7 +94,7 @@ function Prognosis() {
         const firebaseDB = getFirebaseDB()
 
         unsubscribeArray.push(
-            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "start-time"), snapshot => {
+            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + TimerType.Work + "-start-time"), snapshot => {
                 const data = snapshot.val()
 
                 if (data == null || data === "") {
@@ -90,22 +104,32 @@ function Prognosis() {
                     setStartTime(DateTime.dateTimeFromString(data))
             }))
         unsubscribeArray.push(
-            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "work-stop-time"), snapshot => {
+            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + TimerType.Work + "-is-running"), snapshot => {
                 const data = snapshot.val()
 
-                if (data == null || data === "")
-                    setWorkStopTime(null)
+                if (data == null || data === "") {
+                    setTimeIsRunning(false)
+                }
                 else
-                    setWorkStopTime(DateTime.dateTimeFromString(data))
+                    setTimeIsRunning(data)
             }))
         unsubscribeArray.push(
-            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "work-taken-stop"), snapshot => {
+            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + TimerType.Work + "-stop-time"), snapshot => {
                 const data = snapshot.val()
 
                 if (data == null || data === "")
-                    setWorkTakenStop(new DateTime(0,0,0))
+                    setTimeStopTime(null)
                 else
-                    setWorkTakenStop(DateTime.dateTimeFromString(data))
+                    setTimeStopTime(DateTime.dateTimeFromString(data))
+            }))
+        unsubscribeArray.push(
+            onValue(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + TimerType.Work + "-taken-stop"), snapshot => {
+                const data = snapshot.val()
+
+                if (data == null || data === "")
+                    setTimeTakenStop(new DateTime(0,0,0))
+                else
+                    setTimeTakenStop(DateTime.dateTimeFromString(data))
             }))
 
         get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved")).then(() => {
@@ -123,32 +147,18 @@ function Prognosis() {
                 }
             }))
         unsubscribeArray.push(
-            onChildChanged(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), changedSnapshot => {
-                const value = changedSnapshot.val()
-                if (value != null) {
-                    get(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved")).then((snapshot) => {
-                        if (snapshot.exists()) {
-                            const saves = []
-                            snapshot.forEach(childSnapshot => {
-                                saves.push(childSnapshot.val())
-                            })
+            onChildChanged(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), snapshot => {
+                const changedPrognosis = snapshot.val()
 
-                            const newState = saves.map(obj => {
-                                if (obj.id === value.id) {
-                                    return value;
-                                }
-
-                                return obj;
-                            });
-
-                            setSaved(newState);
-                        } else {
-                            console.log("No data available");
+                setSaved((current) => {
+                    return current.map(obj => {
+                        if (obj.id === changedPrognosis.id) {
+                            return changedPrognosis;
                         }
-                    }).catch((error) => {
-                        console.error(error);
-                    });
-                }
+
+                        return obj;
+                    })
+                });
             }))
         unsubscribeArray.push(
             onChildRemoved(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), snapshot => {
@@ -176,52 +186,58 @@ function Prognosis() {
         calculatePrognosis()
     }, 1000);
 
-    const getWorkedTimeInCurrentWeek = (bool=true) => {
+    const isSelectedDateInThisWeek = () => {
+        const thisWeekEnd = getEndOfWeek(new Date())
+        return selectedDate.toDateString() === thisWeekEnd.toDateString()
+    }
+
+    const getWorkedTimeInCurrentWeek = () => {
         const savesThisWeek = saved.filter(save => {
             const saveDate = getDateFromString(save.date)
             return saveDate >= getStartOfWeek(new Date()) && saveDate <= getEndOfWeek(new Date())
         })
 
-        let workedThisWeek = new DateTime(0, 0, 0)
+        let workedThisWeek = new DateTime()
 
         savesThisWeek.forEach(save => {
             workedThisWeek = workedThisWeek.addDateTime(DateTime.dateTimeFromString(save.worked))
         })
 
-        if (workStopTime != null) {
-            const dateTimeDiff = (
-                bool ? DateTime.currentTime() : workStopTime
-            ).getDateDiffToDateTime(
-                startTime,
-                workTakenStop
-            )
+        if (timeStopTime != null) {
+            const workedToday = (timeIsRunning ? DateTime.currentTime() : timeStopTime).getDateDiffToDateTime(startTime, timeTakenStop)
 
-            workedThisWeek = workedThisWeek.addDateTime(new DateTime(dateTimeDiff.hours, dateTimeDiff.minutes, dateTimeDiff.seconds))
+            workedThisWeek = workedThisWeek.addDateTime(workedToday)
         }
 
-        setAlreadyWorkedTimerTime(workedThisWeek)
+        setAlreadyWorkedTimerTime(isSelectedDateInThisWeek() ? workedThisWeek : new DateTime())
     }
 
     const checkIfIsStillInWeek = (dayIndex) => {
-        const currentDay = new Date().getDay()
+        if (isSelectedDateInThisWeek()) {
+            const currentDay = new Date().getDay()
 
-        const startTimeDateTime = new DateTime(averageStartTime.hours, averageStartTime.minutes, averageStartTime.seconds)
-        const startTimeDiff = startTimeDateTime.subtractDateTime(new DateTime())
-        const alreadyAfterStartTime = (startTimeDiff.hours < 0 || startTimeDiff.minutes < 0 || startTimeDiff.seconds < 0)
+            const startTimeDateTime = new DateTime(averageStartTime.hours, averageStartTime.minutes, averageStartTime.seconds)
+            const startTimeDiff = startTimeDateTime.subtractDateTime(new DateTime())
+            const alreadyAfterStartTime = (startTimeDiff.hours < 0 || startTimeDiff.minutes < 0 || startTimeDiff.seconds < 0)
 
-        const isCurrentDay = !alreadyAfterStartTime || (alreadyAfterStartTime && startTime != null)
+            const isCurrentDay = !alreadyAfterStartTime || (alreadyAfterStartTime && startTime != null)
 
-        return (dayIndex > currentDay-1 || (dayIndex === currentDay-1 && isCurrentDay))
+            return (dayIndex > currentDay - 1 || (dayIndex === currentDay - 1 && isCurrentDay))
+        } else {
+            return true
+        }
     }
 
     const calculatePrognosis = () => {
         const calculation = []
 
-        const alreadyWorked = alreadyWorkedState === 1 ? new DateTime(
+        const workedToday = startTime ? (timeIsRunning ? DateTime.currentTime() : timeStopTime).getDateDiffToDateTime(startTime, timeTakenStop) : new DateTime()
+
+        const alreadyWorked = isSelectedDateInThisWeek() ? alreadyWorkedState.pos === 1 ? new DateTime(
             parseInt(alreadyWorkedTimeInput.hours),
             parseInt(alreadyWorkedTimeInput.minutes),
             parseInt(alreadyWorkedTimeInput.seconds)
-        ) : alreadyWorkedTimerTime
+        ) : (alreadyWorkedTimerTime.subtractDateTime(workedToday)) : new DateTime()
 
         let timeLeftToWork = new DateTime(parseInt(hoursPerWeekInput),0,0).subtractDateTime(alreadyWorked)
 
@@ -284,6 +300,10 @@ function Prognosis() {
 
     return (
         <div>
+            <Card title="Week">
+                <WeekSelectComponent justFuture={true} selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+            </Card>
+
             <ListCard title={translation.translate("prognosis.menu-name")}
                          isLoading={alreadyWorkedTimeIsLoading[0]}
                          items={calculatedState}
@@ -301,7 +321,7 @@ function Prognosis() {
 
                 <Divider />
 
-                <Gone isVisible={alreadyWorkedState.pos === 0}>
+                <Gone isVisible={alreadyWorkedState && alreadyWorkedState.pos === 0}>
                     {
                         alreadyWorkedTimeIsLoading[0] ?
                             <div style={{display: "flex", justifyContent:"center"}}>
@@ -312,7 +332,7 @@ function Prognosis() {
                     }
                 </Gone>
 
-                <Gone isGone={alreadyWorkedState.pos === 0}>
+                <Gone isGone={alreadyWorkedState && alreadyWorkedState.pos === 0}>
                     <TimeInputContent
                         currentTimeState={alreadyWorkedTimeInput}
                         setCurrentTimeState={setAlreadyWorkedTimeInput}
@@ -342,13 +362,13 @@ function Prognosis() {
                       }
                 }
             />
-            {/*{*/}
-            {/*    workingDays.map((workingDay, i) => {*/}
-            {/*        if (workingDay[0] && checkIfIsStillInWeek(i)) {*/}
-            {/*            return <WorkingDay key={i} day={workingDay} workingDays={workingDays} setWorkingDays={setWorkingDays}/>*/}
-            {/*        }*/}
-            {/*    })*/}
-            {/*}*/}
+            {
+                workingDays.map((workingDay, i) => {
+                    if (workingDay[0] && checkIfIsStillInWeek(i)) {
+                        return <WorkingDay key={i} day={workingDay} workingDays={workingDays} setWorkingDays={setWorkingDays}/>
+                    }
+                })
+            }
         </div>
     );
 }

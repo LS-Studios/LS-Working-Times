@@ -57,24 +57,17 @@ function Saves({ saves, setSaves }) {
                 }))
             unsubscribeArray.push(
                 onChildChanged(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), snapshot => {
-                    if (snapshot.exists()) {
-                        const saves = []
-                        snapshot.forEach(childSnapshot => {
-                            saves.push(childSnapshot.val())
-                        })
+                    const changedPrognosis = snapshot.val()
 
-                        const newState = saves.map(obj => {
-                            if (obj.id === snapshot.val().id) {
-                                return snapshot.val();
+                    setSaves((current) => {
+                        return current.map(obj => {
+                            if (obj.id === changedPrognosis.id) {
+                                return changedPrognosis;
                             }
 
                             return obj;
                         });
-
-                        setSaves(newState);
-                    } else {
-                        console.log("No data available");
-                    }
+                    });
                 }))
             unsubscribeArray.push(
                 onChildRemoved(ref(firebaseDB, getCurrentTimerPath(currentTimerId, auth.user) + "saved"), snapshot => {

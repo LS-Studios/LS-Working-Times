@@ -1963,17 +1963,17 @@
 "@LS-Studios/components@file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz":
   version "0.0.522"
   resolved "file:../ls-react-components/LS-Library/components/LS-Studios-components-0.0.522.tgz"
-  integrity sha512-/UxOO16of+DHKftqKKYdAQQGqkPu1Urln5kPNarYzAt+Gh9Fkh0Er7QdQY8esqHDhP+cgeb7XkU3sK+6+5VAUA==
+  integrity sha512-VJYlA01iWqpmJMVYPgeY8NzlY5ttE0pn9NexR/YpppbI3azCTOPEqwjV/HU76zLfVZXNrhLakg+Ewk664V9Hxg==
 
 "@LS-Studios/date-helper@file:../ls-react-components/LS-Library/datehelper/LS-Studios-date-helper-0.0.3.tgz":
   version "0.0.3"
   resolved "file:../ls-react-components/LS-Library/datehelper/LS-Studios-date-helper-0.0.3.tgz"
-  integrity sha512-k1v3Zw3dImcDnAXK4yFG6HP7dpNpWz/6ZuKs4zcAQv+SbRacDluOQvANmVbmhW3a2r+rDHR9ucJRgE54X4st6g==
+  integrity sha512-ImwPDabUyl3fBluC3yFt19ayZJfnPkqGZd+RgfoLCx92zXbfNp7fkOz9dUBwv3CqzWQpzYVs10v2sXRlChDsAg==
 
 "@LS-Studios/general@file:../ls-react-components/LS-Library/general/LS-Studios-general-0.0.1.tgz":
   version "0.0.1"
   resolved "file:../ls-react-components/LS-Library/general/LS-Studios-general-0.0.1.tgz"
-  integrity sha512-dGNJBNlEUrE9dDLIGePiy45fYfB4dQ9AqXAKwjFCbQtcpGWzPnBIUi0kxFhjE8GuqPsu5koMgdiMOD4hKIEi+Q==
+  integrity sha512-YvcTuPOEw9epCMXEd/bRUY593oRdZzrtKIrkKNIaWkWk8HX4ZcVl1GaRbBfVR9Rj3BaPTyuHaB3QHJlBv++rvA==
 
 "@LS-Studios/use-local-storage@file:../ls-react-components/LS-Library/uselocalstorage/LS-Studios-use-local-storage-0.0.3.tgz":
   version "0.0.3"
@@ -1988,7 +1988,7 @@
 "@LS-Studios/use-user-auth@file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz":
   version "0.0.7"
   resolved "file:../ls-react-components/LS-Library/useuserauth/LS-Studios-use-user-auth-0.0.7.tgz"
-  integrity sha512-+fA1UAZAdHQ2n0rHcaVRpB/FBn7mG/QXdXQ48knddkMLVCq2yneBHFEgFSTk03Q2NiA18YZJk8NLgherPE/3qw==
+  integrity sha512-qYoTjanXze2ZKvFeeBgQLKKGXNUFo9yMAS+HZyJUJ85wjK/JWkVvoGcoO5oOIOjpPoF2pd5WkUk6eOF5yz5jnA==
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
